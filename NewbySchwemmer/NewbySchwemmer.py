@@ -1,27 +1,13 @@
 from datetime import datetime
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
 import multiprocessing as mp
-
-t0 = 0.0
-T = 10.0
-dt = 0.001
-
-N = 1000 # ensemble size
-
-R0 = 1.5
-Phi0 = np.pi / 1.2
-x0 = np.array([R0, Phi0])
-
-P = { # model parameters
-        "D": 0.198,
-        "omega": 1.0,
-        "gamma": 15.0,
-        "c": -15.0
-        }
 
 def polar2XY(Rho, Phi):
 
@@ -29,6 +15,9 @@ def polar2XY(Rho, Phi):
     Y = Rho*np.sin(Phi)
 
     return (X, Y)
+
+def genTstamp():
+    return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 def NewbySchwemmer(x, P):
 
@@ -70,11 +59,9 @@ def PlanarPolarHeunIteration(x, F, P, dt, dW):
     return y
 
 
-D = pd.DataFrame()
-
-def SolveSDE(i):
+def SolveSDE(i, P, x0, dt, t0, T):
    
-    print("solve", i)
+    #print("solve", i)
 
     Ndof = int((T - t0) / dt)
     x = np.zeros((Ndof , 2))
@@ -101,12 +88,55 @@ def Errclbk(R):
     print("error callback")
 
 
-if __name__ == "__main__":         
-    
-    pool = mp.Pool(mp.cpu_count())
-    for i in range(N):
-        pool.apply_async(SolveSDE, args=(i,), callback=Clbk)#, error_callback=Errclbk)
-    pool.close()
-    pool.join()
+if __name__ == "__main__":
 
-    print(D)
+    if len(sys.argv) != 3:
+        print("Usage: python " + sys.argv[0] + " <Ensemble size> <Filename>")
+        exit()
+
+    N = int(sys.argv[1])
+    PATH = Path(sys.argv[2])
+
+    P = { # model parameters
+        "D": 0.198,
+        "omega": 1.0,
+        "gamma": 15.0,
+        "c": -15.0
+        }
+
+    t0 = 0.0
+    T = 50.0
+    dt = 0.01
+    
+    Ds = np.linspace(0.0, 0.3, num=10)
+
+    for d in Ds:
+
+        FILENAME = str(PATH) + "Esize" + str(N) + "_" + genTstamp()\
+                + ".h5"
+        store = pd.HDFStore(FILENAME)
+        P["D"] = d
+        print("D = ", d)
+        Pseries = pd.Series(P)
+        Pseries = Pseries.append(pd.Series({"t0": t0, "T": T, "dt": dt}))
+        store.put("parameters", Pseries)
+        D = pd.DataFrame()
+        
+        Rs = np.linspace(0.01, 3.0, num=10)
+        x0 = np.zeros((len(Rs), 2))
+        x0[:, 0] = Rs
+        x0[:, 1] = np.pi / 2
+         
+        for j in range(len(Rs)):
+            pool = mp.Pool(mp.cpu_count())
+            D = pd.DataFrame()
+            for i in range(N):
+                pool.apply_async(SolveSDE, args=(i, P, x0[j], dt, t0, T),\
+                        callback=Clbk)#, error_callback=Errclbk)
+            pool.close()
+            pool.join()
+            store.put("ts" + str(j), D)
+            del D
+
+
+        store.close()
