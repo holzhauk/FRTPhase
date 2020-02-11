@@ -108,7 +108,7 @@ if __name__ == "__main__":
     T = 50.0
     dt = 0.01
     
-    Ds = np.linspace(0.0, 0.5, num=30)
+    Ds = np.linspace(0.0, 1.0, num=50)
 
     for d in Ds:
 
@@ -122,7 +122,7 @@ if __name__ == "__main__":
         store.put("parameters", Pseries)
         D = pd.DataFrame()
         
-        Rs = np.linspace(0.01, 3.0, num=20)
+        Rs = np.linspace(0.01, 1.5, num=20)
         x0 = np.zeros((len(Rs), 2))
         x0[:, 0] = Rs
         x0[:, 1] = np.pi / 2
