@@ -34,7 +34,7 @@ class SOscFile():
     VERSION = "0.0.1"
     
 
-class TbarSet(SOscFile):
+class ScalarSet(SOscFile):
     
     def __init__(self, filepath, modelname, dtype=np.double):
         self.FILEPATH = filepath
@@ -176,7 +176,7 @@ if __name__ == "__main__":
         os.remove(FILENAME)
     
     print("Create FILE " + FILENAME)
-    F = TbarSet(FILENAME, "testmodel")
+    F = ScalarSet(FILENAME, "testmodel")
     
     print("Add data to FILE")
     Tbar_test = np.random.randn(100).astype(dtype)
