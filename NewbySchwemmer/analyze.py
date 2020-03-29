@@ -7,24 +7,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 from NewbySchwemmer import polar2XY
-
-import scipy.integrate as integrate
-
-def Tbarnum(P, D, rhom, rhop):
-    
-    P["D"] = D
-    
-    gbar = lambda r: -(P["gamma"]/P["D"])*r*(r**2 - 1) + 1/r
-    f = lambda r: P["omega"] + P["omega"]*P["gamma"]*P["c"]*(1-r)**2
-    
-    integrand1 = lambda x: np.exp(-integrate.quad(gbar, x, rhop)[0])
-    integrand2 = lambda x: f(x)*integrand1(x)
-    
-    Nominator = 2*np.pi*integrate.quad(integrand1, rhom, rhop)[0]
-    Denominator = integrate.quad(integrand2, rhom, rhop)[0]
-    
-    return Nominator / Denominator
-
+from Tbar import Phidotbarnum
 
 if __name__ == "__main__":
 
@@ -37,14 +20,13 @@ if __name__ == "__main__":
 
     Diff = np.zeros(len(FILENAMES))
     Tbar = np.zeros(len(FILENAMES))
-    P = 0
 
     for i in range(len(FILENAMES)):
 
         store = pd.HDFStore(FILENAMES[i])
         P = store.get("parameters")
         DFkeys = store.keys()[1::]
-        Emeans = pd.Series()
+        Emeans = pd.Series([])
 
         # Ensemble mean
         for k in DFkeys:
@@ -60,12 +42,34 @@ if __name__ == "__main__":
         print("Mean Value for D = %f: %f" %(P["D"], Tbar[i]))
         store.close()
     
-    Ds = np.linspace(0.001, 1.5, num=20)
-    Tbars = np.zeros(Ds.shape)
-    for j in range(len(Tbars)):
-        Tbars[j] = Tbarnum(P, Ds[i], 0.01, 1.5)
+    P = {
+        "D": 0.198,
+        "omega": 1.0,
+        "gamma": 15.0,
+        "c": -15.0
+        }    
 
-    plt.figure()
-    #plt.plot(np.log(Diff), 2*np.pi / Tbar, '*')
-    plt.plot(np.log(Ds), 2*np.pi / Tbars, '*')
-    plt.show()
+    Ds = np.linspace(0.01, 1.0, num=100)
+    PhiDots = np.zeros(Ds.shape)
+    for m in range(len(Ds)):
+        PhiDots[m] = Phidotbarnum(P, Ds[m], 0.01, 1.5)
+
+    fig, ax = plt.subplots()
+    ax.set_title(r"$N = 20$, $\rho_{-} = 0.01$, $\rho_{+} = 1.5$")
+    
+    ax.plot(np.log(Diff[1::]), 2*np.pi / Tbar[1::], '*')
+    ax.plot(np.log(Ds), PhiDots, 'r')
+    
+    ax.set_xlabel(r"$log(D)$")
+    ax.set_ylabel(r"$2\,\pi / \overline{T}$")
+    
+    ax.spines["right"].set_position("zero")
+    ax.spines["left"].set_color("none")
+    ax.yaxis.tick_right()
+    ax.spines["top"].set_position("zero")
+    ax.spines["bottom"].set_color("none")
+    ax.xaxis.tick_top()
+
+    ax.legend(["in silico", "numeric"], frameon = False, loc='lower left')
+
+    fig.savefig(str(FILEPATH / "phidotbar.pdf"))

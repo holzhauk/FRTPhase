@@ -111,6 +111,7 @@ if __name__ == "__main__":
     T = 50.0
     dt = 0.01
     
+<<<<<<< HEAD
     OBSERVABLE_TAG = "Tbar"
     MODEL_TAG = "NewbySchwemmer"
 
@@ -173,6 +174,23 @@ if __name__ == "__main__":
         rm0 = 0.01
         rp0 = 3.0
         Rs = np.linspace(rm0, rp0, num=20)
+=======
+    Ds = np.linspace(0.0, 1.0, num=50)
+
+    for d in Ds:
+
+        FILENAME = str(PATH) + "Esize" + str(N) + "_" + genTstamp()\
+                + ".h5"
+        store = pd.HDFStore(FILENAME)
+        P["D"] = d
+        print("D = ", d)
+        Pseries = pd.Series(P)
+        Pseries = Pseries.append(pd.Series({"t0": t0, "T": T, "dt": dt}))
+        store.put("parameters", Pseries)
+        D = pd.DataFrame()
+        
+        Rs = np.linspace(0.01, 1.5, num=20)
+>>>>>>> 6aafe41915dd57178978aae1b0bb5a025607402b
         x0 = np.zeros((len(Rs), 2))
         x0[:, 0] = Rs
         x0[:, 1] = np.pi / 2
