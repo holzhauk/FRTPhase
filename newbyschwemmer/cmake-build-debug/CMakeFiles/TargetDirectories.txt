@@ -1,3 +1,0 @@
-/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles/newbyschwemmer.dir
-/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles/edit_cache.dir

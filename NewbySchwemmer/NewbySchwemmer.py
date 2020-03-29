@@ -9,6 +9,10 @@ from matplotlib import pyplot as plt
 
 import multiprocessing as mp
 
+# external modules
+sys.path.append("../SOscFilePy/")
+from SOscFilePy import *
+
 def polar2XY(Rho, Phi):
 
     X = Rho*np.cos(Phi)
@@ -79,9 +83,8 @@ def Clbk(result):
 
     i = result[0]
     x = result[1]
-
-    D["R" + str(i)] = x[:, 0]
-    D["Phi" + str(i)] = x[:, 1]
+    
+    D[i] = x[-1, 1]
 
 
 def Errclbk(R):
@@ -91,7 +94,7 @@ def Errclbk(R):
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
-        print("Usage: python " + sys.argv[0] + " <Ensemble size> <Filename>")
+        print("Usage: python " + sys.argv[0] + " <Ensemble size> <PATH>")
         exit()
 
     N = int(sys.argv[1])
@@ -103,40 +106,99 @@ if __name__ == "__main__":
         "gamma": 15.0,
         "c": -15.0
         }
-
+    
     t0 = 0.0
     T = 50.0
     dt = 0.01
     
-    Ds = np.linspace(0.0, 0.5, num=30)
+    OBSERVABLE_TAG = "Tbar"
+    MODEL_TAG = "NewbySchwemmer"
 
-    for d in Ds:
+   # ###############################################################
+   # # STUDY 1 - VARY NOISE INTENSITY
+   # STUDY_TAG = "varyDs"
+   # FILENAME = str(PATH) + OBSERVABLE_TAG + "_" + STUDY_TAG + "_" \
+   #             + genTstamp() + ".h5"
+   # F = ScalarSet(FILENAME, MODEL_TAG)
 
-        FILENAME = str(PATH) + "Esize" + str(N) + "_" + genTstamp()\
-                + ".h5"
-        store = pd.HDFStore(FILENAME)
-        P["D"] = d
-        print("D = ", d)
-        Pseries = pd.Series(P)
-        Pseries = Pseries.append(pd.Series({"t0": t0, "T": T, "dt": dt}))
-        store.put("parameters", Pseries)
-        D = pd.DataFrame()
+   # Ds = np.logspace(np.log(0.01), np.log(0.5), num=30)
+   # for d in Ds:
+
+   #     P["D"] = d
+   #     
+   #     rm0 = 0.01
+   #     rp0 = 3.0
+   #     Rs = np.linspace(rm0, rp0, num=20)
+   #     x0 = np.zeros((len(Rs), 2))
+   #     x0[:, 0] = Rs
+   #     x0[:, 1] = np.pi / 2
+
+   #     SP = { # simulation parameters
+   #             "t0": t0,
+   #             "T": T,
+   #             "dt": dt,
+   #             "Rho_m_0": rm0,
+   #             "Rho_p_0": rp0
+   #             }
+
+   #     Emeans = np.zeros((len(Rs), ))
+   #      
+   #     for j in range(len(Rs)):
+   #         pool = mp.Pool(mp.cpu_count())
+   #         D = np.zeros((N,))
+   #         for i in range(N):
+   #             pool.apply_async(SolveSDE, args=(i, P, x0[j], dt, t0, T),\
+   #                     callback=Clbk)#, error_callback=Errclbk)
+   #         pool.close()
+   #         pool.join()
+   #         Emeans[j] = D.mean()
+   #         del D
+
+   #     F.add_Ensemble(P, SP, 2*np.pi*SP["T"] / Emeans.mean())
+   #     del Emeans
+
+   # del F
+
+
+    ###############################################################
+    # STUDY 2 - VARY dt
+    STUDY_TAG = "varydt"
+    FILENAME = str(PATH) + OBSERVABLE_TAG + "_Esize_" + str(N) + "_" + STUDY_TAG + "_" \
+                + genTstamp() + ".h5"
+    F = ScalarSet(FILENAME, MODEL_TAG)
+
+    dts = np.logspace(np.log(0.001), np.log(0.01), num=10)
+    for dt in dts:
         
-        Rs = np.linspace(0.01, 3.0, num=20)
+        rm0 = 0.01
+        rp0 = 3.0
+        Rs = np.linspace(rm0, rp0, num=20)
         x0 = np.zeros((len(Rs), 2))
         x0[:, 0] = Rs
         x0[:, 1] = np.pi / 2
+
+        SP = { # simulation parameters
+                "t0": t0,
+                "T": T,
+                "dt": dt,
+                "Rho_m_0": rm0,
+                "Rho_p_0": rp0
+                }
+
+        Emeans = np.zeros((len(Rs), ))
          
         for j in range(len(Rs)):
             pool = mp.Pool(mp.cpu_count())
-            D = pd.DataFrame()
+            D = np.zeros((N,))
             for i in range(N):
                 pool.apply_async(SolveSDE, args=(i, P, x0[j], dt, t0, T),\
                         callback=Clbk)#, error_callback=Errclbk)
             pool.close()
             pool.join()
-            store.put("ts" + str(j), D)
+            Emeans[j] = D.mean()
             del D
 
+        F.add_Ensemble(P, SP, 2*np.pi*SP["T"] / Emeans.mean())
+        del Emeans
 
-        store.close()
+    del F

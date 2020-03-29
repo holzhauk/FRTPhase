@@ -35,6 +35,8 @@ class SOscFile():
     
 
 class ScalarSet(SOscFile):
+
+    CLASSTAG = "ScalarSet"
     
     def __init__(self, filepath, modelname, dtype=np.double):
         self.FILEPATH = filepath
@@ -48,13 +50,15 @@ class ScalarSet(SOscFile):
                 (self.fh.attrs.get("version") != self.VERSION):
                 raise SOscWrongFileFormat
             
-            if (self.fh.attrs.get("model") != self.MODELNAME):
+            if (self.fh.attrs.get("model") != self.MODELNAME) or \
+                (self.fh.attrs.get("class") != self.CLASSTAG):
                 raise SOscWrongFile
             
         else:
             self.fh = h5py.File(self.FILEPATH, "w")
             self.fh.attrs.create("format", self.FORMAT)
             self.fh.attrs.create("version", self.VERSION)
+            self.fh.attrs.create("class", self.CLASSTAG)
             self.fh.attrs.create("model", self.MODELNAME)
         
     
@@ -85,7 +89,7 @@ class ScalarSet(SOscFile):
             SimulationParameter[key].read_direct(dummy)
             simulation_parameters[key] = np.copy(dummy)
             
-        dset = E["Tbar"]
+        dset = E["Data"]
         with dset.astype(self.dtype):
             data = dset[:]
         
@@ -110,7 +114,7 @@ class ScalarSet(SOscFile):
             SimulationParameters.create_dataset(key, shape=(1,), \
                                                 dtype=self.dtype, \
                                                 data=simulation_parameters[key])
-        E.create_dataset("Tbar", shape=data.shape, \
+        E.create_dataset("Data", shape=data.shape, \
                          dtype=self.dtype,\
                          data=data)
             
@@ -134,7 +138,7 @@ class ScalarSet(SOscFile):
                 SimulationParameter[key].read_direct(dummy)
                 simulation_parameters[key] = np.copy(dummy)
                 
-            dset = E["Tbar"]
+            dset = E["Data"]
             with dset.astype(self.dtype):
                 data = dset[:]
                 
@@ -188,6 +192,9 @@ if __name__ == "__main__":
     print("Read ALL datasets from FILE")
     for Ensemble in F:
         print(Ensemble)
+
+    print("Remove Class object ...")
+    del F
         
     print("Delete FILE ...")
     os.remove(FILENAME)
