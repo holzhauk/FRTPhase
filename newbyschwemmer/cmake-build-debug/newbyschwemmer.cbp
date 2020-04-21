@@ -82,6 +82,66 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Isochrone.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Isochrone.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsochroneSet.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsochroneSet.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NormMoments.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NormMoments.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Trajectory.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Trajectory.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/TrajectorySet.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/TrajectorySet.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
 		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/main.cpp">
 			<Option target="newbyschwemmer"/>
 		</Unit>

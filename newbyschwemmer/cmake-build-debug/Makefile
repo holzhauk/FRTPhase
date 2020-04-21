@@ -123,6 +123,276 @@ newbyschwemmer/fast:
 	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/build
 .PHONY : newbyschwemmer/fast
 
+Domain.o: Domain.cpp.o
+
+.PHONY : Domain.o
+
+# target to build an object file
+Domain.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Domain.cpp.o
+.PHONY : Domain.cpp.o
+
+Domain.i: Domain.cpp.i
+
+.PHONY : Domain.i
+
+# target to preprocess a source file
+Domain.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Domain.cpp.i
+.PHONY : Domain.cpp.i
+
+Domain.s: Domain.cpp.s
+
+.PHONY : Domain.s
+
+# target to generate assembly for a file
+Domain.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Domain.cpp.s
+.PHONY : Domain.cpp.s
+
+IsoPlanarSOsc.o: IsoPlanarSOsc.cpp.o
+
+.PHONY : IsoPlanarSOsc.o
+
+# target to build an object file
+IsoPlanarSOsc.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.o
+.PHONY : IsoPlanarSOsc.cpp.o
+
+IsoPlanarSOsc.i: IsoPlanarSOsc.cpp.i
+
+.PHONY : IsoPlanarSOsc.i
+
+# target to preprocess a source file
+IsoPlanarSOsc.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.i
+.PHONY : IsoPlanarSOsc.cpp.i
+
+IsoPlanarSOsc.s: IsoPlanarSOsc.cpp.s
+
+.PHONY : IsoPlanarSOsc.s
+
+# target to generate assembly for a file
+IsoPlanarSOsc.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.s
+.PHONY : IsoPlanarSOsc.cpp.s
+
+Isochrone.o: Isochrone.cpp.o
+
+.PHONY : Isochrone.o
+
+# target to build an object file
+Isochrone.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.o
+.PHONY : Isochrone.cpp.o
+
+Isochrone.i: Isochrone.cpp.i
+
+.PHONY : Isochrone.i
+
+# target to preprocess a source file
+Isochrone.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.i
+.PHONY : Isochrone.cpp.i
+
+Isochrone.s: Isochrone.cpp.s
+
+.PHONY : Isochrone.s
+
+# target to generate assembly for a file
+Isochrone.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.s
+.PHONY : Isochrone.cpp.s
+
+IsochroneSet.o: IsochroneSet.cpp.o
+
+.PHONY : IsochroneSet.o
+
+# target to build an object file
+IsochroneSet.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.o
+.PHONY : IsochroneSet.cpp.o
+
+IsochroneSet.i: IsochroneSet.cpp.i
+
+.PHONY : IsochroneSet.i
+
+# target to preprocess a source file
+IsochroneSet.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.i
+.PHONY : IsochroneSet.cpp.i
+
+IsochroneSet.s: IsochroneSet.cpp.s
+
+.PHONY : IsochroneSet.s
+
+# target to generate assembly for a file
+IsochroneSet.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.s
+.PHONY : IsochroneSet.cpp.s
+
+MFPTSet.o: MFPTSet.cpp.o
+
+.PHONY : MFPTSet.o
+
+# target to build an object file
+MFPTSet.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.o
+.PHONY : MFPTSet.cpp.o
+
+MFPTSet.i: MFPTSet.cpp.i
+
+.PHONY : MFPTSet.i
+
+# target to preprocess a source file
+MFPTSet.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.i
+.PHONY : MFPTSet.cpp.i
+
+MFPTSet.s: MFPTSet.cpp.s
+
+.PHONY : MFPTSet.s
+
+# target to generate assembly for a file
+MFPTSet.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.s
+.PHONY : MFPTSet.cpp.s
+
+MFPTs.o: MFPTs.cpp.o
+
+.PHONY : MFPTs.o
+
+# target to build an object file
+MFPTs.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.o
+.PHONY : MFPTs.cpp.o
+
+MFPTs.i: MFPTs.cpp.i
+
+.PHONY : MFPTs.i
+
+# target to preprocess a source file
+MFPTs.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.i
+.PHONY : MFPTs.cpp.i
+
+MFPTs.s: MFPTs.cpp.s
+
+.PHONY : MFPTs.s
+
+# target to generate assembly for a file
+MFPTs.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.s
+.PHONY : MFPTs.cpp.s
+
+NewSOsc.o: NewSOsc.cpp.o
+
+.PHONY : NewSOsc.o
+
+# target to build an object file
+NewSOsc.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.o
+.PHONY : NewSOsc.cpp.o
+
+NewSOsc.i: NewSOsc.cpp.i
+
+.PHONY : NewSOsc.i
+
+# target to preprocess a source file
+NewSOsc.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.i
+.PHONY : NewSOsc.cpp.i
+
+NewSOsc.s: NewSOsc.cpp.s
+
+.PHONY : NewSOsc.s
+
+# target to generate assembly for a file
+NewSOsc.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.s
+.PHONY : NewSOsc.cpp.s
+
+NormMoments.o: NormMoments.cpp.o
+
+.PHONY : NormMoments.o
+
+# target to build an object file
+NormMoments.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o
+.PHONY : NormMoments.cpp.o
+
+NormMoments.i: NormMoments.cpp.i
+
+.PHONY : NormMoments.i
+
+# target to preprocess a source file
+NormMoments.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.i
+.PHONY : NormMoments.cpp.i
+
+NormMoments.s: NormMoments.cpp.s
+
+.PHONY : NormMoments.s
+
+# target to generate assembly for a file
+NormMoments.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.s
+.PHONY : NormMoments.cpp.s
+
+Trajectory.o: Trajectory.cpp.o
+
+.PHONY : Trajectory.o
+
+# target to build an object file
+Trajectory.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o
+.PHONY : Trajectory.cpp.o
+
+Trajectory.i: Trajectory.cpp.i
+
+.PHONY : Trajectory.i
+
+# target to preprocess a source file
+Trajectory.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.i
+.PHONY : Trajectory.cpp.i
+
+Trajectory.s: Trajectory.cpp.s
+
+.PHONY : Trajectory.s
+
+# target to generate assembly for a file
+Trajectory.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.s
+.PHONY : Trajectory.cpp.s
+
+TrajectorySet.o: TrajectorySet.cpp.o
+
+.PHONY : TrajectorySet.o
+
+# target to build an object file
+TrajectorySet.cpp.o:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o
+.PHONY : TrajectorySet.cpp.o
+
+TrajectorySet.i: TrajectorySet.cpp.i
+
+.PHONY : TrajectorySet.i
+
+# target to preprocess a source file
+TrajectorySet.cpp.i:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.i
+.PHONY : TrajectorySet.cpp.i
+
+TrajectorySet.s: TrajectorySet.cpp.s
+
+.PHONY : TrajectorySet.s
+
+# target to generate assembly for a file
+TrajectorySet.cpp.s:
+	$(MAKE) -f CMakeFiles/newbyschwemmer.dir/build.make CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.s
+.PHONY : TrajectorySet.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +429,36 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... newbyschwemmer"
 	@echo "... edit_cache"
+	@echo "... Domain.o"
+	@echo "... Domain.i"
+	@echo "... Domain.s"
+	@echo "... IsoPlanarSOsc.o"
+	@echo "... IsoPlanarSOsc.i"
+	@echo "... IsoPlanarSOsc.s"
+	@echo "... Isochrone.o"
+	@echo "... Isochrone.i"
+	@echo "... Isochrone.s"
+	@echo "... IsochroneSet.o"
+	@echo "... IsochroneSet.i"
+	@echo "... IsochroneSet.s"
+	@echo "... MFPTSet.o"
+	@echo "... MFPTSet.i"
+	@echo "... MFPTSet.s"
+	@echo "... MFPTs.o"
+	@echo "... MFPTs.i"
+	@echo "... MFPTs.s"
+	@echo "... NewSOsc.o"
+	@echo "... NewSOsc.i"
+	@echo "... NewSOsc.s"
+	@echo "... NormMoments.o"
+	@echo "... NormMoments.i"
+	@echo "... NormMoments.s"
+	@echo "... Trajectory.o"
+	@echo "... Trajectory.i"
+	@echo "... Trajectory.s"
+	@echo "... TrajectorySet.o"
+	@echo "... TrajectorySet.i"
+	@echo "... TrajectorySet.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

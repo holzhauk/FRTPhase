@@ -70,24 +70,172 @@ CMakeFiles/newbyschwemmer.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/main.cpp -o CMakeFiles/newbyschwemmer.dir/main.cpp.s
 
+CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.o: ../Isochrone.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Isochrone.cpp
+
+CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Isochrone.cpp > CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Isochrone.cpp -o CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.o: ../IsochroneSet.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsochroneSet.cpp
+
+CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsochroneSet.cpp > CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsochroneSet.cpp -o CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.o: ../IsoPlanarSOsc.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.cpp
+
+CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.cpp > CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.cpp -o CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.o: ../NewSOsc.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.cpp
+
+CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.cpp > CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.cpp -o CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/Domain.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/Domain.cpp.o: ../Domain.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/newbyschwemmer.dir/Domain.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/Domain.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.cpp
+
+CMakeFiles/newbyschwemmer.dir/Domain.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/Domain.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.cpp > CMakeFiles/newbyschwemmer.dir/Domain.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/Domain.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/Domain.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.cpp -o CMakeFiles/newbyschwemmer.dir/Domain.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.o: ../MFPTs.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.cpp
+
+CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.cpp > CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.cpp -o CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.o: ../MFPTSet.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.cpp
+
+CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.cpp > CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.cpp -o CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o: ../Trajectory.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Trajectory.cpp
+
+CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Trajectory.cpp > CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Trajectory.cpp -o CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o: ../TrajectorySet.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/TrajectorySet.cpp
+
+CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/TrajectorySet.cpp > CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/TrajectorySet.cpp -o CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.s
+
+CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o: CMakeFiles/newbyschwemmer.dir/flags.make
+CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o: ../NormMoments.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o -c /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NormMoments.cpp
+
+CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NormMoments.cpp > CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.i
+
+CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NormMoments.cpp -o CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.s
+
 # Object files for target newbyschwemmer
 newbyschwemmer_OBJECTS = \
-"CMakeFiles/newbyschwemmer.dir/main.cpp.o"
+"CMakeFiles/newbyschwemmer.dir/main.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/Domain.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o" \
+"CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o"
 
 # External object files for target newbyschwemmer
 newbyschwemmer_EXTERNAL_OBJECTS =
 
 newbyschwemmer: CMakeFiles/newbyschwemmer.dir/main.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/Isochrone.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/IsochroneSet.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/IsoPlanarSOsc.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/NewSOsc.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/Domain.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/MFPTs.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/MFPTSet.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o
+newbyschwemmer: CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o
 newbyschwemmer: CMakeFiles/newbyschwemmer.dir/build.make
-newbyschwemmer: /usr/lib/libgsl.so
-newbyschwemmer: /usr/lib/libgslcblas.so
 newbyschwemmer: /usr/lib/libhdf5.so
 newbyschwemmer: /usr/lib/libsz.so
 newbyschwemmer: /usr/lib/libz.so
 newbyschwemmer: /usr/lib/libdl.so
 newbyschwemmer: /usr/lib/libm.so
 newbyschwemmer: CMakeFiles/newbyschwemmer.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable newbyschwemmer"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable newbyschwemmer"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/newbyschwemmer.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -38,6 +38,10 @@ def StuartLandau(x, P):
 
     return np.array([R, Phi])
 
+############################################################################
+# THIS IMPLEMENTATION OF THE HEUN METHOD IS WRONG!!!!
+# EITHER CORRECT OR USE THE C++ FRAMEWORK IF IT IS ALREADY ESTABLISHED
+############################################################################
 def PlanarPolarHeunIteration(x, F, P, dt, dW):
     # x - state vector
     # F - handler of a function with argument x and P

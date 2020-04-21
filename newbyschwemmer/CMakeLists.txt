@@ -3,12 +3,15 @@ project(newbyschwemmer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(newbyschwemmer main.cpp)
-
-find_package(GSL REQUIRED)
-target_link_libraries(newbyschwemmer GSL::gsl
-                                     GSL::gslcblas)
+add_executable(newbyschwemmer main.cpp
+        Isochrone.h Isochrone.cpp
+        IsochroneSet.h IsochroneSet.cpp
+        IsoPlanarSOsc.cpp IsoPlanarSOsc.h
+        NewSOsc.cpp NewSOsc.h
+        Domain.cpp Domain.h
+        MFPTs.cpp MFPTs.h MFPTSet.cpp MFPTSet.h Trajectory.cpp Trajectory.h TrajectorySet.cpp TrajectorySet.h NormMoments.cpp NormMoments.h)
 
 find_package(HDF5 REQUIRED)
 include_directories(${HDF5_INCLUDE_DIRS})
-target_link_libraries(newbyschwemmer ${HDF5_LIBRARIES})
+set(_hdf5_libs hdf5 hdf5_cpp)
+target_link_libraries(newbyschwemmer ${HDF5_LIBRARIES} ${_hdf5_libs})
