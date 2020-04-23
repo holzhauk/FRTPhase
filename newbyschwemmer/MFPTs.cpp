@@ -53,3 +53,15 @@ void MFPTs::add(double rho_init, double phi_init, double mean_period, double mea
     VarFPT.push_back(var_fpt);
     Tbar.push_back(mean_period);
 }
+
+void MFPTs::add(std::vector<double>& rho_init,
+        std::vector<double>& phi_init,
+        std::vector<double>& mean_period,
+        std::vector<double>& mean_fpt,
+        std::vector<double>& var_fpt){
+    initial_Rho = rho_init;
+    initial_Phi = phi_init;
+    MFPT = mean_fpt;
+    VarFPT = var_fpt;
+    Tbar = mean_period;
+}

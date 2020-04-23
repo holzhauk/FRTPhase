@@ -36,6 +36,7 @@ public:
     void load(fs::path);
     std::list<Isochrone*>::iterator begin();
     std::list<Isochrone*>::iterator end();
+    int get_NoIsochrones();
 
 };
 

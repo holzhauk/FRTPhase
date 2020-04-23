@@ -229,6 +229,8 @@ newbyschwemmer: CMakeFiles/newbyschwemmer.dir/Trajectory.cpp.o
 newbyschwemmer: CMakeFiles/newbyschwemmer.dir/TrajectorySet.cpp.o
 newbyschwemmer: CMakeFiles/newbyschwemmer.dir/NormMoments.cpp.o
 newbyschwemmer: CMakeFiles/newbyschwemmer.dir/build.make
+newbyschwemmer: /usr/lib/openmpi/libmpi_cxx.so
+newbyschwemmer: /usr/lib/openmpi/libmpi.so
 newbyschwemmer: /usr/lib/libhdf5.so
 newbyschwemmer: /usr/lib/libsz.so
 newbyschwemmer: /usr/lib/libz.so

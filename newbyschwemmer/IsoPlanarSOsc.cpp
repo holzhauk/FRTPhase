@@ -35,8 +35,38 @@ IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, sim_config_t& sim_config, double no
     T = sim_config.T;
 }
 
+IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, sim_config_C_t& sim_config) {
+    Disk = domain;
+    D = 0.198;
+    x0[0] = sim_config.x0[0]; // Rho0
+    x0[1] = sim_config.x0[1]; // Phi0
+    x0[2] = sim_config.x0[2]; // t0
+    dt = sim_config.dt;
+    T = sim_config.T;
+}
+
+IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, sim_config_C_t& sim_config, double noise_intensity) {
+    Disk = domain;
+    D = noise_intensity;
+    x0[0] = sim_config.x0[0]; // Rho0
+    x0[1] = sim_config.x0[1]; // Phi0
+    x0[2] = sim_config.x0[2]; // t0
+    dt = sim_config.dt;
+    T = sim_config.T;
+}
+
 void IsoPlanarSOsc::configure(Domain& domain, sim_config_t& config, double noise_intensity) {
     x0 = config.x0;
+    dt = config.dt;
+    T = config.T;
+    D = noise_intensity;
+    Disk = domain;
+}
+
+void IsoPlanarSOsc::configure(Domain& domain, sim_config_C_t& config, double noise_intensity) {
+    for (int i = 0; i < x0.size(); i++){
+        x0[i] = config.x0[i];
+    }
     dt = config.dt;
     T = config.T;
     D = noise_intensity;

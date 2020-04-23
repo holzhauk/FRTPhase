@@ -21,6 +21,8 @@ public:
     std::array<double, 2> reflect_at_UpperBoundary(std::array<double, 2>&);
     std::array<double, 2> reflect_at_LowerBoundary(std::array<double, 2>&);
     std::array<double, 2> apply(std::array<double, 2>&);
+    double get_rho_min();
+    double get_rho_max();
 };
 
 

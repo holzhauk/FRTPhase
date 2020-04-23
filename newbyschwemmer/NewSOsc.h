@@ -32,8 +32,11 @@ public:
     NewSOsc(Domain&);
     NewSOsc(Domain&, sim_config_t&);
     NewSOsc(Domain&, pset_NewS_t&, sim_config_t&);
+    NewSOsc(Domain&, sim_config_C_t&);
+    NewSOsc(Domain&, pset_NewS_t&, sim_config_C_t&);
 
     void configure(Domain&, pset_NewS_t&, sim_config_t&);
+    void configure(Domain&, pset_NewS_t&, sim_config_C_t&);
 };
 
 

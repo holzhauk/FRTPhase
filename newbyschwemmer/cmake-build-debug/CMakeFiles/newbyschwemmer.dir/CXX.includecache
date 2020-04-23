@@ -6,9 +6,21 @@
 
 #IncludeRegexTransform: 
 
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.cpp
+cmath
+-
+Domain.h
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.h
+
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.h
 array
 -
+
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.cpp
+iostream
+-
+IsoPlanarSOsc.h
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.h
 
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/IsoPlanarSOsc.h
 array
@@ -40,6 +52,10 @@ H5Cpp.h
 Isochrone.h
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Isochrone.h
 
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.cpp
+MFPTSet.h
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.h
+
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTSet.h
 filesystem
 -
@@ -52,11 +68,19 @@ H5Cpp.h
 MFPTs.h
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.h
 
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.cpp
+MFPTs.h
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.h
+
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.h
 string
 -
 vector
 -
+
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.cpp
+NewSOsc.h
+/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.h
 
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.h
 IsoPlanarSOsc.h
@@ -87,11 +111,23 @@ Trajectory.h
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Trajectory.h
 
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/main.cpp
+mpi.h
+-
 iostream
 -
 filesystem
 -
 cmath
+-
+cstdlib
+-
+cstddef
+-
+memory
+-
+array
+-
+vector
 -
 Isochrone.h
 /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Isochrone.h

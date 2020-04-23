@@ -31,6 +31,11 @@ public:
     const double* get_VarFPTs_buf_ptr();
     const double* get_Tbars_buf_ptr();
     void add(double, double, double, double, double);
+    void add(std::vector<double>&,
+            std::vector<double>&,
+                    std::vector<double>&,
+                            std::vector<double>&,
+                                    std::vector<double>&);
 
 };
 

@@ -19,6 +19,13 @@ typedef struct sim_config_t {
     std::array<double, 3> x0; // initial condition: [Rho_0, Phi_0, t0]
 } sim_config_t;
 
+// C-type configuration structure
+typedef struct sim_config_C_t {
+    double dt;
+    double T;
+    double x0[3]; // initial condition: [Rho_0, Phi_0, t0]
+} sim_config_C_t;
+
 /*
  * Abstract base class for isotropic, planar
  * stochastic oscillator models
@@ -88,8 +95,11 @@ public:
     IsoPlanarSOsc(Domain&);
     IsoPlanarSOsc(Domain&, sim_config_t&);
     IsoPlanarSOsc(Domain&, sim_config_t&, double);
+    IsoPlanarSOsc(Domain&, sim_config_C_t&);
+    IsoPlanarSOsc(Domain&, sim_config_C_t&, double);
 
     void configure(Domain&, sim_config_t&, double);
+    void configure(Domain&, sim_config_C_t&, double);
     std::array<double, 3> evolve();
     std::array<double, 3> get_state() const;
     bool in_time() const;

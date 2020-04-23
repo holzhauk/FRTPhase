@@ -49,6 +49,10 @@ std::list<Isochrone*>::iterator IsochroneSet::end() {
     return Isochrone_list_ptr.end();
 }
 
+int IsochroneSet::get_NoIsochrones() {
+    return Isochrone_list_ptr.size();
+}
+
 /***************************************
  * C - operator function definitions
  ***************************************/

@@ -9,7 +9,14 @@ add_executable(newbyschwemmer main.cpp
         IsoPlanarSOsc.cpp IsoPlanarSOsc.h
         NewSOsc.cpp NewSOsc.h
         Domain.cpp Domain.h
-        MFPTs.cpp MFPTs.h MFPTSet.cpp MFPTSet.h Trajectory.cpp Trajectory.h TrajectorySet.cpp TrajectorySet.h NormMoments.cpp NormMoments.h)
+        MFPTs.cpp MFPTs.h
+        MFPTSet.cpp MFPTSet.h
+        Trajectory.cpp Trajectory.h
+        TrajectorySet.cpp TrajectorySet.h
+        NormMoments.cpp NormMoments.h)
+
+find_package(MPI REQUIRED)
+target_link_libraries(newbyschwemmer ${MPI_LIBRARIES})
 
 find_package(HDF5 REQUIRED)
 include_directories(${HDF5_INCLUDE_DIRS})

@@ -57,3 +57,11 @@ std::array<double, 2> Domain::apply(std::array<double, 2>& pos) {
         return this->reflect_at_UpperBoundary(pos);
     }
 }
+
+double Domain::get_rho_min() {
+    return rho_LB;
+}
+
+double Domain::get_rho_max() {
+    return rho_UB;
+}
