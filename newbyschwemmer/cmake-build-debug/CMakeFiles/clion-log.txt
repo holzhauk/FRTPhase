@@ -1,5 +1,6 @@
 /opt/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer
 -- HDF5: Using hdf5 compiler wrapper to determine C configuration
+-- Found HDF5: /usr/lib/libhdf5.so;/usr/lib/libsz.so;/usr/lib/libz.so;/usr/lib/libdl.so;/usr/lib/libm.so (found version "1.12.0")  
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug

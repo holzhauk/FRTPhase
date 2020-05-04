@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <list>
 #include <string>
+#include <memory>
 
 #include "H5Cpp.h"
 
@@ -23,12 +24,12 @@ const H5std_string CLASS_TAG_MFPTS = "MeanFirstPassageTimesSet";
 class MFPTSet {
 private:
     std::string model_name;
-    fs::path IsochroneFile_name;
-    std::list<MFPTs*> MFPTs_ptr_list;
+    fs::path ConfigurationFile;
+    fs::path IsochroneFile;
+    std::list<std::shared_ptr<MFPTs>> MFPTs_ptr_list;
 public:
-    MFPTSet(std::string&, fs::path&);
-    ~MFPTSet();
-    void push_back(MFPTs*);
+    MFPTSet(std::string&, fs::path&, fs::path&);
+    std::shared_ptr<MFPTs> create(std::string);
     void write_to_file(fs::path);
 };
 

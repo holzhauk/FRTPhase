@@ -7,12 +7,7 @@
 
 #include "IsoPlanarSOsc.h"
 
-typedef struct pset_NewS_t{
-    double D;
-    double omega;
-    double gamma;
-    double c;
-} pset_NewS_t;
+#include <iostream>
 
 class NewSOsc : public IsoPlanarSOsc {
 protected:
@@ -28,15 +23,19 @@ protected:
 
 public:
 
+    struct pSet_t : IsoPlanarSOsc::pSet_t {
+        double omega;
+        double gamma;
+        double c;
+        void load(std::map<std::string, double>& pMap) override;
+        MPI_Datatype mpiType() override;
+    };
+
     NewSOsc() = default;
     NewSOsc(Domain&);
-    NewSOsc(Domain&, sim_config_t&);
-    NewSOsc(Domain&, pset_NewS_t&, sim_config_t&);
-    NewSOsc(Domain&, sim_config_C_t&);
-    NewSOsc(Domain&, pset_NewS_t&, sim_config_C_t&);
+    NewSOsc(Domain&, NewSOsc::config_t&, NewSOsc::pSet_t&);
 
-    void configure(Domain&, pset_NewS_t&, sim_config_t&);
-    void configure(Domain&, pset_NewS_t&, sim_config_C_t&);
+    void configure(Domain&, NewSOsc::config_t&, NewSOsc::pSet_t&);
 };
 
 

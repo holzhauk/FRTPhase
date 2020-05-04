@@ -46,8 +46,8 @@ std::vector<double>& Isochrone::get_Phi() {
     return *Phi;
 }
 
-double Isochrone::get_Parameter(const std::string Pname) {
-    return parameters[Pname];
+std::map<std::string, double>& Isochrone::get_parameterMap() {
+    return parameters;
 }
 
 std::string Isochrone::get_name() {

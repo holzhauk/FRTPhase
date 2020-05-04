@@ -19,12 +19,10 @@ private:
     double T_tot = 0.0; // total simulated time to calculate mean periods Tbar
     std::vector<double> Tbar; // mean periods
 public:
-    MFPTs(std::string, int, double);
+    MFPTs(std::string);
 
     std::string get_isochrone_name();
-    int get_ensemble_size();
     int get_sample_size();
-    double get_Ttot();
     const double* get_initial_Rhos_buf_ptr();
     const double* get_initial_Phis_buf_ptr();
     const double* get_MFPTs_buf_ptr();

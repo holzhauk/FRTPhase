@@ -2,75 +2,18 @@
 // Created by konstantin on 4/6/20.
 //
 
-#include <iostream>
-
 #include "IsoPlanarSOsc.h"
 
-IsoPlanarSOsc::IsoPlanarSOsc(Domain& d){
-    Disk = d;
-    /*
-     * assign default values
-     */
-    D = 0.198;
-    x0 = {0.1, M_PI / 2.0, 0.0};
-    dt = 0.01;
-    T = 10.0;
+IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, config_t& config, pSet_t& pSet) {
+    this->configure(domain, config, pSet);
 }
 
-IsoPlanarSOsc::IsoPlanarSOsc(Domain& d, sim_config_t& sim_config) {
-    Disk = d;
-    // default noise intensity
-    D = 0.198;
-    // values from configuration structure
-    x0 = sim_config.x0;
-    dt = sim_config.dt;
-    T = sim_config.T;
-}
-
-IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, sim_config_t& sim_config, double noise_intensity) {
+void IsoPlanarSOsc::configure(Domain& domain, config_t& config, pSet_t& pSet) {
     Disk = domain;
-    D = noise_intensity;
-    x0 = sim_config.x0;
-    dt = sim_config.dt;
-    T = sim_config.T;
-}
-
-IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, sim_config_C_t& sim_config) {
-    Disk = domain;
-    D = 0.198;
-    x0[0] = sim_config.x0[0]; // Rho0
-    x0[1] = sim_config.x0[1]; // Phi0
-    x0[2] = sim_config.x0[2]; // t0
-    dt = sim_config.dt;
-    T = sim_config.T;
-}
-
-IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, sim_config_C_t& sim_config, double noise_intensity) {
-    Disk = domain;
-    D = noise_intensity;
-    x0[0] = sim_config.x0[0]; // Rho0
-    x0[1] = sim_config.x0[1]; // Phi0
-    x0[2] = sim_config.x0[2]; // t0
-    dt = sim_config.dt;
-    T = sim_config.T;
-}
-
-void IsoPlanarSOsc::configure(Domain& domain, sim_config_t& config, double noise_intensity) {
-    x0 = config.x0;
+    D = pSet.D;
     dt = config.dt;
     T = config.T;
-    D = noise_intensity;
-    Disk = domain;
-}
-
-void IsoPlanarSOsc::configure(Domain& domain, sim_config_C_t& config, double noise_intensity) {
-    for (int i = 0; i < x0.size(); i++){
-        x0[i] = config.x0[i];
-    }
-    dt = config.dt;
-    T = config.T;
-    D = noise_intensity;
-    Disk = domain;
+    std::copy(std::begin(config.x0), std::end(config.x0), std::begin(x0));
 }
 
 std::array<double, 3> IsoPlanarSOsc::evolve() {
@@ -91,6 +34,7 @@ std::array<double, 3> IsoPlanarSOsc::evolve() {
      * Don't need prediction for Phi, because
      * the dynamic system is isotropic.
      */
+
     double Rho_p;
     Rho_p = Rho_0 + (this->g(Rho_0) + D / Rho_0)*dt + sqrt(2*D)*dW_Rho;
 
@@ -134,4 +78,24 @@ IsoPlanarSOsc& IsoPlanarSOsc::IsoPlanarSOscIt::operator++() {
 
 IsoPlanarSOsc& IsoPlanarSOsc::IsoPlanarSOscIt::operator*() const {
     return this->model_ref;
+}
+
+/*
+ * Configuration interface
+ */
+void IsoPlanarSOsc::pSet_t::load(std::map<std::string, double> &pMap) {
+    D = pMap["D"];
+}
+
+MPI_Datatype IsoPlanarSOsc::config_t::mpiType() {
+    MPI_Datatype mpi_config_t;
+    int blengths[3] = {1, 1, 3};
+    MPI_Datatype types[3] = {MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE};
+    MPI_Aint offsets[3];
+    offsets[0] = offsetof(IsoPlanarSOsc::config_t, dt);
+    offsets[1] = offsetof(IsoPlanarSOsc::config_t, T);
+    offsets[2] = offsetof(IsoPlanarSOsc::config_t, x0);
+    MPI_Type_create_struct(3, blengths, offsets, types, &mpi_config_t);
+    MPI_Type_commit(&mpi_config_t);
+    return mpi_config_t;
 }

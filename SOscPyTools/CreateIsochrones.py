@@ -6,6 +6,7 @@ from scipy.integrate import trapz
 from scipy.special import erf
 
 from SOscFilePy import *
+from SimConfigPy import *
 
 class Model():
 
@@ -116,10 +117,16 @@ class NewbySchwemmer(Model):
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
-        print("Usage: " + sys.argv[0] + " <FILEPATH>")
-        exit()
+        print("Usage: " + sys.argv[0] + " <SimConfigFile>.json")
+        os._exit(os.EX_IOERR)
+        
+    simConfig = SimConfig()
+    simConfig.load_from_file(Path(sys.argv[1]))
 
-    NewbySchwemmer_parameters = {
+
+    ##################################################
+    # define Isochrone parameters
+    NewbySchwemmerAntirotating_parameters = {
                 "D": 0.198,
                 "omega": 1.0,
                 "gamma": 15.0,
@@ -131,30 +138,42 @@ if __name__ == "__main__":
     num = 200
 
     dtype = np.double
+    #################################################
 
-    NewbySchwemmerAntirotating = NewbySchwemmer(NewbySchwemmer_parameters, \
-                                                rm, \
-                                                rp, \
-                                                num)
+    NewbySchwemmerAntirotating = \
+        NewbySchwemmer(NewbySchwemmerAntirotating_parameters, \
+                           rm, \
+                           rp, \
+                           num)
 
-    IsoFile = IsochroneSet(Path(sys.argv[1]) / \
-                Path("AntirotatingNewbySchwemmerIsochroneSet.h5"), 
-                "NewbySchwemmer")
+    IsoFile = IsochroneSet(simConfig.Paths["In"], 
+                simConfig.ModelName)
 
-    NewbySchwemmer_parameters["D"] = 0.0
-    NewbySchwemmerAntirotating.set_Parameters(NewbySchwemmer_parameters)
-    IsoFile.add_Isochrone(NewbySchwemmer_parameters, \
+    NewbySchwemmerAntirotating_parameters["D"] = 0.0
+    NewbySchwemmerAntirotating.set_Parameters(\
+            NewbySchwemmerAntirotating_parameters)
+    IsoFile.add_Isochrone(NewbySchwemmerAntirotating_parameters, \
             NewbySchwemmerAntirotating.get_Rhos(), \
             NewbySchwemmerAntirotating.get_DetPhiIso())
 
     Ds = np.array([0.1, 0.2, 0.5, 1.0, 10.0, 100.0])
     for D in Ds:
         print("Write D:", D)
-        NewbySchwemmer_parameters["D"] = D
-        NewbySchwemmerAntirotating.set_Parameters(NewbySchwemmer_parameters)
-        IsoFile.add_Isochrone(NewbySchwemmer_parameters, \
+        NewbySchwemmerAntirotating_parameters["D"] = D
+        NewbySchwemmerAntirotating.set_Parameters(\
+                NewbySchwemmerAntirotating_parameters)
+        IsoFile.add_Isochrone(NewbySchwemmerAntirotating_parameters, \
                 NewbySchwemmerAntirotating.get_Rhos(), \
                 NewbySchwemmerAntirotating.get_PhiIso())
+            
+    NewbySchwemmerAntirotating_parameters["D"] = 0.5
+    NewbySchwemmerAntirotating.set_Parameters(\
+        NewbySchwemmerAntirotating_parameters)
+    IsoFile.add_Isochrone(NewbySchwemmerAntirotating_parameters, \
+        NewbySchwemmerAntirotating.get_Rhos(), \
+        np.zeros(NewbySchwemmerAntirotating.get_Rhos().shape, \
+                 dtype=np.double))
+    
 
     del IsoFile
     print("Everything written")

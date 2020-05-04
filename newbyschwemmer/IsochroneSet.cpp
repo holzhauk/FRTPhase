@@ -4,12 +4,6 @@
 
 #include "IsochroneSet.h"
 
-IsochroneSet::~IsochroneSet() {
-    for (auto isochrone: Isochrone_list_ptr){
-        delete isochrone;
-    }
-}
-
 void IsochroneSet::load(fs::path filepath) {
     try {
         Exception::dontPrint();
@@ -41,16 +35,12 @@ void IsochroneSet::load(fs::path filepath) {
     }
 }
 
-std::list<Isochrone*>::iterator IsochroneSet::begin() {
+std::list<std::shared_ptr<Isochrone>>::iterator IsochroneSet::begin() {
     return Isochrone_list_ptr.begin();
 }
 
-std::list<Isochrone*>::iterator IsochroneSet::end() {
+std::list<std::shared_ptr<Isochrone>>::iterator IsochroneSet::end() {
     return Isochrone_list_ptr.end();
-}
-
-int IsochroneSet::get_NoIsochrones() {
-    return Isochrone_list_ptr.size();
 }
 
 /***************************************
@@ -62,10 +52,10 @@ int IsochroneSet::get_NoIsochrones() {
  */
 herr_t isochrone_handler(hid_t loc_id, const char* name, const H5L_info_t* linfo, void* opdata){
 
-    auto Isochrone_list_ptr = reinterpret_cast<std::list<Isochrone*>*>(opdata);
+    auto Isochrone_list_ptr = reinterpret_cast<std::list<std::shared_ptr<Isochrone>>*>(opdata);
 
     std::string name_s(name); // convert C-String to std::string object
-    Isochrone* Iso = new Isochrone(name_s);
+    std::shared_ptr<Isochrone> Iso = std::shared_ptr<Isochrone>(new Isochrone(name_s));
 
     hid_t iso_g = H5Gopen2(loc_id, name, H5P_DEFAULT);
 
@@ -74,7 +64,7 @@ herr_t isochrone_handler(hid_t loc_id, const char* name, const H5L_info_t* linfo
      */
     hid_t pset_sg = H5Gopen1(iso_g, "Parameters");
     herr_t idx = H5Literate(pset_sg, H5_INDEX_NAME, H5_ITER_INC,
-                            NULL, parameter_handler, Iso);
+                            NULL, parameter_handler, Iso.get());
     H5Gclose(pset_sg);
 
     /*

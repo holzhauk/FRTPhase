@@ -20,6 +20,18 @@ Domain::Domain(double rho_min, double rho_max) {
     width = rho_UB - rho_LB;
 }
 
+Domain::Domain(boundary_vals_t& boundary_vals){
+    if (boundary_vals.rho_max >= boundary_vals.rho_min) {
+        rho_UB = boundary_vals.rho_max;
+        rho_LB = boundary_vals.rho_min;
+    } else
+    {
+        rho_LB = boundary_vals.rho_max;
+        rho_UB = boundary_vals.rho_min;
+    }
+    width = rho_UB - rho_LB;
+}
+
 bool Domain::hit_LowerBoundary(std::array<double, 2>& pos) {
     return (pos[0] < rho_LB);
 }
@@ -53,8 +65,12 @@ std::array<double, 2> Domain::reflect_at_UpperBoundary(std::array<double, 2>& po
 std::array<double, 2> Domain::apply(std::array<double, 2>& pos) {
     if (this->hit_LowerBoundary(pos)){
         return this->reflect_at_LowerBoundary(pos);
-    } else{
-        return this->reflect_at_UpperBoundary(pos);
+    } else {
+        if (this->hit_UpperBoundary(pos)) {
+            return this->reflect_at_UpperBoundary(pos);
+        } else {
+            return pos;
+        }
     }
 }
 

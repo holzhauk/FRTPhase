@@ -6,6 +6,7 @@
 #define NEWBYSCHWEMMER_ISOCHRONESET_H
 
 #include <filesystem>
+#include <memory>
 #include <list>
 
 #include "H5Cpp.h"
@@ -28,15 +29,13 @@ using namespace H5;
 
 class IsochroneSet {
 private:
-    std::list<Isochrone*> Isochrone_list_ptr;
+    std::list<std::shared_ptr<Isochrone>> Isochrone_list_ptr;
 
 public:
-    ~IsochroneSet();
 
     void load(fs::path);
-    std::list<Isochrone*>::iterator begin();
-    std::list<Isochrone*>::iterator end();
-    int get_NoIsochrones();
+    std::list<std::shared_ptr<Isochrone>>::iterator begin();
+    std::list<std::shared_ptr<Isochrone>>::iterator end();
 
 };
 

@@ -6,25 +6,14 @@
 #define NEWBYSCHWEMMER_ISOPLANARSOSC_H
 
 #include <array>
+#include <map>
+#include <string>
 #include <random>
 
 #include <cmath>
 
+#include "mpi.h"
 #include "Domain.h"
-
-// Simulation configuration
-typedef struct sim_config_t {
-    double dt; // time increment
-    double T; // total time
-    std::array<double, 3> x0; // initial condition: [Rho_0, Phi_0, t0]
-} sim_config_t;
-
-// C-type configuration structure
-typedef struct sim_config_C_t {
-    double dt;
-    double T;
-    double x0[3]; // initial condition: [Rho_0, Phi_0, t0]
-} sim_config_C_t;
 
 /*
  * Abstract base class for isotropic, planar
@@ -75,6 +64,21 @@ protected:
     virtual double f(double) = 0;
 
 public:
+    /*
+     * Configuration Interface
+     */
+    struct pSet_t {
+        double D;
+        virtual void load(std::map<std::string, double>& pMap);
+        virtual MPI_Datatype mpiType() = 0;
+    };
+
+    struct config_t {
+        double dt;
+        double T;
+        double x0[3];
+        MPI_Datatype mpiType();
+    };
 
     /*
     * Iterator class for time evolution
@@ -92,14 +96,9 @@ public:
     };
 
     IsoPlanarSOsc() = default;
-    IsoPlanarSOsc(Domain&);
-    IsoPlanarSOsc(Domain&, sim_config_t&);
-    IsoPlanarSOsc(Domain&, sim_config_t&, double);
-    IsoPlanarSOsc(Domain&, sim_config_C_t&);
-    IsoPlanarSOsc(Domain&, sim_config_C_t&, double);
+    IsoPlanarSOsc(Domain&, IsoPlanarSOsc::config_t&, IsoPlanarSOsc::pSet_t&);
 
-    void configure(Domain&, sim_config_t&, double);
-    void configure(Domain&, sim_config_C_t&, double);
+    void configure(Domain&, IsoPlanarSOsc::config_t&, IsoPlanarSOsc::pSet_t&);
     std::array<double, 3> evolve();
     std::array<double, 3> get_state() const;
     bool in_time() const;

@@ -24,7 +24,7 @@ public:
     void set_curve(std::vector<double>&, std::vector<double>&);
     std::vector<double>& get_Rho();
     std::vector<double>& get_Phi();
-    double get_Parameter(const std::string);
+    std::map<std::string, double>& get_parameterMap();
     std::string get_name();
     void print();
 

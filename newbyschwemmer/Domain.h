@@ -7,6 +7,11 @@
 
 #include <array>
 
+typedef struct boundary_vals_t{
+    double rho_min;
+    double rho_max;
+} boundary_vals_t;
+
 class Domain {
 private:
     double rho_LB = 0.5; // lower boundary
@@ -15,6 +20,7 @@ private:
 public:
     Domain() = default;
     Domain(double, double);
+    Domain(boundary_vals_t&);
 
     bool hit_UpperBoundary(std::array<double, 2>&);
     bool hit_LowerBoundary(std::array<double, 2>&);

@@ -1,0 +1,20 @@
+{
+  "Model Name": "NewbySchwemmer",
+  "Paths": {
+    "In": {
+      "filepath": "../../../Isochrones/NewbySchwemmer",
+      "filename": "AntirotatingNewbySchwemmerIsochroneSet.h5"
+    },
+    "Out": {
+      "filepath": "../../../SimData/MFPTs",
+      "filename": "NewbySchwemmerAntirotating.h5"
+    }
+  },
+  "Simulation": {
+    "dt": 0.01,
+    "t0": 0.0,
+    "T": 100.0,
+    "Ensemble Size": 10,
+    "Sample Size": 20
+  }
+}

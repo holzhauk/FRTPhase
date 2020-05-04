@@ -5,7 +5,7 @@
 		<Option title="newbyschwemmer"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\;CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\;CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\Boost-1.72.0\;CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_headers-1.72.0\;CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_filesystem-1.72.0\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug"/>
@@ -34,6 +34,8 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DBOOST_FILESYSTEM_DYN_LINK"/>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward"/>
@@ -56,6 +58,8 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DBOOST_FILESYSTEM_DYN_LINK"/>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward"/>
@@ -82,6 +86,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Adapters.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Adapters.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
 		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Domain.cpp">
 			<Option target="newbyschwemmer"/>
 		</Unit>
@@ -118,6 +128,12 @@
 		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/MFPTs.h">
 			<Option target="newbyschwemmer"/>
 		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/ModelFactory.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/ModelFactory.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
 		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NewSOsc.cpp">
 			<Option target="newbyschwemmer"/>
 		</Unit>
@@ -128,6 +144,12 @@
 			<Option target="newbyschwemmer"/>
 		</Unit>
 		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/NormMoments.h">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/SimConfig_t.cpp">
+			<Option target="newbyschwemmer"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/SimConfig_t.h">
 			<Option target="newbyschwemmer"/>
 		</Unit>
 		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/Trajectory.cpp">
@@ -147,6 +169,33 @@
 		</Unit>
 		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/BoostDetectToolset-1.72.0.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/Boost-1.72.0/BoostConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\Boost-1.72.0\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/Boost-1.72.0/BoostConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\Boost-1.72.0\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/boost_headers-1.72.0/boost_headers-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_headers-1.72.0\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/boost_headers-1.72.0/boost_headers-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_headers-1.72.0\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/boost_filesystem-1.72.0/boost_filesystem-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_filesystem-1.72.0\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/boost_filesystem-1.72.0/boost_filesystem-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_filesystem-1.72.0\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/boost_filesystem-1.72.0/libboost_filesystem-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_filesystem-1.72.0\"/>
+		</Unit>
+		<Unit filename="/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/../../../../../../../../../usr/lib64/cmake/boost_filesystem-1.72.0/libboost_filesystem-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\..\usr\lib64\cmake\boost_filesystem-1.72.0\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

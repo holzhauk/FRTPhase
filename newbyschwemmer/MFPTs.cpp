@@ -4,26 +4,16 @@
 
 #include "MFPTs.h"
 
-MFPTs::MFPTs(std::string isochrone_group_name, int esize, double T) {
-    ensemble_size = esize;
+MFPTs::MFPTs(std::string isochrone_group_name) {
     isochrone_name = isochrone_group_name;
-    T_tot = T;
 }
 
 std::string MFPTs::get_isochrone_name() {
     return isochrone_name;
 }
 
-int MFPTs::get_ensemble_size() {
-    return ensemble_size;
-}
-
 int MFPTs::get_sample_size() {
     return MFPT.size();
-}
-
-double MFPTs::get_Ttot() {
-    return T_tot;
 }
 
 const double* MFPTs::get_initial_Rhos_buf_ptr() {

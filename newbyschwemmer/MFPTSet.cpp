@@ -4,19 +4,16 @@
 
 #include "MFPTSet.h"
 
-MFPTSet::MFPTSet(std::string& modelname, fs::path& isochronefile_name) {
+MFPTSet::MFPTSet(std::string& modelname, fs::path& configurationfile, fs::path& isochronefile) {
     model_name = modelname;
-    IsochroneFile_name = isochronefile_name;
+    ConfigurationFile = configurationfile;
+    IsochroneFile = isochronefile;
 }
 
-MFPTSet::~MFPTSet() {
-    for (auto MFPTs_ptr : MFPTs_ptr_list){
-        delete MFPTs_ptr;
-    }
-}
-
-void MFPTSet::push_back(MFPTs* MFPTs_ptr) {
+std::shared_ptr<MFPTs> MFPTSet::create(std::string isochrone_group_name) {
+    std::shared_ptr<MFPTs> MFPTs_ptr = std::shared_ptr<MFPTs>(new MFPTs(isochrone_group_name));
     MFPTs_ptr_list.push_back(MFPTs_ptr);
+    return MFPTs_ptr;
 }
 
 void MFPTSet::write_to_file(fs::path filepath) {
@@ -47,8 +44,11 @@ void MFPTSet::write_to_file(fs::path filepath) {
         A = new Attribute(file->createAttribute("model", vlst, *scalarDataSpace));
         A->write(vlst, this->model_name);
         delete A;
+        A = new Attribute(file->createAttribute("ConfigurationFile", vlst, *scalarDataSpace));
+        A->write(vlst, this->ConfigurationFile);
+        delete A;
         A = new Attribute(file->createAttribute("IsochroneFile", vlst, *scalarDataSpace));
-        A->write(vlst, this->IsochroneFile_name);
+        A->write(vlst, this->IsochroneFile);
         delete A;
         delete scalarDataSpace;
 
@@ -58,17 +58,6 @@ void MFPTSet::write_to_file(fs::path filepath) {
             DataSet* dSet;
             hsize_t dim_sizes[1];
             DataSpace* dataSpace;
-            /*
-             * Ensemble Size
-             */
-            dim_sizes[0] = 1;
-            dataSpace = new DataSpace(1, dim_sizes);
-            dSet = new DataSet(isochrone_group->createDataSet("ensemblesize",
-                    PredType::NATIVE_INT, *dataSpace));
-            int e_size = MFPT_ptr->get_ensemble_size();
-            dSet->write(&e_size, PredType::NATIVE_INT);
-            delete dSet;
-            delete dataSpace;
 
             /*
              * Initial Positions
@@ -111,15 +100,7 @@ void MFPTSet::write_to_file(fs::path filepath) {
             dSet->write(MFPT_ptr->get_Tbars_buf_ptr(), PredType::NATIVE_DOUBLE);
             delete dSet;
             delete dataSpace;
-            // total simulation time
-            dim_sizes[0] = 1;
-            dataSpace = new DataSpace(1, dim_sizes);
-            dSet = new DataSet(mean_period_group->createDataSet("Ttot",
-                                                              PredType::NATIVE_DOUBLE, *dataSpace));
-            double Ttot = MFPT_ptr->get_Ttot();
-            dSet->write(&Ttot, PredType::NATIVE_DOUBLE);
-            delete dSet;
-            delete dataSpace;
+
             delete mean_period_group;
 
             delete isochrone_group;
