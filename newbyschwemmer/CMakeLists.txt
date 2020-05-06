@@ -16,12 +16,14 @@ add_executable(newbyschwemmer main.cpp
         NormMoments.cpp NormMoments.h ModelFactory.cpp ModelFactory.h SimConfig_t.cpp SimConfig_t.h Adapters.cpp Adapters.h)
 
 find_package(MPI REQUIRED)
+include_directories(SYSTEM ${MPI_INCLUDE_PATH})
 target_link_libraries(newbyschwemmer ${MPI_LIBRARIES})
 
-find_package(HDF5 REQUIRED)
+find_package(HDF5 REQUIRED COMPONENTS C CXX)
 include_directories(${HDF5_INCLUDE_DIRS})
-set(_hdf5_libs hdf5 hdf5_cpp)
-target_link_libraries(newbyschwemmer ${HDF5_LIBRARIES} ${_hdf5_libs})
+target_link_libraries(newbyschwemmer ${HDF5_C_LIBRARIES} ${HDF5_CXX_LIBRARIES})
 
-find_package(Boost REQUIRED COMPONENTS filesystem)
-target_link_libraries(newbyschwemmer Boost::filesystem)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
+target_link_libraries(newbyschwemmer ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+
+target_link_libraries(newbyschwemmer stdc++fs)
