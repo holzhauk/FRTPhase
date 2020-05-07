@@ -4,13 +4,13 @@
 
 #include "IsoPlanarSOsc.h"
 
-IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, config_t& config, pSet_t& pSet) {
-    this->configure(domain, config, pSet);
+IsoPlanarSOsc::IsoPlanarSOsc(Domain& domain, config_t& config, IsoPlanarSOsc::pSet_t* pSet_ptr) {
+    this->configure(domain, config, pSet_ptr);
 }
 
-void IsoPlanarSOsc::configure(Domain& domain, config_t& config, pSet_t& pSet) {
+void IsoPlanarSOsc::configure(Domain& domain, config_t& config, IsoPlanarSOsc::pSet_t* pSet_ptr) {
     Disk = domain;
-    D = pSet.D;
+    D = pSet_ptr->D;
     dt = config.dt;
     T = config.T;
     std::copy(std::begin(config.x0), std::end(config.x0), std::begin(x0));

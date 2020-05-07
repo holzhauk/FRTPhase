@@ -8,6 +8,7 @@
 #include "IsoPlanarSOsc.h"
 
 #include <iostream>
+#include <memory>
 
 class NewSOsc : public IsoPlanarSOsc {
 protected:
@@ -33,9 +34,9 @@ public:
 
     NewSOsc() = default;
     NewSOsc(Domain&);
-    NewSOsc(Domain&, NewSOsc::config_t&, NewSOsc::pSet_t&);
+    NewSOsc(Domain&, NewSOsc::config_t&, IsoPlanarSOsc::pSet_t*);
 
-    void configure(Domain&, NewSOsc::config_t&, NewSOsc::pSet_t&);
+    void configure(Domain&, NewSOsc::config_t&, IsoPlanarSOsc::pSet_t*);
 };
 
 

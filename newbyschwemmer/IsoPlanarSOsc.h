@@ -9,6 +9,7 @@
 #include <map>
 #include <string>
 #include <random>
+#include <memory>
 
 #include <cmath>
 
@@ -69,6 +70,7 @@ public:
      */
     struct pSet_t {
         double D;
+        virtual ~pSet_t(){}
         virtual void load(std::map<std::string, double>& pMap);
         virtual MPI_Datatype mpiType() = 0;
     };
@@ -78,6 +80,12 @@ public:
         double T;
         double x0[3];
         MPI_Datatype mpiType();
+        void print(){
+            std::cout << "IsoPlanarSOsc - config_t: ";
+            std::cout << "dt: " << dt;
+            std::cout << "| T: " << T;
+            std::cout << "| x0: " << x0[0] << ", " << x0[1] << ", " << x0[2] << std::endl;
+        }
     };
 
     /*
@@ -96,9 +104,10 @@ public:
     };
 
     IsoPlanarSOsc() = default;
-    IsoPlanarSOsc(Domain&, IsoPlanarSOsc::config_t&, IsoPlanarSOsc::pSet_t&);
+    IsoPlanarSOsc(Domain&, IsoPlanarSOsc::config_t&, IsoPlanarSOsc::pSet_t*);
+    virtual ~IsoPlanarSOsc(){}
 
-    void configure(Domain&, IsoPlanarSOsc::config_t&, IsoPlanarSOsc::pSet_t&);
+    virtual void configure(Domain&, IsoPlanarSOsc::config_t&, IsoPlanarSOsc::pSet_t*);
     std::array<double, 3> evolve();
     std::array<double, 3> get_state() const;
     bool in_time() const;

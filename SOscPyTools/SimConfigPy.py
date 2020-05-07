@@ -31,9 +31,11 @@ class SimConfig:
         with open(Path(configFilePath), "r") as read_file:
             dict_bf = json.load(read_file)
         self.ModelName = dict_bf["Model Name"]
-        self.Paths["In"] = Path(dict_bf["Paths"]["In"]["filepath"]) / \
+        self.Paths["In"] = configFilePath.parent / \
+            Path(dict_bf["Paths"]["In"]["filepath"]) / \
             Path(dict_bf["Paths"]["In"]["filename"])
-        self.Paths["Out"] = Path(dict_bf["Paths"]["Out"]["filepath"]) / \
+        self.Paths["Out"] = configFilePath.parent / \
+            Path(dict_bf["Paths"]["Out"]["filepath"]) / \
             Path(dict_bf["Paths"]["Out"]["filename"])
         self.Simulation = dict_bf["Simulation"]
         

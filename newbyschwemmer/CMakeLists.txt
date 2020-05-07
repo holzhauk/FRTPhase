@@ -13,7 +13,10 @@ add_executable(newbyschwemmer main.cpp
         MFPTSet.cpp MFPTSet.h
         Trajectory.cpp Trajectory.h
         TrajectorySet.cpp TrajectorySet.h
-        NormMoments.cpp NormMoments.h ModelFactory.cpp ModelFactory.h SimConfig_t.cpp SimConfig_t.h Adapters.cpp Adapters.h)
+        NormMoments.cpp NormMoments.h
+        ModelFactory.cpp ModelFactory.h
+        SimConfig_t.cpp SimConfig_t.h
+        Adapters.cpp Adapters.h)
 
 find_package(MPI REQUIRED)
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
@@ -23,7 +26,13 @@ find_package(HDF5 REQUIRED COMPONENTS C CXX)
 include_directories(${HDF5_INCLUDE_DIRS})
 target_link_libraries(newbyschwemmer ${HDF5_C_LIBRARIES} ${HDF5_CXX_LIBRARIES})
 
-find_package(Boost REQUIRED COMPONENTS system filesystem)
-target_link_libraries(newbyschwemmer ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+find_package(Boost COMPONENTS system filesystem thread log log_setup REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(newbyschwemmer Boost::filesystem
+                                     Boost::log_setup
+                                     Boost::log
+                                     Boost::system
+                                     Boost::thread)
 
 target_link_libraries(newbyschwemmer stdc++fs)

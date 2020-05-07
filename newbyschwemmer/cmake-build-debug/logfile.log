@@ -1,0 +1,81 @@
+[1] [2020-05-07 20:52:11.633535] [0x00023132] [debug] log initialized
+[2] [2020-05-07 20:52:11.634522] [0x00023132] [debug] number of processes: 3
+[3] [2020-05-07 20:52:11.634979] [0x00023132] [info] loading configuration file: ../config_thinkpad.json
+[4] [2020-05-07 20:52:11.643198] [0x00023132] [debug] broadcasting: number of isochrones = 8
+[5] [2020-05-07 20:52:11.643276] [0x00023132] [debug] number of isochrones sendt
+[6] [2020-05-07 20:52:11.643293] [0x00023132] [debug] broadcasting: modelname = NewbySchwemmer
+[7] [2020-05-07 20:52:11.643309] [0x00023132] [debug] modelname sendt
+[8] [2020-05-07 20:52:11.643391] [0x00023132] [info] Isochrone with D: 0
+[9] [2020-05-07 20:52:11.643434] [0x00023132] [debug] broadcasting: config, parameter set
+[10] [2020-05-07 20:52:11.643456] [0x00023132] [debug] config, parameter set sendt
+[11] [2020-05-07 20:52:11.643470] [0x00023132] [debug] broadcasting: bcast_config
+[12] [2020-05-07 20:52:11.643532] [0x00023132] [debug] bcast_config sendt
+[13] [2020-05-07 20:52:11.643557] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[14] [2020-05-07 20:52:11.643586] [0x00023132] [debug] serialized coordinate information sendt
+[15] [2020-05-07 20:52:11.643606] [0x00023132] [info] start SIMULATION for this isochrone
+[16] [2020-05-07 20:52:12.264851] [0x00023132] [info] SIMULATION finished
+[17] [2020-05-07 20:52:12.264917] [0x00023132] [info] Isochrone with D: 0.1
+[18] [2020-05-07 20:52:12.264959] [0x00023132] [debug] broadcasting: config, parameter set
+[19] [2020-05-07 20:52:12.264983] [0x00023132] [debug] config, parameter set sendt
+[20] [2020-05-07 20:52:12.264998] [0x00023132] [debug] broadcasting: bcast_config
+[21] [2020-05-07 20:52:12.265013] [0x00023132] [debug] bcast_config sendt
+[22] [2020-05-07 20:52:12.265046] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[23] [2020-05-07 20:52:12.265069] [0x00023132] [debug] serialized coordinate information sendt
+[24] [2020-05-07 20:52:12.265086] [0x00023132] [info] start SIMULATION for this isochrone
+[25] [2020-05-07 20:52:13.028753] [0x00023132] [info] SIMULATION finished
+[26] [2020-05-07 20:52:13.028817] [0x00023132] [info] Isochrone with D: 0.2
+[27] [2020-05-07 20:52:13.028854] [0x00023132] [debug] broadcasting: config, parameter set
+[28] [2020-05-07 20:52:13.028875] [0x00023132] [debug] config, parameter set sendt
+[29] [2020-05-07 20:52:13.028889] [0x00023132] [debug] broadcasting: bcast_config
+[30] [2020-05-07 20:52:13.028904] [0x00023132] [debug] bcast_config sendt
+[31] [2020-05-07 20:52:13.028922] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[32] [2020-05-07 20:52:13.028949] [0x00023132] [debug] serialized coordinate information sendt
+[33] [2020-05-07 20:52:13.028966] [0x00023132] [info] start SIMULATION for this isochrone
+[34] [2020-05-07 20:52:14.160664] [0x00023132] [info] SIMULATION finished
+[35] [2020-05-07 20:52:14.160734] [0x00023132] [info] Isochrone with D: 0.5
+[36] [2020-05-07 20:52:14.160775] [0x00023132] [debug] broadcasting: config, parameter set
+[37] [2020-05-07 20:52:14.160802] [0x00023132] [debug] config, parameter set sendt
+[38] [2020-05-07 20:52:14.160818] [0x00023132] [debug] broadcasting: bcast_config
+[39] [2020-05-07 20:52:14.160835] [0x00023132] [debug] bcast_config sendt
+[40] [2020-05-07 20:52:14.160857] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[41] [2020-05-07 20:52:14.160882] [0x00023132] [debug] serialized coordinate information sendt
+[42] [2020-05-07 20:52:14.160898] [0x00023132] [info] start SIMULATION for this isochrone
+[43] [2020-05-07 20:52:15.405281] [0x00023132] [info] SIMULATION finished
+[44] [2020-05-07 20:52:15.405347] [0x00023132] [info] Isochrone with D: 1
+[45] [2020-05-07 20:52:15.405382] [0x00023132] [debug] broadcasting: config, parameter set
+[46] [2020-05-07 20:52:15.405405] [0x00023132] [debug] config, parameter set sendt
+[47] [2020-05-07 20:52:15.405419] [0x00023132] [debug] broadcasting: bcast_config
+[48] [2020-05-07 20:52:15.405434] [0x00023132] [debug] bcast_config sendt
+[49] [2020-05-07 20:52:15.405453] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[50] [2020-05-07 20:52:15.422699] [0x00023132] [debug] serialized coordinate information sendt
+[51] [2020-05-07 20:52:15.422756] [0x00023132] [info] start SIMULATION for this isochrone
+[52] [2020-05-07 20:52:16.620784] [0x00023132] [info] SIMULATION finished
+[53] [2020-05-07 20:52:16.620853] [0x00023132] [info] Isochrone with D: 10
+[54] [2020-05-07 20:52:16.620893] [0x00023132] [debug] broadcasting: config, parameter set
+[55] [2020-05-07 20:52:16.620915] [0x00023132] [debug] config, parameter set sendt
+[56] [2020-05-07 20:52:16.620929] [0x00023132] [debug] broadcasting: bcast_config
+[57] [2020-05-07 20:52:16.620945] [0x00023132] [debug] bcast_config sendt
+[58] [2020-05-07 20:52:16.620966] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[59] [2020-05-07 20:52:16.620989] [0x00023132] [debug] serialized coordinate information sendt
+[60] [2020-05-07 20:52:16.621005] [0x00023132] [info] start SIMULATION for this isochrone
+[61] [2020-05-07 20:52:18.119167] [0x00023132] [info] SIMULATION finished
+[62] [2020-05-07 20:52:18.119230] [0x00023132] [info] Isochrone with D: 100
+[63] [2020-05-07 20:52:18.119268] [0x00023132] [debug] broadcasting: config, parameter set
+[64] [2020-05-07 20:52:18.119288] [0x00023132] [debug] config, parameter set sendt
+[65] [2020-05-07 20:52:18.119301] [0x00023132] [debug] broadcasting: bcast_config
+[66] [2020-05-07 20:52:18.119317] [0x00023132] [debug] bcast_config sendt
+[67] [2020-05-07 20:52:18.119335] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[68] [2020-05-07 20:52:18.119355] [0x00023132] [debug] serialized coordinate information sendt
+[69] [2020-05-07 20:52:18.119370] [0x00023132] [info] start SIMULATION for this isochrone
+[70] [2020-05-07 20:52:19.590916] [0x00023132] [info] SIMULATION finished
+[71] [2020-05-07 20:52:19.590989] [0x00023132] [info] Isochrone with D: 0.5
+[72] [2020-05-07 20:52:19.591026] [0x00023132] [debug] broadcasting: config, parameter set
+[73] [2020-05-07 20:52:19.591052] [0x00023132] [debug] config, parameter set sendt
+[74] [2020-05-07 20:52:19.591066] [0x00023132] [debug] broadcasting: bcast_config
+[75] [2020-05-07 20:52:19.591081] [0x00023132] [debug] bcast_config sendt
+[76] [2020-05-07 20:52:19.591100] [0x00023132] [debug] broadcast: serialized isochrone and initial position coordinates
+[77] [2020-05-07 20:52:19.591129] [0x00023132] [debug] serialized coordinate information sendt
+[78] [2020-05-07 20:52:19.591145] [0x00023132] [info] start SIMULATION for this isochrone
+[79] [2020-05-07 20:52:21.546583] [0x00023132] [info] SIMULATION finished
+[80] [2020-05-07 20:52:21.546651] [0x00023132] [info] write RESULTS to: "../../../SimData/MFPTs/NewbySchwemmerAntirotating.h5"
+[81] [2020-05-07 20:52:21.554949] [0x00023132] [debug] RESULTS written to file

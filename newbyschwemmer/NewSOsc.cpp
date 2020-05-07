@@ -4,18 +4,20 @@
 
 #include "NewSOsc.h"
 
-NewSOsc::NewSOsc(Domain& domain, NewSOsc::config_t& config, NewSOsc::pSet_t& pSet)
-    :IsoPlanarSOsc(domain, config, pSet) {
-    omega = pSet.omega;
-    gamma = pSet.gamma;
-    c = pSet.c;
+NewSOsc::NewSOsc(Domain& domain, NewSOsc::config_t& config, IsoPlanarSOsc::pSet_t* pSet_ptr)
+    :IsoPlanarSOsc(domain, config, pSet_ptr) {
+    auto NewS_pSet_ptr = static_cast<NewSOsc::pSet_t*>(pSet_ptr);
+    omega = NewS_pSet_ptr->omega;
+    gamma = NewS_pSet_ptr->gamma;
+    c = NewS_pSet_ptr->c;
 }
 
-void NewSOsc::configure(Domain& domain, NewSOsc::config_t& config, NewSOsc::pSet_t& pSet) {
-    omega = pSet.omega;
-    gamma = pSet.gamma;
-    c = pSet.c;
-    IsoPlanarSOsc::configure(domain, config, pSet);
+void NewSOsc::configure(Domain& domain, NewSOsc::config_t& config, IsoPlanarSOsc::pSet_t* pSet_ptr) {
+    auto NewS_pSet_ptr = static_cast<NewSOsc::pSet_t*>(pSet_ptr);
+    omega = NewS_pSet_ptr->omega;
+    gamma = NewS_pSet_ptr->gamma;
+    c = NewS_pSet_ptr->c;
+    IsoPlanarSOsc::configure(domain, config, pSet_ptr);
 }
 
 /*

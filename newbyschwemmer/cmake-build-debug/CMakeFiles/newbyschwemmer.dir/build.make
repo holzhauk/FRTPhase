@@ -288,8 +288,16 @@ newbyschwemmer: /usr/lib/libz.so
 newbyschwemmer: /usr/lib/libdl.so
 newbyschwemmer: /usr/lib/libm.so
 newbyschwemmer: /usr/lib64/libboost_filesystem.so.1.72.0
+newbyschwemmer: /usr/lib64/libboost_log_setup.so.1.72.0
+newbyschwemmer: /usr/lib64/libboost_log.so.1.72.0
 newbyschwemmer: /usr/lib64/libboost_system.so.1.72.0
+newbyschwemmer: /usr/lib64/libboost_thread.so.1.72.0
 newbyschwemmer: /usr/lib/libhdf5_cpp.so
+newbyschwemmer: /usr/lib64/libboost_filesystem.so.1.72.0
+newbyschwemmer: /usr/lib64/libboost_atomic.so.1.72.0
+newbyschwemmer: /usr/lib64/libboost_chrono.so.1.72.0
+newbyschwemmer: /usr/lib64/libboost_date_time.so.1.72.0
+newbyschwemmer: /usr/lib64/libboost_regex.so.1.72.0
 newbyschwemmer: CMakeFiles/newbyschwemmer.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking CXX executable newbyschwemmer"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/newbyschwemmer.dir/link.txt --verbose=$(VERBOSE)

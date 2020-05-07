@@ -1,5 +1,12 @@
-//MPI
+// MPI
 #include <mpi.h>
+
+// Boost
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
 
 // CXX standard libraries
 #include <iostream>
@@ -16,7 +23,6 @@
 #include "IsochroneSet.h"
 #include "IsoPlanarSOsc.h"
 #include "Domain.h"
-#include "MFPTs.h"
 #include "MFPTSet.h"
 #include "NormMoments.h"
 #include "ModelFactory.h"
@@ -54,15 +60,17 @@ struct bcast_config_t {
     }
 };
 
+void log_init();
+
 void gen_GathervCounts(int data_size, int world_size,
         std::vector<int>& SendCounts, std::vector<int>& Displs);
 
-std::unique_ptr<std::array<double, 4>> run_AsymptoticAngle(IsoPlanarSOsc& Model,
-        IsoPlanarSOsc::config_t& sim_config, IsoPlanarSOsc::pSet_t& pSet,
+std::unique_ptr<std::array<double, 4>> run_AsymptoticAngle(IsoPlanarSOsc* Model_ptr,
+        IsoPlanarSOsc::config_t& sim_config, IsoPlanarSOsc::pSet_t* pSet_ptr,
         Domain& Disk, int EnsembleSize);
 
-std::unique_ptr<std::array<double, 2>> run_FP(IsoPlanarSOsc& Model,
-        IsoPlanarSOsc::config_t& config, IsoPlanarSOsc::pSet_t& pSet,
+std::unique_ptr<std::array<double, 2>> run_FP(IsoPlanarSOsc* Model_ptr,
+        IsoPlanarSOsc::config_t& config, IsoPlanarSOsc::pSet_t* pSet_ptr,
         Domain& Disk, int EnsembleSize, double MeanPhiT,
         std::vector<double>& IsoRho, std::vector<double>& IsoPhi);
 
@@ -93,8 +101,13 @@ int main(int argc, char* argv[]) {
         /*
          * master process block
          */
+        log_init();
+        BOOST_LOG_TRIVIAL(debug) << "log initialized";
+        BOOST_LOG_TRIVIAL(debug) << "number of processes: " << world_size;
+
         fs::path configPath = fs::path(argv[1]);
         SimConfig_t sim_config;
+        BOOST_LOG_TRIVIAL(info) << "loading configuration file: " + configPath.string();
         sim_config.load_from_file(configPath);
 
         IsochroneSet IsoSet;
@@ -106,13 +119,18 @@ int main(int argc, char* argv[]) {
         bcast_dimensions_t bcast_dim;
         bcast_dim.noIsochrones = std::distance(IsoSet.begin(), IsoSet.end());
         bcast_dim.sizeOfModelname = sim_config.modelname.length() + 1;
+        BOOST_LOG_TRIVIAL(debug) << "broadcasting: number of isochrones = "
+                                 << bcast_dim.noIsochrones;
         MPI_Bcast(&bcast_dim, 1, mpi_bcast_dimensions_t, 0, MPI_COMM_WORLD);
+        BOOST_LOG_TRIVIAL(debug) << "number of isochrones sendt";
 
         /*
          * Broadcast model name
          */
+        BOOST_LOG_TRIVIAL(debug) << "broadcasting: modelname = " << sim_config.modelname;
         MPI_Bcast(sim_config.modelname.data(), (int) bcast_dim.sizeOfModelname,
                 MPI_CHAR, 0, MPI_COMM_WORLD);
+        BOOST_LOG_TRIVIAL(debug) << "modelname sendt";
 
         auto Model_ptr = TheFactory.create_Model(sim_config.modelname);
         auto pSet_ptr = TheFactory.create_pSet(sim_config.modelname);
@@ -127,7 +145,9 @@ int main(int argc, char* argv[]) {
 
             auto mfpts_ptr = mfptSet.create(Iso_ptr->get_name());
 
-            std::cout << "Isochrone with D: " << Iso_ptr->get_parameterMap()["D"] << std::endl;
+            BOOST_LOG_TRIVIAL(info) << "Isochrone with D: "
+                                    << Iso_ptr->get_parameterMap()["D"]
+                                    << std::endl;
 
             std::vector<double> IsoRho = Iso_ptr->get_Rho();
             std::vector<double> IsoPhi = Iso_ptr->get_Phi();
@@ -148,11 +168,15 @@ int main(int argc, char* argv[]) {
                                             };
             Domain Disk(boundaryVals);
 
+            BOOST_LOG_TRIVIAL(debug) << "broadcasting: config, parameter set";
             MPI_Bcast(&config, 1, config.mpiType(), 0, MPI_COMM_WORLD);
             MPI_Bcast(pSet_ptr.get(), 1, pSet_ptr->mpiType(), 0, MPI_COMM_WORLD);
+            BOOST_LOG_TRIVIAL(debug) << "config, parameter set sendt";
 
+            BOOST_LOG_TRIVIAL(debug) << "broadcasting: bcast_config";
             bcast_config_t bcast_config(sim_config, *Iso_ptr);
             MPI_Bcast(&bcast_config, 1, bcast_config.mpiType(), 0, MPI_COMM_WORLD);
+            BOOST_LOG_TRIVIAL(debug) << "bcast_config sendt";
 
             std::vector<int> RcvCounts, Displs;
             int SubEnsembleSize;
@@ -168,14 +192,18 @@ int main(int argc, char* argv[]) {
                 SendBuffer[i + 2*bcast_config.noCoordinates] = IsoSample_rho[i];
                 SendBuffer[i + 2*bcast_config.noCoordinates + bcast_config.noSamples] = IsoSample_phi[i];
             }
+            BOOST_LOG_TRIVIAL(debug) << "broadcast: serialized isochrone and initial position coordinates";
             MPI_Bcast(SendBuffer, 2*(bcast_config.noCoordinates + bcast_config.noSamples),
                     MPI_DOUBLE, 0, MPI_COMM_WORLD);
+            BOOST_LOG_TRIVIAL(debug) << "serialized coordinate information sendt";
             delete[] SendBuffer;
 
             std::vector<double> MFPT = std::vector<double>(bcast_config.noSamples, 0.0);
             std::vector<double> VarFPT = std::vector<double>(bcast_config.noSamples, 0.0);
             std::vector<double> Tbar = std::vector<double>(bcast_config.noSamples, 0.0);
+            std::vector<double> VarT = std::vector<double>(bcast_config.noSamples, 0.0);
 
+            BOOST_LOG_TRIVIAL(info) << "start SIMULATION for this isochrone";
             for (int s = 0; s < bcast_config.noSamples; s++){
 
                 config.x0[0] = IsoSample_rho[s];
@@ -183,7 +211,7 @@ int main(int argc, char* argv[]) {
 
                 // AsympStatistics = [MPhiT, VarPhiT, Tbar, VarT]
                 std::unique_ptr<std::array<double, 4>> AsympStatistics =
-                        run_AsymptoticAngle(*Model_ptr, config, *pSet_ptr,
+                        run_AsymptoticAngle(Model_ptr.get(), config, pSet_ptr.get(),
                                 Disk, SubEnsembleSize);
                 auto* TotAsympStatistics = new double [4*world_size];
                 MPI_Gather(AsympStatistics->data(), 4, MPI_DOUBLE,
@@ -193,16 +221,18 @@ int main(int argc, char* argv[]) {
                 for (int k = 0; k < 4*world_size; k += 4){
                     MPhiT += TotAsympStatistics[k];
                     Tbar[s] += TotAsympStatistics[k + 2];
+                    VarT[s] += TotAsympStatistics[k + 3];
                 }
                 delete[] TotAsympStatistics;
 
                 MPhiT = MPhiT / world_size;
                 Tbar[s] = Tbar[s] / world_size;
+                VarT[s] = VarT[s] / world_size;
                 MPI_Bcast(&MPhiT, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
                 config.x0[1] = IsoSample_phi[s];
                 std::unique_ptr<std::array<double, 2>> FPTStatistics =
-                        run_FP(*Model_ptr, config, *pSet_ptr, Disk,
+                        run_FP(Model_ptr.get(), config, pSet_ptr.get(), Disk,
                                 SubEnsembleSize, MPhiT, IsoRho, IsoPhi);
                 auto* TotFPTStatistics = new double [2*world_size];
                 MPI_Gather(FPTStatistics->data(), 2, MPI_DOUBLE,
@@ -211,16 +241,19 @@ int main(int argc, char* argv[]) {
                 VarFPT[s] = 0.0;
                 for (int k = 0; k < 2*world_size; k += 2){
                     MFPT[s] += TotFPTStatistics[k];
-                    VarFPT[s] += pow(TotFPTStatistics[k + 1], 2.0);
+                    VarFPT[s] +=TotFPTStatistics[k + 1];
                 }
                 delete[] TotFPTStatistics;
 
                 MFPT[s] = MFPT[s] / world_size;
-                VarFPT[s] = sqrt(VarFPT[s] / world_size);
+                VarFPT[s] = VarFPT[s] / world_size;
             }
+            BOOST_LOG_TRIVIAL(info) << "SIMULATION finished";
             mfpts_ptr->add(IsoSample_rho, IsoSample_phi, Tbar, MFPT, VarFPT);
         }
+        BOOST_LOG_TRIVIAL(info) << "write RESULTS to: " << sim_config.Paths.output;
         mfptSet.write_to_file(sim_config.Paths.output);
+        BOOST_LOG_TRIVIAL(debug) << "RESULTS written to file";
 
     } else {
 
@@ -280,8 +313,8 @@ int main(int argc, char* argv[]) {
                 config.x0[0] = IsoSample_rho[s];
                 config.x0[1] = 0.0;
                 std::unique_ptr<std::array<double, 4>> AsympStatistics =
-                        run_AsymptoticAngle(*Model_ptr, config,
-                                *pSet_ptr, Disk, SubEnsembleSize);
+                        run_AsymptoticAngle(Model_ptr.get(), config,
+                                pSet_ptr.get(), Disk, SubEnsembleSize);
                 auto* dummy_buffer = new double [4*world_size];
                 MPI_Gather(AsympStatistics->data(), 4, MPI_DOUBLE,
                         dummy_buffer, 4, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -291,7 +324,7 @@ int main(int argc, char* argv[]) {
                 MPI_Bcast(&MPhiT, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
                 config.x0[1] = IsoSample_phi[s];
                 std::unique_ptr<std::array<double, 2>> FPTStatistics =
-                        run_FP(*Model_ptr, config, *pSet_ptr,
+                        run_FP(Model_ptr.get(), config, pSet_ptr.get(),
                                 Disk, SubEnsembleSize, MPhiT, IsoRho, IsoPhi);
 
                 dummy_buffer = new double [2*world_size];
@@ -304,6 +337,16 @@ int main(int argc, char* argv[]) {
     }
     MPI_Finalize();
     return EXIT_SUCCESS;
+}
+
+void log_init(){
+    boost::log::register_simple_formatter_factory<boost::log::trivial::severity_level, char>("Severity");
+    boost::log::add_file_log( boost::log::keywords::file_name = "logfile.log",
+                       boost::log::keywords::format =
+                               "[%LineID%] [%TimeStamp%] [%ProcessID%] [%Severity%] %Message%"
+                               );
+    boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);
+    boost::log::add_common_attributes();
 }
 
 void gen_GathervCounts(int data_size, int world_size,
@@ -323,17 +366,17 @@ void gen_GathervCounts(int data_size, int world_size,
     }
 }
 
-std::unique_ptr<std::array<double, 4>> run_AsymptoticAngle(IsoPlanarSOsc& Model,
-        IsoPlanarSOsc::config_t& sim_config, IsoPlanarSOsc::pSet_t& pSet,
+std::unique_ptr<std::array<double, 4>> run_AsymptoticAngle(IsoPlanarSOsc* Model_ptr,
+        IsoPlanarSOsc::config_t& sim_config, IsoPlanarSOsc::pSet_t* pSet_ptr,
         Domain& Disk, int EnsembleSize){
     std::vector<double> PhiT = std::vector<double>(EnsembleSize);
     std::vector<double> Tbar = std::vector<double>(EnsembleSize);
     for (int e = 0; e < EnsembleSize; e++){
-        Model.configure(Disk, sim_config, pSet);
-        while (Model.in_time()) {
-            Model.evolve();
+        Model_ptr->configure(Disk, sim_config, pSet_ptr);
+        while (Model_ptr->in_time()) {
+            Model_ptr->evolve();
         }
-        auto [Rho, Phi, T] = Model.get_state();
+        auto [Rho, Phi, T] = Model_ptr->get_state();
         PhiT[e] = Phi;
         Tbar[e] = (2*M_PI*T) / Phi;
     }
@@ -347,8 +390,8 @@ std::unique_ptr<std::array<double, 4>> run_AsymptoticAngle(IsoPlanarSOsc& Model,
     return std::move(Results_ptr);
 }
 
-std::unique_ptr<std::array<double, 2>> run_FP(IsoPlanarSOsc& Model,
-        IsoPlanarSOsc::config_t& sim_config, IsoPlanarSOsc::pSet_t& pSet,
+std::unique_ptr<std::array<double, 2>> run_FP(IsoPlanarSOsc* Model_ptr,
+        IsoPlanarSOsc::config_t& sim_config, IsoPlanarSOsc::pSet_t* pSet_ptr,
         Domain& Disk, int EnsembleSize, double MeanPhiT,
         std::vector<double>& IsoRho, std::vector<double>& IsoPhi){
 
@@ -362,12 +405,12 @@ std::unique_ptr<std::array<double, 2>> run_FP(IsoPlanarSOsc& Model,
     for (int e = 0; e < EnsembleSize; e++) {
 
         double t = 0.0;
-        Model.configure(Disk, sim_config, pSet);
+        Model_ptr->configure(Disk, sim_config, pSet_ptr);
 
         bool not_passed = true;
         if (MeanPhiT > Phi0 + 2 * M_PI) {
             while (not_passed && (t <= sim_config.T)) {
-                auto[rho_e, phi_e, t_e] = Model.evolve();
+                auto[rho_e, phi_e, t_e] = Model_ptr->evolve();
                 // rho_i equally spaced on rho->axis
                 // -> we get the index as follows
                 // this could also be solved more elegantly by using the STL
@@ -379,7 +422,7 @@ std::unique_ptr<std::array<double, 2>> run_FP(IsoPlanarSOsc& Model,
         } else {
             if (MeanPhiT < Phi0 - 2 * M_PI) {
                 while (not_passed && (t <= sim_config.T)) {
-                    auto[rho_e, phi_e, t_e] = Model.evolve();
+                    auto[rho_e, phi_e, t_e] = Model_ptr->evolve();
                     // rho_i equally spaced on rho->axis
                     // -> we get the index as follows
                     // this could also be solved more elegantly by using the STL

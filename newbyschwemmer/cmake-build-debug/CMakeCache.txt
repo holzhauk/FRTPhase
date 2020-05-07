@@ -28,7 +28,13 @@ Boost_FILESYSTEM_LIBRARY_RELEASE:STRING=/usr/lib64/libboost_filesystem.so.1.72.0
 //Path to a file.
 Boost_INCLUDE_DIR:PATH=/usr/include
 
+Boost_LOG_LIBRARY_RELEASE:STRING=/usr/lib64/libboost_log.so.1.72.0
+
+Boost_LOG_SETUP_LIBRARY_RELEASE:STRING=/usr/lib64/libboost_log_setup.so.1.72.0
+
 Boost_SYSTEM_LIBRARY_RELEASE:STRING=/usr/lib64/libboost_system.so.1.72.0
+
+Boost_THREAD_LIBRARY_RELEASE:STRING=/usr/lib64/libboost_thread.so.1.72.0
 
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
@@ -382,14 +388,35 @@ ProcessorCount_cmd_nproc:FILEPATH=/usr/bin/nproc
 //Path to a program.
 ProcessorCount_cmd_sysctl:FILEPATH=/usr/bin/sysctl
 
+//The directory containing a CMake configuration file for boost_atomic.
+boost_atomic_DIR:PATH=/usr/lib64/cmake/boost_atomic-1.72.0
+
+//The directory containing a CMake configuration file for boost_chrono.
+boost_chrono_DIR:PATH=/usr/lib64/cmake/boost_chrono-1.72.0
+
+//The directory containing a CMake configuration file for boost_date_time.
+boost_date_time_DIR:PATH=/usr/lib64/cmake/boost_date_time-1.72.0
+
 //The directory containing a CMake configuration file for boost_filesystem.
 boost_filesystem_DIR:PATH=/usr/lib64/cmake/boost_filesystem-1.72.0
 
 //The directory containing a CMake configuration file for boost_headers.
 boost_headers_DIR:PATH=/usr/lib64/cmake/boost_headers-1.72.0
 
+//The directory containing a CMake configuration file for boost_log.
+boost_log_DIR:PATH=/usr/lib64/cmake/boost_log-1.72.0
+
+//The directory containing a CMake configuration file for boost_log_setup.
+boost_log_setup_DIR:PATH=/usr/lib64/cmake/boost_log_setup-1.72.0
+
+//The directory containing a CMake configuration file for boost_regex.
+boost_regex_DIR:PATH=/usr/lib64/cmake/boost_regex-1.72.0
+
 //The directory containing a CMake configuration file for boost_system.
 boost_system_DIR:PATH=/usr/lib64/cmake/boost_system-1.72.0
+
+//The directory containing a CMake configuration file for boost_thread.
+boost_thread_DIR:PATH=/usr/lib64/cmake/boost_thread-1.72.0
 
 //Value Computed by CMake
 newbyschwemmer_BINARY_DIR:STATIC=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug
@@ -499,6 +526,14 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Test CMAKE_HAVE_LIBC_PTHREAD
+CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=
+//Have library pthreads
+CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
+//Have library pthread
+CMAKE_HAVE_PTHREAD_CREATE:INTERNAL=1
+//Have include pthread.h
+CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer
@@ -565,7 +600,7 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Boost
-FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib64/cmake/Boost-1.72.0/BoostConfig.cmake][cfound components: system filesystem ][v1.72.0()]
+FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib64/cmake/Boost-1.72.0/BoostConfig.cmake][cfound components: system filesystem thread log log_setup ][v1.72.0()]
 //Details about finding GSL
 FIND_PACKAGE_MESSAGE_DETAILS_GSL:INTERNAL=[/usr/include][/usr/lib/libgsl.so][/usr/lib/libgslcblas.so][v2.6()]
 //Details about finding HDF5
@@ -578,6 +613,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_MPI_C:INTERNAL=[/usr/lib/openmpi/libmpi.so][mpi][/u
 FIND_PACKAGE_MESSAGE_DETAILS_MPI_CXX:INTERNAL=[/usr/lib/openmpi/libmpi_cxx.so][/usr/lib/openmpi/libmpi.so][mpi_cxx;mpi][/usr/include][TRUE][v3.1()]
 //Details about finding PkgConfig
 FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v1.6.3()]
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: GSL_CBLAS_LIBRARY
 GSL_CBLAS_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: GSL_CBLAS_LIBRARY_DEBUG
@@ -698,12 +735,26 @@ ProcessorCount_cmd_nproc-ADVANCED:INTERNAL=1
 ProcessorCount_cmd_sysctl-ADVANCED:INTERNAL=1
 __pkg_config_arguments_GSL:INTERNAL=QUIET;gsl
 __pkg_config_checked_GSL:INTERNAL=1
+//ADVANCED property for variable: boost_atomic_DIR
+boost_atomic_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_chrono_DIR
+boost_chrono_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_date_time_DIR
+boost_date_time_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: boost_filesystem_DIR
 boost_filesystem_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: boost_headers_DIR
 boost_headers_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_log_DIR
+boost_log_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_log_setup_DIR
+boost_log_setup_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_regex_DIR
+boost_regex_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: boost_system_DIR
 boost_system_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_thread_DIR
+boost_thread_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GSL_gsl
 pkgcfg_lib_GSL_gsl-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GSL_gslcblas

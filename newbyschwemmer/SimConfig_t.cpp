@@ -10,11 +10,13 @@ void SimConfig_t::load_from_file(fs::path filepath) {
     modelname = root.get<std::string>("Model Name");
 
     pt::ptree inPaths = root.get_child("Paths.In");
-    Paths.input = fs::path(inPaths.get<std::string>("filepath")) /
+    Paths.input = filepath.remove_filename() /
+            fs::path(inPaths.get<std::string>("filepath")) /
             fs::path(inPaths.get<std::string>("filename"));
 
     pt::ptree outPaths = root.get_child("Paths.Out");
-    Paths.output = fs::path(outPaths.get<std::string>("filepath")) /
+    Paths.output = filepath.remove_filename() /
+            fs::path(outPaths.get<std::string>("filepath")) /
             fs::path(outPaths.get<std::string>("filename"));
 
     pt::ptree simulation_configuration = root.get_child("Simulation");

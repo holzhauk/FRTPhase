@@ -1,7 +1,7 @@
 /opt/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer
 -- HDF5: Using hdf5 compiler wrapper to determine C configuration
 -- HDF5: Using hdf5 compiler wrapper to determine CXX configuration
--- Found Boost: /usr/lib64/cmake/Boost-1.72.0/BoostConfig.cmake (found version "1.72.0") found components: system filesystem 
+-- Found Boost: /usr/lib64/cmake/Boost-1.72.0/BoostConfig.cmake (found version "1.72.0") found components: system filesystem thread log log_setup 
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/stochasticphase/newbyschwemmer/cmake-build-debug
