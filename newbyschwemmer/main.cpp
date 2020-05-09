@@ -249,7 +249,7 @@ int main(int argc, char* argv[]) {
                 VarFPT[s] = VarFPT[s] / world_size;
             }
             BOOST_LOG_TRIVIAL(info) << "SIMULATION finished";
-            mfpts_ptr->add(IsoSample_rho, IsoSample_phi, Tbar, MFPT, VarFPT);
+            mfpts_ptr->add(IsoSample_rho, IsoSample_phi, Tbar, VarT, MFPT, VarFPT);
         }
         BOOST_LOG_TRIVIAL(info) << "write RESULTS to: " << sim_config.Paths.output;
         mfptSet.write_to_file(sim_config.Paths.output);

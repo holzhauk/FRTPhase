@@ -36,6 +36,10 @@ const double* MFPTs::get_Tbars_buf_ptr() {
     return Tbar.data();
 }
 
+const double* MFPTs::get_VarT_buf_ptr() {
+    return VarT.data();
+}
+
 void MFPTs::add(double rho_init, double phi_init, double mean_period, double mean_fpt, double var_fpt) {
     initial_Rho.push_back(rho_init);
     initial_Phi.push_back(phi_init);
@@ -47,6 +51,7 @@ void MFPTs::add(double rho_init, double phi_init, double mean_period, double mea
 void MFPTs::add(std::vector<double>& rho_init,
         std::vector<double>& phi_init,
         std::vector<double>& mean_period,
+        std::vector<double>& var_period,
         std::vector<double>& mean_fpt,
         std::vector<double>& var_fpt){
     initial_Rho = rho_init;
@@ -54,4 +59,5 @@ void MFPTs::add(std::vector<double>& rho_init,
     MFPT = mean_fpt;
     VarFPT = var_fpt;
     Tbar = mean_period;
+    VarT = var_period;
 }

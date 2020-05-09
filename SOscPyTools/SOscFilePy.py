@@ -195,9 +195,7 @@ class Isochrone:
     
     def __init__(self, dtype=np.double):
         self.dtype = dtype
-        self.key = ""
-        self.EnsembleSize = 0
-        self.T = 0.0
+        self.key = "" 
         self.Rho_init = np.array([], dtype=self.dtype)
         self.Phi_init = np.array([], dtype=self.dtype)
         self.MFPT = np.array([], dtype=self.dtype)
@@ -220,10 +218,6 @@ class MFPTSet(SOscFile):
     
         I_group = self.fh[group_key]
 
-        dummy = np.zeros((1,), dtype=np.int)
-        I_group["EnsembleSize"].read_direct(dummy)
-        I.EnsembleSize = np.copy(dummy)
-
         Init_conds = I_group["InitialPositions"]
         
         dset_rho = Init_conds["Rho"]
@@ -239,11 +233,7 @@ class MFPTSet(SOscFile):
         dset_tbar = Mean_period_group["Tbar"]
         with dset_tbar.astype(self.dtype):
             I.Tbar = dset_tbar[:]
-            
-        #dummy = np.zeros((1, ), dtype=np.dtype)
-        #Mean_period_group["Ttot"].read_direct(dummy)
-        #I.T = np.copy(dummy)
-            
+                    
         dset_mfpts = I_group["MFPT"]
         with dset_mfpts.astype(self.dtype):
             I.MFPT = dset_mfpts[:]

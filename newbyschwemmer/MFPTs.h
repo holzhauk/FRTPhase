@@ -18,6 +18,7 @@ private:
     std::vector<double> VarFPT; // variance in the first passage times
     double T_tot = 0.0; // total simulated time to calculate mean periods Tbar
     std::vector<double> Tbar; // mean periods
+    std::vector<double> VarT;
 public:
     MFPTs(std::string);
 
@@ -28,12 +29,14 @@ public:
     const double* get_MFPTs_buf_ptr();
     const double* get_VarFPTs_buf_ptr();
     const double* get_Tbars_buf_ptr();
+    const double* get_VarT_buf_ptr();
     void add(double, double, double, double, double);
     void add(std::vector<double>&,
             std::vector<double>&,
                     std::vector<double>&,
                             std::vector<double>&,
-                                    std::vector<double>&);
+                                    std::vector<double>&,
+                                            std::vector<double>&);
 
 };
 

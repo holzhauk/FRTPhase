@@ -99,6 +99,10 @@ void MFPTSet::write_to_file(fs::path filepath) {
                                                                 PredType::NATIVE_DOUBLE, *dataSpace));
             dSet->write(MFPT_ptr->get_Tbars_buf_ptr(), PredType::NATIVE_DOUBLE);
             delete dSet;
+            dSet = new DataSet(mean_period_group->createDataSet("VarT",
+                                                                PredType::NATIVE_DOUBLE, *dataSpace));
+            dSet->write(MFPT_ptr->get_VarT_buf_ptr(), PredType::NATIVE_DOUBLE);
+            delete dSet;
             delete dataSpace;
 
             delete mean_period_group;

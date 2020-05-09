@@ -177,4 +177,19 @@ if __name__ == "__main__":
 
     del IsoFile
     print("Everything written")
+    
+    print("Create high noise IsochroneSet")
+    IsoFile = IsochroneSet(simConfig.Paths["In"], simConfig.ModelName)
+    NewbySchwemmerAntirotating_parameters["D"] = 100.0
+    NewbySchwemmerAntirotating.set_Parameters(\
+            NewbySchwemmerAntirotating_parameters)
+    IsoFile.add_Isochrone(NewbySchwemmerAntirotating_parameters, \
+            NewbySchwemmerAntirotating.get_Rhos(),\
+            NewbySchwemmerAntirotating.get_PhiIso())
+
+    print("Everything written")
+    del IsoFile
     del NewbySchwemmerAntirotating
+
+
+
