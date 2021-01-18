@@ -5,7 +5,7 @@
 #ifndef MRTPHASESIMULATION_SOSCFILE_H
 #define MRTPHASESIMULATION_SOSCFILE_H
 
-#include "../../src/SOscFile/Isochrone.h"
+#include "../../src/SOscFile/Isochron.h"
 #include "../../src/SOscFile/IsochroneSet.h"
 #include "../../src/SOscFile/MFPTs.h"
 #include "../../src/SOscFile/MFPTSet.h"

@@ -10,7 +10,7 @@ void IsochroneSet::load(fs::path filepath) {
         H5std_string FILENAME(filepath);
         H5File* file = new H5File(FILENAME, H5F_ACC_RDONLY);
         herr_t idx = H5Literate(file->getId(), H5_INDEX_NAME, H5_ITER_INC,
-                                NULL, isochrone_handler, &Isochrone_list_ptr);
+                                NULL, isochrone_handler, &Isochron_list_ptr);
         delete file;
     }
         // catch failure caused by the H5File operations
@@ -35,12 +35,12 @@ void IsochroneSet::load(fs::path filepath) {
     }
 }
 
-std::list<std::shared_ptr<Isochrone>>::iterator IsochroneSet::begin() {
-    return Isochrone_list_ptr.begin();
+std::list<std::shared_ptr<Isochron>>::iterator IsochroneSet::begin() {
+    return Isochron_list_ptr.begin();
 }
 
-std::list<std::shared_ptr<Isochrone>>::iterator IsochroneSet::end() {
-    return Isochrone_list_ptr.end();
+std::list<std::shared_ptr<Isochron>>::iterator IsochroneSet::end() {
+    return Isochron_list_ptr.end();
 }
 
 /***************************************
@@ -52,10 +52,10 @@ std::list<std::shared_ptr<Isochrone>>::iterator IsochroneSet::end() {
  */
 herr_t isochrone_handler(hid_t loc_id, const char* name, const H5L_info_t* linfo, void* opdata){
 
-    auto Isochrone_list_ptr = reinterpret_cast<std::list<std::shared_ptr<Isochrone>>*>(opdata);
+    auto Isochrone_list_ptr = reinterpret_cast<std::list<std::shared_ptr<Isochron>>*>(opdata);
 
     std::string name_s(name); // convert C-String to std::string object
-    std::shared_ptr<Isochrone> Iso = std::shared_ptr<Isochrone>(new Isochrone(name_s));
+    std::shared_ptr<Isochron> Iso = std::shared_ptr<Isochron>(new Isochron(name_s));
 
     hid_t iso_g = H5Gopen2(loc_id, name, H5P_DEFAULT);
 
@@ -111,7 +111,7 @@ herr_t isochrone_handler(hid_t loc_id, const char* name, const H5L_info_t* linfo
  */
 herr_t parameter_handler(hid_t loc_id, const char* name, const H5L_info_t* linfo, void* opdata) {
 
-    auto Iso = reinterpret_cast<Isochrone*>(opdata);
+    auto Iso = reinterpret_cast<Isochron*>(opdata);
 
     hid_t dset = H5Dopen(loc_id, name, H5P_DEFAULT);
     hid_t space = H5Dget_space(dset);

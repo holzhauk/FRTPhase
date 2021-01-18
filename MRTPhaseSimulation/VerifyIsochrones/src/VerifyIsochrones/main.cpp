@@ -37,8 +37,8 @@ struct bcast_config_t {
     unsigned int noSamples = 0;
     unsigned int ensembleSize = 0;
     bcast_config_t() = default;
-    bcast_config_t(SimConfig_t& config, Isochrone& isochrone){
-        noCoordinates = isochrone.get_Rho().size();
+    bcast_config_t(SimConfig_t& config, Isochron& isochron){
+        noCoordinates = isochron.get_Rho().size();
         noSamples = config.Simulation.SampleSize;
         ensembleSize = config.Simulation.EnsembleSize;
     }

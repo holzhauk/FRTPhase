@@ -2,15 +2,15 @@
 // Created by konstantin on 4/6/20.
 //
 
-#ifndef NEWBYSCHWEMMER_ISOCHRONE_H
-#define NEWBYSCHWEMMER_ISOCHRONE_H
+#ifndef NEWBYSCHWEMMER_ISOCHRON_H
+#define NEWBYSCHWEMMER_ISOCHRON_H
 
 #include <string>
 #include <map>
 #include <vector>
 #include <memory>
 
-class Isochrone {
+class Isochron {
 private:
     std::string name;
     std::map<std::string, double> parameters;
@@ -18,7 +18,7 @@ private:
     std::unique_ptr<std::vector<double>> Phi;
 
 public:
-    Isochrone(std::string&);
+    Isochron(std::string&);
 
     void push_parameter(std::string, double&);
     void set_curve(std::vector<double>&, std::vector<double>&);
@@ -30,4 +30,4 @@ public:
 
 };
 
-#endif //NEWBYSCHWEMMER_ISOCHRONE_H
+#endif //NEWBYSCHWEMMER_ISOCHRON_H

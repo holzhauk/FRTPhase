@@ -92,11 +92,11 @@ class NewbySchwemmer(Model):
         a = P["gamma"]/(4*P["D"])
         
         for i in range(len(R)):
-            r1 = R[:(i+1)]
+            r1 = R[:i]
             i1 = np.zeros(r1.shape)
     
             for j in range(len(r1)):
-                r2 = r1[:(j+1)]
+                r2 = r1[:j]
                 i2 = np.zeros(r2.shape)
                     
                 i1[j] = trapz((self.f(r2) - obar)*r2*\

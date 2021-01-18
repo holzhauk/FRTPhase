@@ -74,6 +74,9 @@ if __name__ == "__main__":
         rho_max = np.amax(IsoRho)
         Ds[i] = pSet["D"]
         Tbars[i] = np.mean(I.Tbar)
+
+    del ISet
+    del FPTSet
     
     
     D = np.linspace(Ds[1], 100, num=1000)
@@ -85,24 +88,57 @@ if __name__ == "__main__":
     obars = np.zeros(D.shape)
     for i in range(len(D)):
         obars[i] = OmegaBar(D[i], rho_min, rho_max)[0]
+
+    HighNoiseSimConfig = SimConfig()
+    HighNoiseSimConfig.load_from_file(Path("../configs/config_cluster_high_noise.json"));
+    ISet = IsochroneSet(HighNoiseSimConfig.Paths["In"].resolve(), HighNoiseSimConfig.ModelName)
+    FPTSet = MFPTSet(HighNoiseSimConfig.Paths["Out"].resolve(), HighNoiseSimConfig.ModelName)
+    noSets = sum(1 for _ in FPTSet)
+    HighNoiseTbars = np.zeros((noSets, ))
+    HighNoiseVarTs = np.zeros((noSets, ))
+    for i, I in enumerate(FPTSet, start=0):
+        HighNoiseTbars[i] = np.mean(I.Tbar)
+
+    VarTs = np.array([0.000190951, 0.000168459, 0.000190211, 0.00016833, 0.000178149, 0.000192491,\
+                        0.000164856, 0.000174417, 0.000172473, 0.00017444, 0.000177766, 0.000176331, \
+                        0.000172935, 0.000168798, 0.000178058, 0.00015719, 0.000162182, 0.000177715, \
+                        0.000179366, 0.000160911], dtype=np.double)
+    HighNoiseVarTs[0] = np.mean(VarTs)
     
+
+    del ISet
+    del FPTSet
+
+    HighNoise2Tbars = np.array(np.mean(np.array([ -0.323264, -0.322959, -0.322945, -0.322403, -0.32411, -0.323167, \
+                        -0.322175, -0.322915, -0.323712, -0.321833, -0.322604, -0.323077, -0.324169, \
+                        -0.32533, -0.323273, -0.320134, -0.323755, -0.319503, -0.325758, -0.322986 ], dtype=np.double)))
+    HighNoise2VarTs = np.array(np.mean(np.array([ 7.84507e-05, 4.77232e-05, 8.04538e-05, 7.61505e-05, 8.40962e-05, \
+                        3.95456e-05, 7.22033e-05, 8.21001e-05, 5.89792e-05, 7.39548e-05, 7.54628e-05, 7.00665e-05, \
+                        6.80643e-05, 0.000117195, 7.17906e-05, 4.88781e-05, 5.80263e-05, 6.82364e-05, 7.10541e-05, 8.87985e-05 ], dtype=np.double)))
+        
     latex_textwidth_in = 6.50127
     fig, ax = plt.subplots(1, 1)
-    fig.set_size_inches(w=latex_textwidth_in, h=0.5*latex_textwidth_in)
-        
-    ax.plot(np.log10(Ds[1:]), 2*np.pi / Tbars[1:], "x")
+    fig.set_size_inches(w=latex_textwidth_in, h=0.5*latex_textwidth_in) 
+
     ax.plot(np.log10(D), obars, "k")
     ax.plot(np.log10(D), obars_D_inf, "k--")
     ax.plot(np.log10(D), obars_D0, "k:")
+
+    ax.plot(np.log10(Ds[1:6]), 2*np.pi / Tbars[1:6], "x")
+    ax.plot(np.array([np.log10(100.0) - 0.05]), 2*np.pi / HighNoiseTbars, marker="x", color="orange")
+    ax.errorbar(np.array([np.log10(100.0) - 0.05]), 2*np.pi / HighNoiseTbars,\
+            yerr=(2*np.pi*np.sqrt(HighNoiseVarTs)/(HighNoiseTbars**2)), mec="orange")
+    ax.plot(np.array([np.log10(100.0) + 0.05]), 2*np.pi / HighNoise2Tbars, marker="x", color="green")
+    ax.errorbar(np.array([np.log10(100.0) + 0.05]), 2*np.pi / HighNoise2Tbars,\
+            yerr=(2*np.pi*np.sqrt(HighNoise2VarTs)/(HighNoise2Tbars**2)), mec="red")
+
     ax.set_title(r"$T=" + str(simConfig.Simulation["T"]) + ", N=" + \
             str(simConfig.Simulation["Ensemble Size"]) + ", dt=" + \
             str(simConfig.Simulation["dt"]) + "$")
     ax.set_xlabel(r"$\log{D}$")
     ax.set_ylabel(r"$\overline{\omega}$")
-    ax.legend(["Simulation", "Analytisch", r"$D \rightarrow \infty$",\
-                r"$D \rightarrow 0$"])
+    ax.legend([ "Analytisch", r"$D \rightarrow \infty$", r"$D \rightarrow 0$", \
+            "Simulation",r"$dt=0.00001, T=500, N=1000$", r"$dt=0.000001, T=500, N=100$"])
         
-    del FPTSet
-    del ISet
-    
+    plt.savefig("OmegaBar.pgf")
     plt.savefig("OmegaBar.pdf")

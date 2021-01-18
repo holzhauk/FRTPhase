@@ -11,7 +11,7 @@
 
 #include "H5Cpp.h"
 
-#include "Isochrone.h"
+#include "Isochron.h"
 
 /*
  * C- operator functions to iterate through the HDF5 File
@@ -29,13 +29,13 @@ using namespace H5;
 
 class IsochroneSet {
 private:
-    std::list<std::shared_ptr<Isochrone>> Isochrone_list_ptr;
+    std::list<std::shared_ptr<Isochron>> Isochron_list_ptr;
 
 public:
 
     void load(fs::path);
-    std::list<std::shared_ptr<Isochrone>>::iterator begin();
-    std::list<std::shared_ptr<Isochrone>>::iterator end();
+    std::list<std::shared_ptr<Isochron>>::iterator begin();
+    std::list<std::shared_ptr<Isochron>>::iterator end();
 
 };
 

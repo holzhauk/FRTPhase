@@ -1,25 +1,25 @@
 //
 // Created by konstantin on 4/6/20.
 //
-#include "Isochrone.h"
+#include "Isochron.h"
 #include <iostream>
 
-Isochrone::Isochrone(std::string& isochrone_group_name) {
+Isochron::Isochron(std::string& isochrone_group_name) {
     name = isochrone_group_name;
 }
 
-void Isochrone::push_parameter(std::string key, double& val) {
+void Isochron::push_parameter(std::string key, double& val) {
     parameters[key] = val;
 }
 
-void Isochrone::set_curve(std::vector<double>& Rhos, std::vector<double>& Phis) {
+void Isochron::set_curve(std::vector<double>& Rhos, std::vector<double>& Phis) {
     Rho = std::unique_ptr<std::vector<double>>(new std::vector<double>(Rhos.size()));
     Phi = std::unique_ptr<std::vector<double>>(new std::vector<double>(Phis.size()));
     *Rho = Rhos;
     *Phi = Phis;
 }
 
-void Isochrone::print() {
+void Isochron::print() {
     std::cout << "Parameters:" << std::endl;
     for (auto p_i : parameters){
         std::cout << "\t" << p_i.first << ": " <<
@@ -38,18 +38,18 @@ void Isochrone::print() {
     std::cout << "]" << std::endl;
 }
 
-std::vector<double>& Isochrone::get_Rho() {
+std::vector<double>& Isochron::get_Rho() {
     return *Rho;
 }
 
-std::vector<double>& Isochrone::get_Phi() {
+std::vector<double>& Isochron::get_Phi() {
     return *Phi;
 }
 
-std::map<std::string, double>& Isochrone::get_parameterMap() {
+std::map<std::string, double>& Isochron::get_parameterMap() {
     return parameters;
 }
 
-std::string Isochrone::get_name() {
+std::string Isochron::get_name() {
     return name;
 }

@@ -86,7 +86,7 @@ IsoPlanarSOsc& IsoPlanarSOsc::IsoPlanarSOscIt::operator*() const {
 void IsoPlanarSOsc::pSet_t::load(std::map<std::string, double> &pMap) {
     D = pMap["D"];
 }
-
+/*
 MPI_Datatype IsoPlanarSOsc::config_t::mpiType() {
     MPI_Datatype mpi_config_t;
     int blengths[3] = {1, 1, 3};
@@ -98,4 +98,4 @@ MPI_Datatype IsoPlanarSOsc::config_t::mpiType() {
     MPI_Type_create_struct(3, blengths, offsets, types, &mpi_config_t);
     MPI_Type_commit(&mpi_config_t);
     return mpi_config_t;
-}
+}*/
