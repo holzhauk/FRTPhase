@@ -3,7 +3,6 @@
 //
 #include <cmath>
 #include <utility>
-#include <algorithm>
 #include <H5Cpp.h>
 
 #include "IsoSurface.h"
