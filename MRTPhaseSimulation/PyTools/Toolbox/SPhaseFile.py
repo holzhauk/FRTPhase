@@ -1,14 +1,16 @@
 import h5py
 import os
+from pathlib import Path
+import json
 import numpy as np
-from Exceptions import *
+from .Exceptions import *
 
 class SPhaseFile():
     FORMAT = "SPhaseFile"
     VERSION = "0.0.1"
     CLASSTAG = ""
 
-    def __init__(self, model_name, dtype=np.double):
+    def __init__(self, model_name: str, dtype: np.dtype =np.double):
         self.MODELNAME = model_name
         self.dtype = dtype
 
@@ -60,6 +62,18 @@ class Curve():
         self.rho = np.array([], dtype=self.dtype)
         self.phi = np.array([], dtype=self.dtype)
 
+    def __eq__(self, other):
+        if not isinstance(other, Curve):
+            return NotImplemented
+        are_equal = True
+        are_equal = are_equal and (self.dtype == other.dtype)
+        are_equal = are_equal and (self.key == other.key)
+        are_equal = are_equal and (self.parameterSet == other.parameterSet)
+        are_equal = are_equal and np.array_equal(self.rho, other.rho)
+        are_equal = are_equal and np.array_equal(self.phi, other.phi)
+        return are_equal
+
+
 
 class IsoSurfaceFile(SPhaseFile):
     CLASSTAG = "IsoSurfaceFile"
@@ -102,6 +116,19 @@ class IsoSurfaceFile(SPhaseFile):
             dSet_phi = CurveGroup["phi"]
             with dSet_phi.astype(self.dtype):
                 curve.phi = dSet_phi[:]
+
+    def __iter__(self):
+        self.IsoSurfaceIterator = iter(self.curveSet)
+        return self.IsoSurfaceIterator
+
+    def __next__(self):
+        return next(self.IsoSurfaceIterator)
+
+    def __eq__(self, other):
+        are_equal = True
+        for (c1, c2) in zip(self.curveSet, other.curveSet):
+            are_equal = are_equal and (c1 == c2)
+        return are_equal
 
     def createCurve(self, key):
         newCurve = Curve(key)
@@ -221,3 +248,36 @@ class FRTDataFile(SPhaseFile):
         frtData = FRTData(key)
         self.dataSet.append(frtData)
         return frtData
+
+class SimConfigFile:
+    def __init__(self):
+        self.modelName = ""
+        self.paths = {
+            "In": Path(""),
+            "Out": Path("")
+        }
+        self.simulation = {
+            "dt": 0.0,
+            "t0": 0.0,
+            "T": 0.0,
+            "Ensemble Size": 0,
+            "Sample Size": 0,
+        }
+
+    def read(self, file_path: Path):
+        with open(file_path, "r") as file:
+            dict_bf = json.load(file)
+        self.modelName = dict_bf["Model Name"]
+        self.paths["In"] = Path(dict_bf["Paths"]["In"]["filepath"]) / \
+                           Path(dict_bf["Paths"]["In"]["filename"])
+        self.paths["Out"] = Path(dict_bf["Paths"]["Out"]["filepath"]) / \
+                            Path(dict_bf["Paths"]["Out"]["filename"])
+        self.simulation = dict_bf["Simulation"]
+
+    def print_contents(self):
+        print("SimConfig")
+        print("\t ModelName: ", self.modelName)
+        print("\t Paths: \n \t \t In: ", self.paths["In"],
+              "\n \t \t Out: ", self.paths["Out"])
+        print("\t Simulation: \n \t \t", self.simulation)
+

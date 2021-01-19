@@ -28,8 +28,8 @@ namespace MPI {
         int get_worldSize();
         FRTData run(Config::Simulation& config,
                         InterpolatedCurve& curve,
-                        Sampler& sampler,
-                        SDEIntegrator& integrator);
+                        Sampler* sampler_ptr,
+                        SDEIntegrator* integrator_ptr);
     };
 
 };

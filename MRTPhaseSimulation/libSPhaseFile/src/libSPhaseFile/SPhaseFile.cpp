@@ -4,7 +4,7 @@
 
 #include "SPhaseFile.h"
 
-void SPhaseFile::read(fs::path& filePath){
+void SPhaseFile::read(const fs::path& filePath){
     try{
         H5::Exception::dontPrint();
 
@@ -71,7 +71,7 @@ void SPhaseFile::read(fs::path& filePath){
     }
 }
 
-void SPhaseFile::write(fs::path& filePath){
+void SPhaseFile::write(const fs::path& filePath){
     try {
         H5::Exception::dontPrint();
 

@@ -15,6 +15,6 @@ double IsotropicPlanarSSDEAdditiveNoise::q_rho(double& rho) {
     return sqrt(2*pSet["D_rho"]);
 }
 
-double IsotropicPlanarSSDEAdditiveNoise::q_phi(double& phi) {
-    return sqrt(2*pSet["D_phi"]);
+double IsotropicPlanarSSDEAdditiveNoise::q_phi(double& rho) {
+    return sqrt(2*pSet["D_phi"]) / rho;
 }

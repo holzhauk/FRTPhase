@@ -17,6 +17,8 @@ private:
     unique_ptr<Domain> domain_ptr;
     unique_ptr<IsotropicPlanarSSDE> sde_ptr;
 public:
+    ItoEulerIntegrator(unique_ptr<Domain>& domain_ptr,
+                        unique_ptr<IsotropicPlanarSSDE>& sde_ptr);
     ItoEulerIntegrator(const config_t& config,
                        unique_ptr<Domain>& domain_ptr,
                        unique_ptr<IsotropicPlanarSSDE>& sde_ptr);

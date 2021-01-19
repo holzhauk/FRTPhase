@@ -27,6 +27,10 @@ tuple<double, double> InterpolatedCurve::get_extensions() {
     return tie(rho_min, rho_max);
 }
 
+ParameterSet InterpolatedCurve::get_parameterSet() {
+    return ParameterSet(parameterSet);
+}
+
 void InterpolatedCurve::add_parameter(string pName, double pVal){
     parameterSet[pName] = pVal;
 }

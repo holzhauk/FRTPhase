@@ -1,0 +1,20 @@
+{
+  "Model Name": "NewbySchwemmer",
+  "Paths": {
+    "In": {
+      "filepath": "/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/SimData/IsoSurfaceVerification/NewbySchwemmer/",
+      "filename": "NewbySchwemmerAntirotating_IsoSurfacePair.h5"
+    },
+    "Out": {
+      "filepath": "/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/SimData/IsoSurfaceVerification/NewbySchwemmer/",
+      "filename": "NewbySchwemmerAntirotating_FRTFile.h5"
+    }
+  },
+  "Simulation": {
+    "dt": 0.001,
+    "t0": 0.0,
+    "T": 100.0,
+    "Ensemble Size": 100,
+    "Sample Size": 20
+  }
+}

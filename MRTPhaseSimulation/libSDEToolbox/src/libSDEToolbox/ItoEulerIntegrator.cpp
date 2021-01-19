@@ -5,11 +5,17 @@
 #include <cmath>
 #include "ItoEulerIntegrator.h"
 
+ItoEulerIntegrator::ItoEulerIntegrator(unique_ptr<Domain>& domain_ptr,
+                                       unique_ptr<IsotropicPlanarSSDE>& sde_ptr){
+    this->domain_ptr = move(domain_ptr);
+    this->sde_ptr = move(sde_ptr);
+}
+
 ItoEulerIntegrator::ItoEulerIntegrator(const config_t& config,
                                        unique_ptr<Domain>& domain_ptr,
                                        unique_ptr<IsotropicPlanarSSDE>& sde_ptr): SDEIntegrator(config){
-    domain_ptr = move(domain_ptr);
-    sde_ptr = move(sde_ptr);
+    this->domain_ptr = move(domain_ptr);
+    this->sde_ptr = move(sde_ptr);
 }
 
 state_t ItoEulerIntegrator::evolve(){

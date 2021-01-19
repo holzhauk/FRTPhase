@@ -18,9 +18,11 @@ private:
     unique_ptr<Domain> domain_ptr;
     unique_ptr<IsotropicPlanarSSDEAdditiveNoise> sde_ptr;
 public:
+    HeunIntegrator(unique_ptr<Domain>& domain_ptr,
+                   unique_ptr<IsotropicPlanarSSDEAdditiveNoise>& sde_ptr);
     HeunIntegrator(const config_t& config,
                    unique_ptr<Domain>& domain_ptr,
-                   unique_ptr<IsotropicPlanarSSDE>& sde_ptr);
+                   unique_ptr<IsotropicPlanarSSDEAdditiveNoise>& sde_ptr);
     state_t evolve();
 };
 

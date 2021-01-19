@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
                 SendBuffer[i + 2*bcast_config.noCoordinates] = IsoSample_rho[i];
                 SendBuffer[i + 2*bcast_config.noCoordinates + bcast_config.noSamples] = IsoSample_phi[i];
             }
-            BOOST_LOG_TRIVIAL(debug) << "broadcast: serialized isochrone and initial position coordinates";
+            BOOST_LOG_TRIVIAL(debug) << "broadcast: serialized isochron and initial position coordinates";
             MPI_Bcast(SendBuffer, 2*(bcast_config.noCoordinates + bcast_config.noSamples),
                     MPI_DOUBLE, 0, MPI_COMM_WORLD);
             BOOST_LOG_TRIVIAL(debug) << "serialized coordinate information sendt";
@@ -199,7 +199,7 @@ int main(int argc, char* argv[]) {
             std::vector<double> Tbar = std::vector<double>(bcast_config.noSamples, 0.0);
             std::vector<double> VarT = std::vector<double>(bcast_config.noSamples, 0.0);
 
-            BOOST_LOG_TRIVIAL(info) << "start SIMULATION for this isochrone";
+            BOOST_LOG_TRIVIAL(info) << "start SIMULATION for this isochron";
             for (int s = 0; s < bcast_config.noSamples; s++){
 
                 config.x0[0] = IsoSample_rho[s];

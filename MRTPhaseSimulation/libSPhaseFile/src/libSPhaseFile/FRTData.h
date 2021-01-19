@@ -19,7 +19,7 @@ class FRTDataFile;
 struct FRTData {
 private:
     friend class FRTDataFile;
-    const string isoSurfaceName;
+    string isoSurfaceName;
 public:
     array<vector<double>, 2> x0;
     // asymptotic angle PhiT = phi(T)
@@ -34,6 +34,7 @@ public:
 
     FRTData(string isoSurfaceName): isoSurfaceName(isoSurfaceName) {};
     bool operator == (const FRTData& other) const;
+    FRTData& operator = (const FRTData& other);
 };
 
 class FRTDataFile: public SPhaseFile{

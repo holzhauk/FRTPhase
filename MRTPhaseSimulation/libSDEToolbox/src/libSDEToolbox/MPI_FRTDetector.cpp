@@ -3,6 +3,7 @@
 //
 #include <cmath>
 #include "MPI_FRTDetector.h"
+#include <iostream>
 
 MPI::FRTDetector::FRTDetector() {
     // configure and init mpi
@@ -13,8 +14,8 @@ MPI::FRTDetector::FRTDetector() {
 }
 
 MPI::FRTDetector::FRTDetector(int world_rank, int world_size) {
-    world_size = world_size;
-    world_rank = world_rank;
+    this->world_size = world_size;
+    this->world_rank = world_rank;
     this->has_initiated_mpi = false;
 }
 
@@ -33,24 +34,24 @@ int MPI::FRTDetector::get_worldSize() {
 
 FRTData MPI::FRTDetector::run(Config::Simulation& config,
                               InterpolatedCurve& curve,
-                              Sampler& sampler,
-                              SDEIntegrator& integrator) {
+                              Sampler* sampler_ptr,
+                              SDEIntegrator* integrator_ptr) {
 
     FRTData dataSet(curve.get_name());
     Pen pen(dataSet);
-    vector<State_t> Samples = sampler.get_samples(config.SampleSize, curve);
+    vector<State_t> Samples = sampler_ptr->get_samples(config.SampleSize, curve);
     SDEIntegrator::config_t integratorConfig = SimConfig2IntegratorConfig(config);
-    integrator.configure(integratorConfig);
+    integrator_ptr->configure(integratorConfig);
 
     for (auto x0: Samples){
 
         pen.write_down(x0);
         Data<StationaryStats> sData(config);
-        unsigned int subE = SubEnsembleSize(world_rank, world_size, config.EnsembleSize);
 
+        unsigned int subE = SubEnsembleSize(world_rank, world_size, config.EnsembleSize);
         for (unsigned int e = 0; e < subE; e++){
-            integrator.reset(x0, config.t0);
-            auto [xT, T] = integrator.integrate();
+            integrator_ptr->reset(x0, config.t0);
+            auto [xT, T] = integrator_ptr->integrate();
             sData.add_data_point(xT[1]);
         }
 
@@ -64,11 +65,11 @@ FRTData MPI::FRTDetector::run(Config::Simulation& config,
 
             Data<FRTStats> frtData(config);
             for (unsigned int e = 0; e < subE; e++){
-                integrator.reset(x0, config.t0);
+                integrator_ptr->reset(x0, config.t0);
                 array<double, 2> x = x0;
                 double T = config.t0;
-                while(!curve.is_first_return_event(x, pos_sense_of_rotation) && integrator.is_in_time()){
-                    tie(x, T) = integrator.evolve();
+                while(!curve.is_first_return_event(x, pos_sense_of_rotation) && integrator_ptr->is_in_time()){
+                    tie(x, T) = integrator_ptr->evolve();
                 }
                 frtData.add_data_point(T);
             }

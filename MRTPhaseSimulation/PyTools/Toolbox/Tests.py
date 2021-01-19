@@ -4,7 +4,7 @@ from SPhaseFile import *
 
 class TestSPhaseFileFunctionality(unittest.TestCase):
 
-    def test_WriteIsoSurfaceFile(self):
+    def test_WriteReadIsoSurfaceFile(self):
         isoSurfaceFile = IsoSurfaceFile("theTestModel")
         c1 = isoSurfaceFile.createCurve("Curve0")
         c1.parameterSet["D"] = 0.1256
@@ -18,10 +18,13 @@ class TestSPhaseFileFunctionality(unittest.TestCase):
         c2.rho = np.linspace(0.3, 3.67, num=50)
         c2.phi = c2.parameterSet["beta"]*c2.rho
         
-        isoSurfaceFile.write("../../../pythonTestFile.h5")
+        isoSurfaceFile.write("pythonTestFile.h5")
 
-    def test_ReadIsoSurfaceFile(self):
-        isoSurfaceFile = IsoSurfaceFile("theTestModel")
+        readFile = IsoSurfaceFile("theTestModel")
+        readFile.read("pythonTestFile.h5")
+        self.assertEqual(isoSurfaceFile, readFile)
+        os.remove("pythonTestFile.h5")
+
 
 
 

@@ -9,8 +9,6 @@
 #include "Sampler.h"
 
 class EquidistantSampler: public Sampler {
-private:
-
 public:
     vector<array<double, 2>> get_samples(size_t sample_size, InterpolatedCurve& curve);
 };

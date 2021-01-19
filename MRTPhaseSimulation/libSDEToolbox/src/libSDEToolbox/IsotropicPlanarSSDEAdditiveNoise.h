@@ -10,8 +10,8 @@
 class IsotropicPlanarSSDEAdditiveNoise: public IsotropicPlanarSSDE {
 public:
     IsotropicPlanarSSDEAdditiveNoise(double D_rho, double D_phi);
-    double q_rho(double& rho);
-    double q_phi(double& phi);
+    double q_rho(double& rho) override;
+    double q_phi(double& rho) override;
 };
 
 #endif //MRTPHASESIMULATION_ISOTROPICPLANARSSDEADDITIVENOISE_H

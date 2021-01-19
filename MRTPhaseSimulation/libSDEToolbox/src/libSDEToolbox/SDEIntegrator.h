@@ -24,11 +24,12 @@ public:
         double T;
     };
 protected:
-    array<double, 2> x;
-    double t;
-    double dt;
-    double T;
+    array<double, 2> x = {0.0, 0.0};
+    double t = 0.0;
+    double dt = 0.0;
+    double T = 0.0;
 public:
+    SDEIntegrator() = default;
     SDEIntegrator(const config_t& config){
        this->configure(config);
     };

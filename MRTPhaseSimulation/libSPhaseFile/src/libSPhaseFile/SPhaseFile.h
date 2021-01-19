@@ -22,8 +22,8 @@ protected:
     virtual void write_body(H5::H5File& file) = 0;
 public:
     SPhaseFile(string class_id): SPHASEFILE_CLASS_ID(class_id) {};
-    void read(fs::path& filePath);
-    void write(fs::path& filePath);
+    void read(const fs::path& filePath);
+    void write(const fs::path& filePath);
 };
 
 

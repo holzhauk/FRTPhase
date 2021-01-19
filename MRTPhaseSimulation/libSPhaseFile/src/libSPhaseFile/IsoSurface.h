@@ -32,6 +32,7 @@ public:
     InterpolatedCurve() = default;
     InterpolatedCurve(string name): name(name) {};
     string get_name();
+    ParameterSet get_parameterSet();
     tuple<double, double> get_extensions();
     void add_parameter(string pName, double pVal);
     void add_node(array<double, 2>& x);

@@ -20,7 +20,17 @@ bool FRTData::operator == (const FRTData& other) const {
     return is_equal;
 }
 
-
+FRTData& FRTData::operator = (const FRTData& other) {
+    this->isoSurfaceName = other.isoSurfaceName;
+    this->x0 = other.x0;
+    this->mPhiT = other.mPhiT;
+    this->varPhiT = other.varPhiT;
+    this->mT = other.mT;
+    this->varT = other.varT;
+    this->mFRT = other.mFRT;
+    this->varFRT = other.varFRT;
+    return *this;
+}
 
 FRTData& FRTDataFile::createDataSet(string isoSurfaceName) {
     unique_ptr<FRTData> dataSet_ptr(new FRTData(isoSurfaceName));
