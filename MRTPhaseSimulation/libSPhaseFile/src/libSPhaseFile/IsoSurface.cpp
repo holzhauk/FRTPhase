@@ -1,6 +1,7 @@
 //
 // Created by konstantin on 1/3/21.
 //
+#include <algorithm>
 #include <cmath>
 #include <utility>
 #include <H5Cpp.h>
@@ -357,9 +358,9 @@ void InterpolatedCurve::sortNodes(){
     for(auto rho_it = nodes[0].begin(), phi_it = nodes[1].begin();
             rho_it != nodes[0].end(), phi_it != nodes[1].end();
             ++rho_it, ++phi_it){
-        dummy.push_back({*rho_it, *phi_it});
+        dummy.emplace_back(*rho_it, *phi_it);
     }
-    sort(dummy.begin(), dummy.end()); // sort for non-descending order in rho
+    std::sort(dummy.begin(), dummy.end()); // sort for non-descending order in rho
     nodes[0] = vector<double>();
     nodes[1] = vector<double>();
     for (auto& x: dummy){
