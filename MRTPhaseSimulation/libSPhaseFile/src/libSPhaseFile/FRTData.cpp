@@ -484,3 +484,14 @@ bool FRTDataFile::operator == (const FRTDataFile& other) const {
     }
     return is_equal;
 }
+
+FRTDataFile& FRTDataFile::operator = (const FRTDataFile& other) {
+    this->modelName = other.modelName;
+    this->configFilePath = other.configFilePath;
+    this->isoSurfaceFilePath = other.isoSurfaceFilePath;
+    for (auto& data_ptr: data_ptr_Set){
+        FRTData& new_data = this->createDataSet(data_ptr->isoSurfaceName);
+        new_data = *data_ptr;
+    }
+    return *this;
+}

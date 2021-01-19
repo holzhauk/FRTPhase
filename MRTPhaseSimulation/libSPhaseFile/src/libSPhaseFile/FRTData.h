@@ -39,7 +39,7 @@ public:
 
 class FRTDataFile: public SPhaseFile{
 private:
-    const string modelName;
+    string modelName;
     fs::path isoSurfaceFilePath;
     fs::path configFilePath;
     list<unique_ptr<FRTData>> data_ptr_Set;
@@ -56,6 +56,7 @@ public:
         SPhaseFile(SPhaseFile_FRTDataFile_CLASS_ID){};
     FRTData& createDataSet(string isoSurfaceName);
     bool operator == (const FRTDataFile& other) const;
+    FRTDataFile& operator = (const FRTDataFile& other);
 };
 
 

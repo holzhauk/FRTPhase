@@ -60,6 +60,11 @@ int main(int argc, char* argv[]){
     MPI_Share(world_rank, isoSurfaceFile);
 
     FRTDataFile frtDataFile(modelName);
+    if (is_master){
+        fs::path in_path(config.get_inPath());
+        frtDataFile = FRTDataFile(modelName, config_file_path, in_path);
+    }
+
     EquidistantSampler sampler;
     for (auto isoSurface: isoSurfaceFile) {
         auto [rho_min, rho_max] = isoSurface.get_extensions();
