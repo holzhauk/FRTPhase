@@ -5,7 +5,6 @@
 #include <mpi.h>
 #include <filesystem>
 #include <cmath>
-#include <memory>
 #include <libSDEToolbox/libSDEToolbox.h>
 #include <libSPhaseFile/libSPhaseFile.h>
 #include <libMPIFunctions/libMPIFunctions.h>
@@ -68,9 +67,9 @@ int main(int argc, char* argv[]){
     EquidistantSampler sampler;
     for (auto isoSurface: isoSurfaceFile) {
         auto [rho_min, rho_max] = isoSurface.get_extensions();
-        unique_ptr<Domain> domain_ptr(new ReflectiveAnnulus(rho_min, rho_max));
-        unique_ptr<IsotropicPlanarSSDE> theModel_ptr(new NewbySchwemmer(isoSurface.get_parameterSet()));
-        ItoEulerIntegrator integrator(domain_ptr, theModel_ptr);
+        ReflectiveAnnulus domain(rho_min, rho_max);
+        NewbySchwemmer model(isoSurface.get_parameterSet());
+        ItoEulerIntegrator integrator(&domain, &model);
         MPI::FRTDetector frtDetector(world_rank, world_size);
         FRTData& frtData = frtDataFile.createDataSet(isoSurface.get_name());
         frtData = frtDetector.run(simConfig, isoSurface, &sampler, &integrator);

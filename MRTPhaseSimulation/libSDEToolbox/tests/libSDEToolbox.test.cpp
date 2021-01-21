@@ -6,30 +6,56 @@
 #define BOOST_TEST_MODULE libSDEToolbox test
 
 #include <iostream>
+#include <cmath>
+#include <memory>
+#include <array>
 #include <boost/test/unit_test.hpp>
 #include <libSDEToolbox/libSDEToolbox.h>
-#include "../src/libSDEToolbox/SDEIntegrator.h"
 
 using namespace std;
 
 BOOST_AUTO_TEST_CASE(SDEIntegrator_test){
 
-   class TestInt : public SDEIntegrator {
+   ParameterSet antirotatingPSet = {{"D", 0.2},
+                                    {"omega", 1.0},
+                                    {"gamma", 15.0},
+                                    {"c", -15.0}};
+   class NewbySchwemmer: public IsotropicPlanarSSDEAdditiveNoise {
    public:
-       TestInt(config_t& config): SDEIntegrator(config){};
-       state_t evolve() {
-           x[0] = x[0] + dt;
-           x[1] = x[1] + dt;
-           t += dt;
-           return tie(x, t);
-       }
+       NewbySchwemmer(ParameterSet& pSet): IsotropicPlanarSSDEAdditiveNoise(pSet["D"], pSet["D"]) {
+           this->pSet = pSet;
+       };
+       double g(double& rho) override {
+           return -pSet["gamma"]*rho*(pow(rho, 2) - 1.0) + pSet["D"] / rho;
+       };
+       double f(double& rho) override {
+           return pSet["omega"]*(1.0 + pSet["gamma"]*pSet["c"]*pow((rho - 1.0), 2.0));
+       };
    };
 
-   TestInt::config_t config = {{0.0, 0.0}, 0.0, 1.0, 10.0};
-   TestInt testInt(config);
-   auto [x_1, t_1] = testInt.evolve();
-   auto [x_f, t_f] = testInt.integrate();
+    class NoBDomain: public Domain{
+    public:
+        array<double, 2> apply_boundary_conditions(array<double, 2>& x_init, array<double, 2>& x_final){
+            return array<double, 2>(x_final);
+        };
+    };
 
-   cout << "evolve: " << x_1[0] << "\t integrate: " << x_f[0] << endl;
+   double rho_min = 0.5;
+   double rho_max = 1.5;
+   SDEIntegrator::config_t config;
+   config.x0 = {0.6, 0.0};
+   config.t0 = 0.0;
+   config.dt = 0.001;
+   config.T = 0.1;
+   NewbySchwemmer model(antirotatingPSet);
+   //unique_ptr<Domain> domain_ptr(new NoBDomain());
+   ReflectiveAnnulus domain(rho_min, rho_max);
+   ItoEulerIntegrator integrator(config, &domain, &model);
+   for (int i = 0; i < 10; i++){
+       integrator.configure(config);
+       auto [x, t] = integrator.integrate();
+       auto [rho, phi] = x;
+       cout << i << "th realization: x = (" << rho << ", " << phi << ")" << endl;
+   }
 
 }

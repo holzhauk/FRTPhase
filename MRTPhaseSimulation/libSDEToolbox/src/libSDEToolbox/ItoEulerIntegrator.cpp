@@ -3,19 +3,20 @@
 //
 
 #include <cmath>
+#include <iostream>
 #include "ItoEulerIntegrator.h"
 
-ItoEulerIntegrator::ItoEulerIntegrator(unique_ptr<Domain>& domain_ptr,
-                                       unique_ptr<IsotropicPlanarSSDE>& sde_ptr){
-    this->domain_ptr = move(domain_ptr);
-    this->sde_ptr = move(sde_ptr);
+ItoEulerIntegrator::ItoEulerIntegrator(Domain* domain_ptr,
+                                       IsotropicPlanarSSDE* sde_ptr){
+    this->domain_ptr = domain_ptr;
+    this->sde_ptr = sde_ptr;
 }
 
 ItoEulerIntegrator::ItoEulerIntegrator(const config_t& config,
-                                       unique_ptr<Domain>& domain_ptr,
-                                       unique_ptr<IsotropicPlanarSSDE>& sde_ptr): SDEIntegrator(config){
-    this->domain_ptr = move(domain_ptr);
-    this->sde_ptr = move(sde_ptr);
+                                       Domain* domain_ptr,
+                                       IsotropicPlanarSSDE* sde_ptr): SDEIntegrator(config){
+    this->domain_ptr = domain_ptr;
+    this->sde_ptr = sde_ptr;
 }
 
 state_t ItoEulerIntegrator::evolve(){
@@ -25,7 +26,7 @@ state_t ItoEulerIntegrator::evolve(){
     x[0] = x0[0] + sde_ptr->g(x0[0])*dt + sde_ptr->q_rho(x0[0])*dW;
     //phi
     dW = sqrt(dt)*norm_dist(rn_gen);
-    x[1] = x[1] + sde_ptr->f(x0[0])*dt + sde_ptr->q_phi(x0[0])*dW;
+    x[1] = x0[1] + sde_ptr->f(x0[0])*dt + sde_ptr->q_phi(x0[0])*dW;
 
     x = domain_ptr->apply_boundary_conditions(x0, x);
 

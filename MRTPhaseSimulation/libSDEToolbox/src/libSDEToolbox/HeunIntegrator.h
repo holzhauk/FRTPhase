@@ -15,14 +15,14 @@ private:
     random_device rdn_dev {};
     mt19937_64 rn_gen {rdn_dev()};
     normal_distribution<double> norm_dist {0.0, 1.0};
-    unique_ptr<Domain> domain_ptr;
-    unique_ptr<IsotropicPlanarSSDEAdditiveNoise> sde_ptr;
+    Domain* domain_ptr;
+    IsotropicPlanarSSDEAdditiveNoise* sde_ptr;
 public:
-    HeunIntegrator(unique_ptr<Domain>& domain_ptr,
-                   unique_ptr<IsotropicPlanarSSDEAdditiveNoise>& sde_ptr);
+    HeunIntegrator(Domain* domain_ptr,
+                   IsotropicPlanarSSDEAdditiveNoise* sde_ptr);
     HeunIntegrator(const config_t& config,
-                   unique_ptr<Domain>& domain_ptr,
-                   unique_ptr<IsotropicPlanarSSDEAdditiveNoise>& sde_ptr);
+                   Domain* domain_ptr,
+                   IsotropicPlanarSSDEAdditiveNoise* sde_ptr);
     state_t evolve();
 };
 

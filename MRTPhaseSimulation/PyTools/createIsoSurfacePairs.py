@@ -13,7 +13,7 @@ if __name__ == "__main__":
     config.read(config_file_path)
 
     antirotatingPSet = {
-        "D": 0.2,
+        "D": 1.0,
         "omega": 1.0,
         "gamma": 15.0,
         "c": -15.0

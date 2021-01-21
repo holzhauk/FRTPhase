@@ -5,17 +5,17 @@
 #include <cmath>
 #include "HeunIntegrator.h"
 
-HeunIntegrator::HeunIntegrator(unique_ptr<Domain>& domain_ptr,
-                               unique_ptr<IsotropicPlanarSSDEAdditiveNoise>& sde_ptr) {
-    this->domain_ptr = move(domain_ptr);
-    this->sde_ptr = move(sde_ptr);
+HeunIntegrator::HeunIntegrator(Domain* domain_ptr,
+                               IsotropicPlanarSSDEAdditiveNoise* sde_ptr) {
+    this->domain_ptr = domain_ptr;
+    this->sde_ptr = sde_ptr;
 }
 
 HeunIntegrator::HeunIntegrator(const config_t& config,
-                               unique_ptr<Domain>& domain_ptr,
-                               unique_ptr<IsotropicPlanarSSDEAdditiveNoise>& sde_ptr): SDEIntegrator(config) {
-    this->domain_ptr = move(domain_ptr);
-    this->sde_ptr = move(sde_ptr);
+                               Domain* domain_ptr,
+                               IsotropicPlanarSSDEAdditiveNoise* sde_ptr): SDEIntegrator(config) {
+    this->domain_ptr = domain_ptr;
+    this->sde_ptr = sde_ptr;
 }
 
 state_t HeunIntegrator::evolve() {
@@ -39,7 +39,7 @@ state_t HeunIntegrator::evolve() {
 
     // phi iteration
     dW = sqrt(dt)*norm_dist(rn_gen);
-    x[1] = x[1] + (sde_ptr->f(x0[0]) + sde_ptr->f(Rho_p))*dt / 2
+    x[1] = x0[1] + (sde_ptr->f(x0[0]) + sde_ptr->f(Rho_p))*dt / 2
             + sde_ptr->q_phi(x0[0])*(1 / x0[0] + 1 / Rho_p)*dW / 2;
 
     x = domain_ptr->apply_boundary_conditions(x0, x);
