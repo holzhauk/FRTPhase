@@ -11,10 +11,10 @@
     }
   },
   "Simulation": {
-    "dt": 0.001,
+    "dt": 0.01,
     "t0": 0.0,
-    "T": 10.0,
-    "Ensemble Size": 10,
-    "Sample Size": 20
+    "T": 100.0,
+    "Ensemble Size": 1000,
+    "Sample Size": 5
   }
 }

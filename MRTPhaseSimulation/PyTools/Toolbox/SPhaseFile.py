@@ -139,6 +139,7 @@ class IsoSurfaceFile(SPhaseFile):
 class FRTData():
     def __init__(self, key, dtype=np.double):
         self.dtype=dtype
+        self.key = key
         self.rho0 = np.array([], dtype=self.dtype)
         self.phi0 = np.array([], dtype=self.dtype)
         self.mPhiT = np.array([], dtype=self.dtype)
@@ -200,11 +201,9 @@ class FRTDataFile(SPhaseFile):
 
     def __read_body__(self, file):
         dSet_isoSurfaceFilePath = file["isosurface_file"]
-        with dSet_isoSurfaceFilePath.asstr() as str:
-            self.isoSurfaceFilePath = str
+        self.isoSurfaceFilePath = dSet_isoSurfaceFilePath[()]
         dSet_configFilePath = file["configuration_file"]
-        with dSet_configFilePath.asstr() as str:
-            self.configFilePath = str
+        self.configFilePath = dSet_configFilePath[()]
 
         for key in file:
             if (key != "isosurface_file") and (key != "configuration_file"):
@@ -243,6 +242,12 @@ class FRTDataFile(SPhaseFile):
                 with dSet_varFRT.astype(self.dtype):
                     frtData.varFRT = dSet_varFRT[:]
 
+    def __iter__(self):
+        self.dataIterator = iter(self.dataSet)
+        return self.dataIterator
+
+    def __next__(self):
+        return next(self.dataIterator)
 
     def createFRTData(self, key):
         frtData = FRTData(key)

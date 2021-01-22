@@ -23,7 +23,7 @@ public:
     };
 
     double f(double& rho) override{
-        return -pSet["omega"]*(1 + pSet["gamma"]*pSet["c"]*pow((rho - 1.0), 2.0));
+        return pSet["omega"]*(1 + pSet["gamma"]*pSet["c"]*pow((rho - 1.0), 2.0));
     };
 };
 
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]){
         auto [rho_min, rho_max] = isoSurface.get_extensions();
         ReflectiveAnnulus domain(rho_min, rho_max);
         NewbySchwemmer model(isoSurface.get_parameterSet());
-        ItoEulerIntegrator integrator(&domain, &model);
+        HeunIntegrator integrator(&domain, &model);
         MPI::FRTDetector frtDetector(world_rank, world_size);
         FRTData& frtData = frtDataFile.createDataSet(isoSurface.get_name());
         frtData = frtDetector.run(simConfig, isoSurface, &sampler, &integrator);

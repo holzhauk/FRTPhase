@@ -54,7 +54,38 @@ BOOST_AUTO_TEST_CASE(assignment_test){
 }
 
 BOOST_AUTO_TEST_CASE(detect_first_return_event_test){
-    BOOST_CHECK(true);
+
+    vector<double> rho_curve = {0.5, 0.5909, 0.6818, 0.77272, 0.86363,
+                                0.9545, 1.04545, 1.136363, 1.227272, 1.31818,
+                                1.40909, 1.5 };
+    vector<double> phi_curve = {0.0, -0.1, -0.3, -0.4, -0.42, -0.41, -0.2, 0.1,
+                                0.3, 0.4, 1.1, 1.7};
+    InterpolatedCurve curve("IsoCurve");
+    curve.set_nodes(rho_curve, phi_curve);
+    auto [rho, phi] = curve.get_nodes();
+    BOOST_CHECK(rho == rho_curve);
+    BOOST_CHECK(phi == phi_curve);
+
+    array<double, 2> x = {0.7, 0.3};
+    BOOST_CHECK(!curve.is_first_return_event(x, true));
+    BOOST_CHECK(!curve.is_first_return_event(x, false));
+
+    x = {1.2, 2*M_PI + 0.1};
+    BOOST_CHECK(curve.is_first_return_event(x, true));
+    BOOST_CHECK(!curve.is_first_return_event(x, false));
+
+    x = {0.6, 2*M_PI - 0.09};
+    BOOST_CHECK(curve.is_first_return_event(x, true));
+    BOOST_CHECK(!curve.is_first_return_event(x, false));
+
+    x = {1.046, - 2*M_PI - 0.2};
+    BOOST_CHECK(!curve.is_first_return_event(x, true));
+    BOOST_CHECK(curve.is_first_return_event(x, false));
+
+    x = {1.22, - 2*M_PI + 0.09};
+    BOOST_CHECK(!curve.is_first_return_event(x, true));
+    BOOST_CHECK(curve.is_first_return_event(x, false));
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

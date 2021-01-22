@@ -3,7 +3,6 @@
 //
 
 #include <cmath>
-#include <iostream>
 #include "ItoEulerIntegrator.h"
 
 ItoEulerIntegrator::ItoEulerIntegrator(Domain* domain_ptr,

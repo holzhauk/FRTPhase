@@ -6,7 +6,6 @@
 #define MRTPHASESIMULATION_SDEINTEGRATOR_H
 
 #include <array>
-#include <memory>
 #include <tuple>
 
 #include "Domain.h"

@@ -7,13 +7,13 @@
 
 #include <iostream>
 #include <cmath>
-#include <memory>
 #include <array>
 #include <boost/test/unit_test.hpp>
 #include <libSDEToolbox/libSDEToolbox.h>
 
 using namespace std;
 
+/*
 BOOST_AUTO_TEST_CASE(SDEIntegrator_test){
 
    ParameterSet antirotatingPSet = {{"D", 0.2},
@@ -59,3 +59,33 @@ BOOST_AUTO_TEST_CASE(SDEIntegrator_test){
    }
 
 }
+*/
+
+BOOST_AUTO_TEST_CASE(ReflectiveAnnulus_test){
+    double rho_min, rho_max;
+    rho_min = 0.5;
+    rho_max = 1.5;
+    ReflectiveAnnulus domain(rho_min, rho_max);
+    State_t x0 = {0.6, 0.0};
+    State_t x = {0.8, 0.02};
+    State_t x_p = domain.apply_boundary_conditions(x0, x);
+    BOOST_CHECK(x_p == x);
+    x = {0.4, 0.02};
+    x_p = domain.apply_boundary_conditions(x0, x);
+    State_t x_c = {0.6, 0.02};
+    BOOST_CHECK(x_p == x_c);
+    x = {1.7, 0.6};
+    x_p = domain.apply_boundary_conditions(x0, x);
+    x_c = {1.3, 0.6};
+    BOOST_CHECK(x_p == x_c);
+    x = {3.8, 0.6};
+    x_p = domain.apply_boundary_conditions(x0, x);
+    BOOST_CHECK(x_p[0] - 1.2 < 0.00001);
+    BOOST_CHECK_EQUAL(x_p[1], 0.6);
+    //std::cout << "x = {" << x_p[0] << ", " << x_p[1] << "}" << std::endl;
+    x = {-3.8, 0.6};
+    x_p = domain.apply_boundary_conditions(x0, x);
+    BOOST_CHECK(x_p[0] - 0.8 < 0.00001);
+    BOOST_CHECK_EQUAL(x_p[1], 0.6);
+}
+

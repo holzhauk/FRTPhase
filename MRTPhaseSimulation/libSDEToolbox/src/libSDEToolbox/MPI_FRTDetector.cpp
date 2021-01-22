@@ -3,7 +3,6 @@
 //
 #include <cmath>
 #include "MPI_FRTDetector.h"
-#include <iostream>
 
 MPI::FRTDetector::FRTDetector() {
     // configure and init mpi
