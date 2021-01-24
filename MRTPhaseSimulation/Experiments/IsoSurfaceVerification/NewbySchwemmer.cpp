@@ -23,7 +23,7 @@ public:
     };
 
     double f(double& rho) override{
-        return pSet["omega"]*(1 + pSet["gamma"]*pSet["c"]*pow((rho - 1.0), 2.0));
+        return pSet["omega"]*(1 + pSet["gamma"]*pSet["c"]*pow((1.0 - rho), 2.0));
     };
 };
 
