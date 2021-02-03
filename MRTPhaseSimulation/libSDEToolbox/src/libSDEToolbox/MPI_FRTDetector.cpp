@@ -38,7 +38,7 @@ FRTData MPI::FRTDetector::run(Config::Simulation& config,
 
     FRTData dataSet(curve.get_name());
     Pen pen(dataSet);
-    vector<State_t> Samples = sampler_ptr->get_samples(config.SampleSize, curve);
+    vector<Pos_t> Samples = sampler_ptr->get_samples(config.SampleSize, curve);
     SDEIntegrator::config_t integratorConfig = SimConfig2IntegratorConfig(config);
     integrator_ptr->configure(integratorConfig);
 
@@ -98,7 +98,7 @@ SimConfig2IntegratorConfig& SimConfig2IntegratorConfig::operator = (const SimCon
     return *this;
 }
 
-void Pen::write_down(const State_t& x0) {
+void Pen::write_down(const Pos_t& x0) {
     dataSet.x0[0].push_back(x0[0]);
     dataSet.x0[1].push_back(x0[1]);
 }

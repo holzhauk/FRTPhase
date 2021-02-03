@@ -36,7 +36,7 @@ class NewbySchwemmer(IsotropicPlanarSSDE):
 
     def f(self, rho: np.array) -> np.array:
         P = self.pSet
-        return P["omega"]*(1 + P["gamma"]*P["c"]*(1 - rho)**2)
+        return P["omega"]*(1.0 + P["gamma"]*P["c"]*(1.0 - rho)**2)
 
     def q_rho(self, rho: np.array) -> np.array:
         P = self.pSet
@@ -45,4 +45,16 @@ class NewbySchwemmer(IsotropicPlanarSSDE):
     def q_phi(self, rho: np.array) -> np.array:
         P = self.pSet
         return np.sqrt(2*P["D"]) / rho
+
+
+class ModelFactory():
+
+    def __init__(self):
+        self.NewbyS = NewbySchwemmer()
+
+    def create(self, modelName: str, parameters: dict = {}):
+        if (modelName == self.NewbyS.modelName):
+            return NewbySchwemmer(parameters)
+
+
 

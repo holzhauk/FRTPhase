@@ -1,1 +1,2 @@
 add_subdirectory(IsoSurfaceVerification)
+add_subdirectory(IsoSurfaceCorrelation)

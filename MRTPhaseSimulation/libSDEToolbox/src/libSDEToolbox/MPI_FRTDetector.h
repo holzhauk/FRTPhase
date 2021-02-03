@@ -12,7 +12,7 @@
 #include "Sampler.h"
 #include "SDEIntegrator.h"
 
-using State_t = array<double, 2>;
+using Pos_t = array<double, 2>;
 
 namespace MPI {
 
@@ -47,7 +47,7 @@ private:
     FRTData& dataSet;
 public:
     Pen(FRTData& dataSet): dataSet(dataSet) {};
-    void write_down(const State_t& x0);
+    void write_down(const Pos_t& x0);
     void write_down(const StationaryStats& sStats);
     void write_down(const FRTStats& frtStats);
 };

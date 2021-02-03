@@ -2,11 +2,22 @@
 // Created by konstantin on 1/16/21.
 //
 
+#include <algorithm>
 #include "SimConfig.h"
 
 bool Config::operator==(const Config &other) {
     bool is_equal = true;
     is_equal = is_equal && (this->modelName == other.modelName);
+
+    auto lhsPSetIt = this->pSetList.begin();
+    auto rhsPSetIt = other.pSetList.begin();
+    while (lhsPSetIt != this->pSetList.end() && rhsPSetIt != other.pSetList.end()){
+        is_equal = is_equal && ((lhsPSetIt->size() == rhsPSetIt->size()) &&
+                (std::equal(lhsPSetIt->begin(), lhsPSetIt->end(), rhsPSetIt->begin())));
+        ++lhsPSetIt;
+        ++rhsPSetIt;
+    }
+
     is_equal = is_equal && (this->paths.input == other.paths.input);
     is_equal = is_equal && (this->paths.output == other.paths.output);
     is_equal == is_equal && (this->simulation == other.simulation);
@@ -23,10 +34,31 @@ bool Config::Simulation::operator== (const Config::Simulation& other) {
     return is_equal;
 }
 
+bool SimConfigFile::paramSetIterator::operator != (const SimConfigFile::paramSetIterator& other) {
+    return this->it != other.it;
+}
+
+ParameterSet& SimConfigFile::paramSetIterator::operator ++ (){
+    return *(++it);
+}
+
+ParameterSet& SimConfigFile::paramSetIterator::operator * (){
+    return *it;
+}
+
 void SimConfigFile::read(const fs::path& filepath) {
     pt::ptree root;
     pt::read_json(filepath, root);
-    config.modelName = root.get<std::string>("Model Name");
+    pt::ptree modelG = root.get_child("Model");
+    config.modelName = modelG.get<std::string>("Name");
+
+    for (auto& ptPSet: modelG.get_child("Parameterizations")){
+        ParameterSet pSet;
+        for (auto& parameter: ptPSet.second){
+            pSet[parameter.first.data()] = stod(parameter.second.data());
+        }
+        config.pSetList.push_back(pSet);
+    }
 
     pt::ptree inPaths = root.get_child("Paths.In");
     config.paths.input = fs::path(inPaths.get<std::string>("filepath")) /
@@ -46,7 +78,20 @@ void SimConfigFile::read(const fs::path& filepath) {
 
 void SimConfigFile::write(const fs::path& filepath) {
     pt::ptree root;
-    root.put("Model Name", config.modelName);
+
+    pt::ptree modelG;
+    modelG.put("Name", config.modelName);
+
+    pt::ptree paramG;
+    for (auto& pSet: config.pSetList){
+        pt::ptree ptPSet;
+        for (auto& param: pSet){
+            ptPSet.put(param.first.data(), param.second);
+        }
+        paramG.push_back(make_pair("", ptPSet));
+    }
+    modelG.put_child("Parameterizations", paramG);
+    root.put_child("Model", modelG);
 
     pt::ptree inPaths;
     inPaths.put("filepath", string(config.paths.input.parent_path()));
@@ -67,6 +112,14 @@ void SimConfigFile::write(const fs::path& filepath) {
     root.put_child("Simulation", simulation);
 
     pt::write_json(filepath, root);
+}
+
+SimConfigFile::paramSetIterator SimConfigFile::pSet_begin(){
+    return paramSetIterator(config.pSetList.begin());
+}
+
+SimConfigFile::paramSetIterator SimConfigFile::pSet_end(){
+    return paramSetIterator(config.pSetList.end());
 }
 
 Config::Simulation SimConfigFile::get_simConfig() const{

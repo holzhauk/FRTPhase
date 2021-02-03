@@ -1,20 +1,30 @@
 {
-  "Model Name": "NewbySchwemmer",
+  "Model": {
+	  "Name": "NewbySchwemmer",
+	  "Parameterizations": [
+		  {
+			  "D": 0.5,
+			  "omega": 1.0,
+			  "gamma": 15.0,
+			  "c": -15.0
+		  }
+	  ]
+  },
   "Paths": {
     "In": {
       "filepath": "/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/SimData/IsoSurfaceVerification/NewbySchwemmer/",
-      "filename": "AntirotatingD02_IsoSurfacePair.h5"
+      "filename": "AntirotatingD05_IsoSurfacePair.h5"
     },
     "Out": {
       "filepath": "/home/konstantin/Documents/Uni/Master/Masterarbeit/simulations/SimData/IsoSurfaceVerification/NewbySchwemmer/",
-      "filename": "AntirotatingD02_FRTFile.h5"
+      "filename": "AntirotatingD05_FRTFile.h5"
     }
   },
   "Simulation": {
     "dt": 0.01,
     "t0": 0.0,
     "T": 100.0,
-    "Ensemble Size": 1000,
+    "Ensemble Size": 2000,
     "Sample Size": 5
   }
 }

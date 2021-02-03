@@ -67,7 +67,17 @@ int main(int argc, char* argv[]){
     EquidistantSampler sampler;
     for (auto isoSurface: isoSurfaceFile) {
         auto [rho_min, rho_max] = isoSurface.get_extensions();
+        if (is_master)
+            cout << "rho_min: " << rho_min << "; rho_max: " << rho_max << endl;
         ReflectiveAnnulus domain(rho_min, rho_max);
+        if (is_master) {
+            ParameterSet pSet = isoSurface.get_parameterSet();
+            cout << "Parameters: " << endl;
+            cout << "D: " << pSet["D"] << endl;
+            cout << "omega: " << pSet["omega"] << endl;
+            cout << "gamma: " << pSet["gamma"] << endl;
+            cout << "c: " << pSet["c"] << endl;
+        }
         NewbySchwemmer model(isoSurface.get_parameterSet());
         HeunIntegrator integrator(&domain, &model);
         MPI::FRTDetector frtDetector(world_rank, world_size);

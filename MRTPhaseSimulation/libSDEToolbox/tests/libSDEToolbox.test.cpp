@@ -66,13 +66,13 @@ BOOST_AUTO_TEST_CASE(ReflectiveAnnulus_test){
     rho_min = 0.5;
     rho_max = 1.5;
     ReflectiveAnnulus domain(rho_min, rho_max);
-    State_t x0 = {0.6, 0.0};
-    State_t x = {0.8, 0.02};
-    State_t x_p = domain.apply_boundary_conditions(x0, x);
+    Pos_t x0 = {0.6, 0.0};
+    Pos_t x = {0.8, 0.02};
+    Pos_t x_p = domain.apply_boundary_conditions(x0, x);
     BOOST_CHECK(x_p == x);
     x = {0.4, 0.02};
     x_p = domain.apply_boundary_conditions(x0, x);
-    State_t x_c = {0.6, 0.02};
+    Pos_t x_c = {0.6, 0.02};
     BOOST_CHECK(x_p == x_c);
     x = {1.7, 0.6};
     x_p = domain.apply_boundary_conditions(x0, x);

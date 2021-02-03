@@ -257,6 +257,7 @@ class FRTDataFile(SPhaseFile):
 class SimConfigFile:
     def __init__(self):
         self.modelName = ""
+        self.pSets = []
         self.paths = {
             "In": Path(""),
             "Out": Path("")
@@ -272,7 +273,24 @@ class SimConfigFile:
     def read(self, file_path: Path):
         with open(file_path, "r") as file:
             dict_bf = json.load(file)
-        self.modelName = dict_bf["Model Name"]
+
+        modelG = dict_bf["Model"]
+        self.modelName = modelG["Name"]
+        for pSet in modelG["Parameterizations"]:
+            if type(pSet) is dict:
+                P = {}
+                for key in pSet:
+                    if type(pSet[key]) is float:
+                        P[key] = pSet[key]
+                    else:
+                        raise SPhaseFileWrongFormat(file_path, "in Model: " \
+                                + self.modelName + "Parameterizations: Parameter " \
+                                                    + key + "has non-float values" )
+                self.pSets.append(P)
+            else:
+                raise SPhaseFileWrongFormat(file_path, "in Model: " \
+                                + self.modelName + "Parameterizations: not in dict format")
+
         self.paths["In"] = Path(dict_bf["Paths"]["In"]["filepath"]) / \
                            Path(dict_bf["Paths"]["In"]["filename"])
         self.paths["Out"] = Path(dict_bf["Paths"]["Out"]["filepath"]) / \
@@ -282,6 +300,11 @@ class SimConfigFile:
     def print_contents(self):
         print("SimConfig")
         print("\t ModelName: ", self.modelName)
+        print("\t Parameterizations:")
+        for pSet in self.pSets:
+            for key in pSet:
+                print("\t \t Parameter: " + key + " = " + pSet[key])
+
         print("\t Paths: \n \t \t In: ", self.paths["In"],
               "\n \t \t Out: ", self.paths["Out"])
         print("\t Simulation: \n \t \t", self.simulation)

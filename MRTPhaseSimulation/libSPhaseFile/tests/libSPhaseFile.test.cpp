@@ -10,6 +10,9 @@
 #include <boost/test/unit_test.hpp>
 #include <libSPhaseFile/libSPhaseFile.h>
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 namespace fs = std::filesystem;
 
 const string modelName = "test_model";
@@ -97,7 +100,6 @@ BOOST_AUTO_TEST_CASE(assignment_test){
     IsoSurfaceFile file1(modelName);
     string alternate_name = "alternate_name";
     IsoSurfaceFile file2(alternate_name);
-    cout << "problem will occur here" << endl;
     file1 = file2;
     BOOST_REQUIRE(file1.get_modelName() == alternate_name);
 
@@ -617,6 +619,14 @@ BOOST_AUTO_TEST_CASE(write_read_json) {
 
     Config config_write;
     config_write.modelName = modelName;
+    ParameterSet pSet;
+    pSet["D"] = 0.1;
+    pSet["omega"] = 1.0;
+    pSet["gamma"] = 15.0;
+    pSet["c"] = -15.0;
+    config_write.pSetList.push_back(pSet);
+    pSet["D"] = 0.5;
+    config_write.pSetList.push_back(move(pSet));
     config_write.paths.input = fs::path("../Test/input.h5");
     config_write.paths.output = fs::path("/usr/Test/output.h5");
     config_write.simulation.dt = 0.002;
@@ -630,6 +640,14 @@ BOOST_AUTO_TEST_CASE(write_read_json) {
 
     SimConfigFile simConfigFile_read;
     simConfigFile_read.read(testPath);
+
+    int index = 0;
+    for (auto pSetIt = simConfigFile_read.pSet_begin();
+            pSetIt != simConfigFile_read.pSet_end(); ++pSetIt){
+        for (auto pIt = (*pSetIt).begin(); pIt != (*pSetIt).end(); ++pIt){
+            BOOST_TEST(true);
+        }
+    }
 
     BOOST_REQUIRE(simConfigFile_write == simConfigFile_read);
     BOOST_REQUIRE(simConfigFile_write.get_modelName() == simConfigFile_read.get_modelName());
