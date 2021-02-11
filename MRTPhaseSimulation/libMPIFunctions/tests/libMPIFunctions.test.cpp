@@ -42,6 +42,7 @@ BOOST_AUTO_TEST_CASE(MPI_share_IsoSurfaceFile_test){
         c1.add_parameter("omega", 1.0);
         c1.add_parameter("gamma", 15.0);
         c1.add_parameter("c", -15.0);
+        c1.set_omegaBar(-5.934);
         vector<double> rhos = {0.1, 0.2, 0.5, 100.0};
         vector<double> phis = {1.5, 0.1, 0.0004, -15.0};
         c1.set_nodes(rhos, phis);
@@ -51,6 +52,7 @@ BOOST_AUTO_TEST_CASE(MPI_share_IsoSurfaceFile_test){
         c2.add_parameter("delta", 2.71);
         c2.add_parameter("gamma", 3.141592);
         c2.add_parameter("p0", 1.0);
+        c2.set_omegaBar(0.564);
         rhos = {0.3, 0.8, 0.9623, 100.1};
         phis = {1.8, 3.0, 0.0004, -100.0};
         c2.set_nodes(rhos, phis);
@@ -70,6 +72,7 @@ BOOST_AUTO_TEST_CASE(MPI_share_IsoSurfaceFile_test){
         c1.add_parameter("omega", 1.0);
         c1.add_parameter("gamma", 15.0);
         c1.add_parameter("c", -15.0);
+        c1.set_omegaBar(-5.934);
         vector<double> rhos = {0.1, 0.2, 0.5, 100.0};
         vector<double> phis = {1.5, 0.1, 0.0004, -15.0};
         c1.set_nodes(rhos, phis);
@@ -79,6 +82,7 @@ BOOST_AUTO_TEST_CASE(MPI_share_IsoSurfaceFile_test){
         c2.add_parameter("delta", 2.71);
         c2.add_parameter("gamma", 3.141592);
         c2.add_parameter("p0", 1.0);
+        c2.set_omegaBar(0.564);
         rhos = {0.3, 0.8, 0.9623, 100.1};
         phis = {1.8, 3.0, 0.0004, -100.0};
         c2.set_nodes(rhos, phis);

@@ -23,8 +23,8 @@
   "Simulation": {
     "dt": 0.01,
     "t0": 0.0,
-    "T": 100.0,
-    "Ensemble Size": 2000,
+    "T": 1000.0,
+    "Ensemble Size": 1000,
     "Sample Size": 5
   }
 }

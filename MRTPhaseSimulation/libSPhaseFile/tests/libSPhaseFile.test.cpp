@@ -56,6 +56,23 @@ BOOST_AUTO_TEST_CASE(assignment_test){
     BOOST_CHECK_EQUAL(vals.front(), 0.1);
 }
 
+BOOST_AUTO_TEST_CASE(sample_random_point_from_curve){
+
+    vector<double> rho_curve = {0.5, 0.5909, 0.6818, 0.77272, 0.86363,
+                                0.9545, 1.04545, 1.136363, 1.227272, 1.31818,
+                                1.40909, 1.5};
+    vector<double> phi_curve = {0.0, -0.1, -0.3, -0.4, -0.42, -0.41, -0.2, 0.1,
+                                0.3, 0.4, 1.1, 1.7};
+    InterpolatedCurve curve("IsoCurve");
+    curve.set_nodes(rho_curve, phi_curve);
+    auto x_rand = curve.get_random_point();
+    BOOST_REQUIRE(x_rand[0] >= 0.5);
+    BOOST_REQUIRE(x_rand[0] <= 1.5);
+    BOOST_REQUIRE(x_rand[1] >= -0.42);
+    BOOST_REQUIRE(x_rand[1] <= 1.7);
+
+}
+
 BOOST_AUTO_TEST_CASE(detect_first_return_event_test){
 
     vector<double> rho_curve = {0.5, 0.5909, 0.6818, 0.77272, 0.86363,
@@ -363,6 +380,7 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
     InterpolatedCurve& ic_1 = isoSurfaceFile_write.createInterpolatedCurve("isosurface1");
     ic_1.add_parameter("a", 1.0);
     ic_1.add_parameter("b", 2.0);
+    ic_1.set_omegaBar(0.156);
     for (int i = 0; i < 10; i++) {
         array<double, 2> x;
         x[0] = i;
@@ -374,6 +392,7 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
     ic_2.add_parameter("c", 3.141592);
     ic_2.add_parameter("delta", 1.4125);
     ic_2.add_parameter("omega", 2.71);
+    ic_2.set_omegaBar(-5.456);
     for (int i = 0; i < 200; i++) {
         array<double, 2> x;
         x[0] = n_dist(rn_engine);
@@ -389,6 +408,43 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
 
     //cleanup and delete file
     fs::remove(TestPath);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(SerialCorrFileTest)
+
+fs::path configFilePath = "../theConfigFile.json";
+fs::path isoSurfaceFilePath = "../../SimData/theisoSurfaceFile.h5";
+
+BOOST_AUTO_TEST_CASE(write_read_file_test){
+
+    //random number generator
+    std::mt19937 rn_engine;
+    std::normal_distribution<double> n_dist;
+
+    string modelName = "theModelName";
+    fs::path testPath("../../../../theTestFile.h5");
+    SerialCorrFile serialCorrFile(modelName);
+    IsoSurfaceCorr& iS_0 = serialCorrFile.create_isoSurfaceCorr("Isochron0");
+    IsoSurfaceCorr& iS_1 = serialCorrFile.create_isoSurfaceCorr("Isovatiant0");
+    iS_0.N = 10000;
+    iS_1.N = 10000;
+    iS_0.offset = 100;
+    iS_1.offset = 10;
+    const unsigned int lags = 10;
+    for (unsigned int k = 0; k < lags; k++){
+        iS_0.rho_k.push_back(n_dist(rn_engine));
+        iS_1.rho_k.push_back(n_dist(rn_engine));
+    }
+
+    serialCorrFile.write(testPath);
+
+    SerialCorrFile serialCorrFile_read(modelName);
+    serialCorrFile_read.read(testPath);
+
+    BOOST_CHECK(serialCorrFile == serialCorrFile_read);
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -519,16 +575,12 @@ BOOST_AUTO_TEST_CASE(exception_tests){
     for (int i = 0; i < 10; i++){
         frtData.x0[0].push_back(n_dist(rn_engine));
         frtData.x0[1].push_back(n_dist(rn_engine));
-        frtData.mPhiT.push_back(n_dist(rn_engine));
-        frtData.varPhiT.push_back(n_dist(rn_engine));
-        frtData.mT.push_back(n_dist(rn_engine));
-        frtData.varT.push_back(n_dist(rn_engine));
         frtData.mFRT.push_back(n_dist(rn_engine));
         frtData.varFRT.push_back(n_dist(rn_engine));
     }
     // create extra elements -> frtData becomes corrupt
     frtData.x0[0].push_back(n_dist(rn_engine));
-    frtData.mT.push_back(n_dist(rn_engine));
+    frtData.mFRT.push_back(n_dist(rn_engine));
 
     exceptions_catched = false;
     testPath = fs::path ("wrong_model_name.h5");
@@ -557,10 +609,6 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
     for (int i = 0; i < 10; i++) {
         dat_1.x0[0].push_back(i);
         dat_1.x0[1].push_back(i + 0.2);
-        dat_1.mPhiT.push_back(i + 0.32);
-        dat_1.varPhiT.push_back(i + 0.47);
-        dat_1.mT.push_back(i + 0.001);
-        dat_1.varT.push_back(i + 0.002341);
         dat_1.mFRT.push_back(i + 2.713);
         dat_1.varFRT.push_back(i + 3.141592);
     }
@@ -568,10 +616,6 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
     for (int i = 0; i < 200; i++) {
         dat_2.x0[0].push_back(n_dist(rn_engine));
         dat_2.x0[1].push_back(n_dist(rn_engine));
-        dat_2.mPhiT.push_back(n_dist(rn_engine));
-        dat_2.varPhiT.push_back(n_dist(rn_engine));
-        dat_2.mT.push_back(n_dist(rn_engine));
-        dat_2.varT.push_back(n_dist(rn_engine));
         dat_2.mFRT.push_back(n_dist(rn_engine));
         dat_2.varFRT.push_back(n_dist(rn_engine));
     }

@@ -64,6 +64,7 @@ void MPI_Share(int world_rank, IsoSurfaceFile& isoSurfaceFile) {
         for (auto curve: isoSurfaceFile){
             string curveName = curve.get_name();
             auto [rhos, phis] = curve.get_nodes();
+            double omegaBar = curve.get_omegaBar();
             auto [keys, vals] = curve.get_parameters();
             interpolatedCurveExt.nameSize = curveName.size();
             interpolatedCurveExt.NoNodes = rhos.size();
@@ -75,6 +76,9 @@ void MPI_Share(int world_rank, IsoSurfaceFile& isoSurfaceFile) {
             MPI_Bcast(curveName.data(), interpolatedCurveExt.nameSize, MPI_CHAR, root, MPI_COMM_WORLD);
             MPI_Bcast(rhos.data(), interpolatedCurveExt.NoNodes, MPI_DOUBLE, root, MPI_COMM_WORLD);
             MPI_Bcast(phis.data(), interpolatedCurveExt.NoNodes, MPI_DOUBLE, root, MPI_COMM_WORLD);
+
+            // transmit omega bar
+            MPI_Bcast(&omegaBar, 1, MPI_DOUBLE, root, MPI_COMM_WORLD);
 
             // transmit the parameters
             vector<string>::iterator keyIt;
@@ -118,6 +122,11 @@ void MPI_Share(int world_rank, IsoSurfaceFile& isoSurfaceFile) {
             MPI_Bcast(rhos.data(), interpolatedCurveExt.NoNodes, MPI_DOUBLE, root, MPI_COMM_WORLD);
             MPI_Bcast(phis.data(), interpolatedCurveExt.NoNodes, MPI_DOUBLE, root, MPI_COMM_WORLD);
             curve.set_nodes(rhos, phis);
+
+            //receive omega bar value
+            double omegaBar = 0.0;
+            MPI_Bcast(&omegaBar, 1, MPI_DOUBLE, root, MPI_COMM_WORLD);
+            curve.set_omegaBar(omegaBar);
 
             // receive parameter set and add to the curve
             for (int p = 0; p < interpolatedCurveExt.NoParameters; p++){

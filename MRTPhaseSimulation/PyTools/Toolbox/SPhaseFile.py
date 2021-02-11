@@ -59,6 +59,7 @@ class Curve():
         self.dtype = dtype
         self.key = key
         self.parameterSet = {}
+        self.omegaBar = 0.0
         self.rho = np.array([], dtype=self.dtype)
         self.phi = np.array([], dtype=self.dtype)
 
@@ -68,6 +69,7 @@ class Curve():
         are_equal = True
         are_equal = are_equal and (self.dtype == other.dtype)
         are_equal = are_equal and (self.key == other.key)
+        are_equal = are_equal and (self.omegaBar == other.omegaBar)
         are_equal = are_equal and (self.parameterSet == other.parameterSet)
         are_equal = are_equal and np.array_equal(self.rho, other.rho)
         are_equal = are_equal and np.array_equal(self.phi, other.phi)
@@ -90,6 +92,10 @@ class IsoSurfaceFile(SPhaseFile):
                                          dtype=self.dtype,\
                                          data=curve.parameterSet[key])
 
+            IsoSurfaceGroup.create_dataset("omega_bar", shape=(1,),\
+                                           dtype=self.dtype, \
+                                           data=curve.omegaBar)
+
             CurveGroup = IsoSurfaceGroup.create_group("curve")
             CurveGroup.create_dataset("rho", shape=curve.rho.shape,\
                                       dtype=self.dtype,\
@@ -108,6 +114,11 @@ class IsoSurfaceFile(SPhaseFile):
             for key in Parameter:
                 Parameter[key].read_direct(scalar_dummy)
                 curve.parameterSet[key] = scalar_dummy.copy()
+
+            dSet_omega_bar = IsoSurfaceGroup.get("omega_bar")
+            with dSet_omega_bar.astype(self.dtype):
+                dSet_omega_bar.read_direct(scalar_dummy)
+                curve.omegaBar = scalar_dummy.copy()
 
             CurveGroup = IsoSurfaceGroup["curve"]
             dSet_rho = CurveGroup["rho"]
@@ -158,12 +169,13 @@ class FRTDataFile(SPhaseFile):
         self.dataSet = []
 
     def __write_body__(self, file):
-        file.create_dataset("isosurface_file", shape=(1,),\
-                            dtype=str,\
-                            data=self.isoSurfaceFilePath)
-        file.create_dataset("configuration_file", shape=(1,),\
-                            dtype=str,\
-                            data=self.configFilePath)
+        str_dtype = h5py.string_dtype(encoding='utf-8')
+        file.create_dataset("isosurface_file",\
+                            dtype=str_dtype,\
+                            data=self.isoSurfaceFilePath.encode('utf-8'))
+        file.create_dataset("configuration_file",\
+                            dtype=str_dtype,\
+                            data=self.configFilePath.encode('utf-8'))
         for frtData in self.dataSet:
             IsoSurfaceGroup = file.create_group(frtData.key)
 
@@ -253,6 +265,120 @@ class FRTDataFile(SPhaseFile):
         frtData = FRTData(key)
         self.dataSet.append(frtData)
         return frtData
+
+class FRTCorrData():
+    def __init__(self, key, dtype=np.double):
+        self.dtype = np.double
+        self.key = key
+        self.rho0 = np.array([], dtype=self.dtype)
+        self.phi0 = np.array([], dtype=self.dtype)
+        self.mFRT = np.array([], dtype=self.dtype)
+        self.varFRT = np.array([], dtype=self.dtype)
+        self.corr_k = np.array([[]], dtype=self.dtype)
+
+    def __eq__(self, other):
+        if not isinstance(other, FRTCorrData):
+            return NotImplemented
+        are_equal = True
+        are_equal = are_equal and (self.dtype == other.dtype)
+        are_equal = are_equal and (self.key == other.key)
+        are_equal = are_equal and np.array_equal(self.rho0, other.rho0)
+        are_equal = are_equal and np.array_equal(self.phi0, other.phi0)
+        are_equal = are_equal and np.array_equal(self.mFRT, other.mFRT)
+        are_equal = are_equal and np.array_equal(self.varFRT, other.varFRT)
+        are_equal = are_equal and np.array_equal(self.corr_k, other.corr_k)
+        return are_equal
+
+class CorrelationFile(SPhaseFile):
+    CLASSTAG = "CorrelationFile"
+    def __init__(self, model_name):
+        super(CorrelationFile, self).__init__(model_name)
+        self.isoSurfaceFilePath = ""
+        self.configFilePath = ""
+        self.dataSet = []
+
+    def __write_body__(self, file):
+        str_dtype = h5py.string_dtype(encoding='utf-8')
+        file.create_dataset("isosurface_file", \
+                            dtype=str_dtype, \
+                            data=self.isoSurfaceFilePath.encode('utf-8'))
+        file.create_dataset("configuration_file", \
+                            dtype=str_dtype, \
+                            data=self.configFilePath.encode('utf-8'))
+        for frtCorrData in self.dataSet:
+            IsoSurfaceGroup = file.create_group(frtCorrData.key)
+
+            XinitGroup = IsoSurfaceGroup.create_group("initial_position")
+            XinitGroup.create_dataset("rho", shape=frtCorrData.rho0.shape, \
+                                      dtype=self.dtype, \
+                                      data=frtCorrData.rho0)
+            XinitGroup.create_dataset("phi", shape=frtCorrData.phi0.shape, \
+                                      dtype=self.dtype, \
+                                      data=frtCorrData.phi0)
+
+            FRTGroup = IsoSurfaceGroup.create_group("first_return_time")
+            FRTGroup.create_dataset("mFRT", shape=frtCorrData.mFRT.shape, \
+                                    dtype=self.dtype, \
+                                    data=frtCorrData.mFRT)
+            FRTGroup.create_dataset("varFRT", shape=frtCorrData.varFRT.shape, \
+                                    dtype=self.dtype, \
+                                    data=frtCorrData.varFRT)
+
+            SerCorrGroup = IsoSurfaceGroup.create_group("serial_correlation_coefficients")
+            SerCorrGroup.create_dataset("rho_k", shape=frtCorrData.corr_k.shape,\
+                                        dtype=self.dtype,\
+                                        data=frtCorrData.corr_k)
+
+    def __read_body__(self, file):
+        dSet_isoSurfaceFilePath = file["isosurface_file"]
+        self.isoSurfaceFilePath = dSet_isoSurfaceFilePath[()]
+        dSet_configFilePath = file["configuration_file"]
+        self.configFilePath = dSet_configFilePath[()]
+
+        for key in file:
+            if (key != "isosurface_file") and (key != "configuration_file"):
+                IsoSurfaceGroup = file[key]
+                frtCorrData = self.createFRTCorrData(key)
+
+                XinitGroup = IsoSurfaceGroup["initial_position"]
+                dSet_rho = XinitGroup["rho"]
+                with dSet_rho.astype(self.dtype):
+                    frtCorrData.rho0 = dSet_rho[:]
+                dSet_phi = XinitGroup["phi"]
+                with dSet_phi.astype(self.dtype):
+                    frtCorrData.phi0 = dSet_phi[:]
+
+                FRTGroup = IsoSurfaceGroup["first_return_time"]
+                dSet_mFRT = FRTGroup["mFRT"]
+                with dSet_mFRT.astype(self.dtype):
+                    frtCorrData.mFRT = dSet_mFRT[:]
+                dSet_varFRT = FRTGroup["varFRT"]
+                with dSet_varFRT.astype(self.dtype):
+                    frtCorrData.varFRT = dSet_varFRT[:]
+
+                SerCorrGroup = IsoSurfaceGroup["serial_correlation_coefficients"]
+                dSet_rho_k = SerCorrGroup.get("rho_k")
+                with dSet_rho_k.astype(self.dtype):
+                    frtCorrData.corr_k = np.array(dSet_rho_k, dtype=self.dtype)
+
+    def __iter__(self):
+        self.dataIterator = iter(self.dataSet)
+        return self.dataIterator
+
+    def __next__(self):
+        return next(self.dataIterator)
+
+    def __eq__(self, other):
+        are_equal = True
+        for (d1, d2) in zip(self.dataSet, other.dataSet):
+            are_equal = are_equal and (d1 == d2)
+        return are_equal
+
+    def createFRTCorrData(self, key):
+        frtCorrData = FRTCorrData(key)
+        self.dataSet.append(frtCorrData)
+        return frtCorrData
+
 
 class SimConfigFile:
     def __init__(self):

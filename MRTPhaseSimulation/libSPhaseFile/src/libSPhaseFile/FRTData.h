@@ -9,7 +9,6 @@
 
 #include <vector>
 #include <list>
-#include <memory>
 
 #include "SPhaseFile.h"
 
@@ -21,13 +20,8 @@ private:
     friend class FRTDataFile;
     string isoSurfaceName;
 public:
+    // initial positions
     array<vector<double>, 2> x0;
-    // asymptotic angle PhiT = phi(T)
-    vector<double> mPhiT;
-    vector<double> varPhiT;
-    // stationary period T
-    vector<double> mT;
-    vector<double> varT;
     // first passage times FPT
     vector<double> mFRT;
     vector<double> varFRT;
@@ -42,7 +36,7 @@ private:
     string modelName;
     fs::path isoSurfaceFilePath;
     fs::path configFilePath;
-    list<unique_ptr<FRTData>> data_ptr_Set;
+    list<FRTData> dataList;
 protected:
     void read_body(H5::H5File& file);
     void write_body(H5::H5File& file);

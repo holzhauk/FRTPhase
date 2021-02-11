@@ -2,6 +2,7 @@
 // Created by konstantin on 1/3/21.
 //
 #include <algorithm>
+#include <random>
 #include <cmath>
 #include <utility>
 #include <H5Cpp.h>
@@ -29,6 +30,15 @@ tuple<double, double> InterpolatedCurve::get_extensions() {
 
 ParameterSet InterpolatedCurve::get_parameterSet() {
     return ParameterSet(parameterSet);
+}
+
+double InterpolatedCurve::get_omegaBar() {
+    double dummy = omegaBar;
+    return dummy;
+}
+
+void InterpolatedCurve::set_omegaBar(double val) {
+    omegaBar = val;
 }
 
 void InterpolatedCurve::add_parameter(string pName, double pVal){
@@ -67,27 +77,28 @@ bool InterpolatedCurve::operator==(const InterpolatedCurve &other) const {
     bool is_equal = true;
     is_equal = is_equal && (this->name == other.name);
     is_equal = is_equal && (this->parameterSet == other.parameterSet);
+    is_equal = is_equal && (this->omegaBar == other.omegaBar);
     is_equal = is_equal && (this->nodes == other.nodes);
     return is_equal;
 }
 
 
 bool IsoSurfaceFile::operator==(const IsoSurfaceFile& other) const {
-    bool is_equal = true;
-    if (this->curve_ptr_Set.size() != other.curve_ptr_Set.size())
+    bool is_equal;
+    if (this->curveList.size() != other.curveList.size())
         return false;
-    is_equal = is_equal && (this->modelName == other.modelName);
+    is_equal = (this->modelName == other.modelName);
 
-    for (auto t_it = this->curve_ptr_Set.begin(), o_it = other.curve_ptr_Set.begin();
-            t_it != this->curve_ptr_Set.end(), o_it != other.curve_ptr_Set.end();
+    for (auto t_it = this->curveList.begin(), o_it = other.curveList.begin();
+         (t_it != this->curveList.end()) && (o_it != other.curveList.end());
             ++t_it, ++o_it){
-        is_equal = is_equal && (**(t_it) == **(o_it));
+        is_equal = is_equal && (*(t_it) == *(o_it));
     }
     return is_equal;
 }
 
 int IsoSurfaceFile::get_NoSurfaces() {
-    return curve_ptr_Set.size();
+    return curveList.size();
 }
 
 void IsoSurfaceFile::read_body(H5::H5File& file) {
@@ -147,11 +158,47 @@ herr_t surface_group_handler_isosurface(hid_t group_id, const char* group_name,
         throw SPhaseFileHDF5APIError("failed to close subgroup 'parameters' in: "
                                     + string(group_name));
 
+    // get the mean value of angular frequency omega_bar for this particular isosurface
+    hid_t dset_omega_bar = H5Dopen(surface_group_id, "omega_bar", H5P_DEFAULT);
+    if (dset_omega_bar < 0)
+        throw SPhaseFileHDF5APIError("failed to open dataset 'omega_bar' in surface group: "
+                                    + string(group_name));
+
+    hid_t omega_bar_dspace = H5Dget_space(dset_omega_bar);
+    if (omega_bar_dspace < 0)
+        throw SPhaseFileHDF5APIError("failed to get data space info of 'omega_bar' in surface group: "
+                                     + string(group_name));
+
+    hsize_t size_dim0[2];
+    int ndims = H5Sget_simple_extent_dims(omega_bar_dspace, size_dim0, NULL);
+    if (ndims < 0)
+        throw SPhaseFileHDF5APIError("failed to get dspace's dims of 'omega_bar' in surface group: "
+                                     + string(group_name));
+    double double_dummy;
+    herr_t idx = H5Dread(dset_omega_bar,
+                         H5T_NATIVE_DOUBLE,
+                         H5S_ALL, H5S_ALL, H5P_DEFAULT,
+                         &double_dummy);
+    interpolatedCurve.set_omegaBar(double_dummy);
+
+    if (idx < 0)
+        throw SPhaseFileHDF5APIError("failed to read 'omega_bar' in surface group: "
+                                     + string(group_name));
+
+    herr_t omega_bar_dspace_err = H5Sclose(omega_bar_dspace);
+    if (omega_bar_dspace_err < 0)
+        throw SPhaseFileHDF5APIError("failed to close data space of 'omega_bar' in surface group: "
+                                     + string(group_name));
+    herr_t dset_omega_bar_err = H5Dclose(dset_omega_bar);
+    if (dset_omega_bar_err < 0)
+        throw SPhaseFileHDF5APIError("failed to close 'omega_bar' in surface group: "
+                                     + string(group_name));
+
     // open curve subgroup to retrieve the node's coordinates
     hid_t curve_subgroup_id = H5Gopen(surface_group_id, "curve", H5P_DEFAULT);
     if (curve_subgroup_id < 0)
         throw SPhaseFileHDF5APIError("failed to open 'curve' subgroup in surface group: "
-            + string(group_name));
+                                    + string(group_name));
 
     // get radial coordinates
     hid_t dset_rho_id = H5Dopen(curve_subgroup_id, "rho", H5P_DEFAULT);
@@ -276,33 +323,43 @@ void IsoSurfaceFile::write_body(H5::H5File& file){
 
     // write the individual curves representing
     // the isosurfaces to the file
-    for (auto& curve_ptr: curve_ptr_Set){
+    for (auto interpolCurve: curveList){
 
-        if (curve_ptr->nodes[0].size() != curve_ptr->nodes[1].size())
+        if (interpolCurve.nodes[0].size() != interpolCurve.nodes[1].size())
             throw SPhaseFileDimError();
 
         H5::DataSpace dspace;
 
-        H5::Group surface = file.createGroup(curve_ptr->name);
+        H5::Group surface = file.createGroup(interpolCurve.name);
 
         H5::Group curve = surface.createGroup("curve");
-        hsize_t dim_size[] = {curve_ptr->nodes[0].size()};
+        hsize_t dim_size[] = {interpolCurve.nodes[0].size()};
         dspace = H5::DataSpace(1, dim_size);
         H5::DataSet rhos = curve.createDataSet("rho",
                                                H5::PredType::NATIVE_DOUBLE,
                                                dspace);
-        rhos.write(curve_ptr->nodes[0].data(), H5::PredType::NATIVE_DOUBLE);
+        rhos.write(interpolCurve.nodes[0].data(), H5::PredType::NATIVE_DOUBLE);
         rhos.close();
         H5::DataSet phis = curve.createDataSet("phi",
                                                H5::PredType::NATIVE_DOUBLE,
                                                dspace);
-        phis.write(curve_ptr->nodes[1].data(), H5::PredType::NATIVE_DOUBLE);
+        phis.write(interpolCurve.nodes[1].data(), H5::PredType::NATIVE_DOUBLE);
         phis.close();
         dspace.close();
         curve.close();
 
+        hsize_t scalar_dim_size[] = {1};
+        dspace = H5::DataSpace(1, scalar_dim_size);
+        H5::DataSet omegaBar = surface.createDataSet("omega_bar",
+                                                   H5::PredType::NATIVE_DOUBLE,
+                                                   dspace);
+        double scalar_buf = interpolCurve.get_omegaBar();
+        omegaBar.write(&scalar_buf, H5::PredType::NATIVE_DOUBLE);
+        omegaBar.close();
+        dspace.close();
+
         H5::Group parameters = surface.createGroup("parameters");
-        for (auto p: curve_ptr->parameterSet){
+        for (auto p: interpolCurve.parameterSet){
             hsize_t dim_size[] = {1};
             dspace = H5::DataSpace(1, dim_size);
             H5::DataSet param = parameters.createDataSet(p.first,
@@ -321,9 +378,18 @@ void IsoSurfaceFile::write_body(H5::H5File& file){
 }
 
 InterpolatedCurve& IsoSurfaceFile::createInterpolatedCurve(string name) {
-    unique_ptr<InterpolatedCurve> curve_ptr(new InterpolatedCurve(name));
-    curve_ptr_Set.push_back(move(curve_ptr));
-    return *curve_ptr_Set.back();
+    InterpolatedCurve curve (name);
+    curveList.push_back(curve);
+    return curveList.back();
+}
+
+array<double, 2> InterpolatedCurve::get_random_point() {
+    size_t dof = nodes[0].size();
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distr(0, dof);
+    int rI = distr(gen);
+    return {nodes[0][rI], nodes[1][rI]};
 }
 
 bool InterpolatedCurve::is_first_return_event(array<double, 2>& x, bool pos_sense_of_rotation) {
@@ -369,24 +435,12 @@ void InterpolatedCurve::sortNodes(){
     }
 }
 
-IsoSurfaceFile::IsoSurfaceFileIt IsoSurfaceFile::begin() {
-    return IsoSurfaceFileIt(curve_ptr_Set.begin());
+list<InterpolatedCurve>::iterator IsoSurfaceFile::begin() {
+    return curveList.begin();
 }
 
-IsoSurfaceFile::IsoSurfaceFileIt IsoSurfaceFile::end() {
-    return IsoSurfaceFileIt(curve_ptr_Set.end());
-}
-
-bool IsoSurfaceFile::IsoSurfaceFileIt::operator!=(IsoSurfaceFileIt& other) {
-    return (this->ptrListIt != other.ptrListIt);
-}
-
-InterpolatedCurve& IsoSurfaceFile::IsoSurfaceFileIt::operator*() const {
-    return **ptrListIt;
-}
-
-InterpolatedCurve& IsoSurfaceFile::IsoSurfaceFileIt::operator++() {
-    return **(ptrListIt++);
+list<InterpolatedCurve>::iterator IsoSurfaceFile::end() {
+    return curveList.end();
 }
 
 string IsoSurfaceFile::get_modelName() {
@@ -402,9 +456,9 @@ InterpolatedCurve& InterpolatedCurve::operator = (const InterpolatedCurve& other
 
 IsoSurfaceFile& IsoSurfaceFile::operator = (const IsoSurfaceFile& other) {
     this->modelName = other.modelName;
-    for (auto& curve_ptr: other.curve_ptr_Set) {
-        InterpolatedCurve& new_curve = this->createInterpolatedCurve(curve_ptr->name);
-        new_curve = *curve_ptr;
+    for (auto curve: other.curveList) {
+        InterpolatedCurve& new_curve = this->createInterpolatedCurve(curve.name);
+        new_curve = curve;
     }
     return *this;
 }

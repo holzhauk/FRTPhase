@@ -42,41 +42,27 @@ FRTData MPI::FRTDetector::run(Config::Simulation& config,
     SDEIntegrator::config_t integratorConfig = SimConfig2IntegratorConfig(config);
     integrator_ptr->configure(integratorConfig);
 
+    double omegaBar = curve.get_omegaBar();
+    if (omegaBar == 0.0)
+        throw FRTDetectorNoSenseOfRotation();
+    bool is_pos_sense_of_rotation = (omegaBar > 0.0);
+
     for (auto x0: Samples){
-
         pen.write_down(x0);
-        Data<StationaryStats> sData(config);
-
         unsigned int subE = SubEnsembleSize(world_rank, world_size, config.EnsembleSize);
+        FRTStats frtStats;
+
+        Data<FRTStats> frtData(config);
         for (unsigned int e = 0; e < subE; e++){
             integrator_ptr->reset(x0, config.t0);
-            auto [xT, T] = integrator_ptr->integrate();
-            sData.add_data_point(xT[1]);
-        }
-
-        StationaryStats sStats = MPI_Dist_StatsFromData(sData, config.EnsembleSize);
-        pen.write_down(sStats);
-        FRTStats frtStats;
-        if ((sStats.mPhiT >= x0[1] + 2*M_PI) || (sStats.mPhiT <= x0[1] - 2*M_PI)){
-            bool pos_sense_of_rotation = false;
-            if (sStats.mPhiT >= x0[1] + 2*M_PI)
-                pos_sense_of_rotation = true;
-
-            Data<FRTStats> frtData(config);
-            for (unsigned int e = 0; e < subE; e++){
-                integrator_ptr->reset(x0, config.t0);
-                array<double, 2> x = x0;
-                double T = config.t0;
-                while(!curve.is_first_return_event(x, pos_sense_of_rotation) && integrator_ptr->is_in_time()){
-                    tie(x, T) = integrator_ptr->evolve();
-                }
-                frtData.add_data_point(T);
+            array<double, 2> x = x0;
+            double T = config.t0;
+            while(!curve.is_first_return_event(x, is_pos_sense_of_rotation) && integrator_ptr->is_in_time()){
+                tie(x, T) = integrator_ptr->evolve();
             }
-            frtStats = MPI_Dist_StatsFromData(frtData, config.EnsembleSize);
-        } else {
-            frtStats.mFRT = config.T;
-            frtStats.varFRT = 0.0;
+            frtData.add_data_point(T);
         }
+        frtStats = MPI_Dist_StatsFromData(frtData, config.EnsembleSize);
         pen.write_down(frtStats);
     }
 
@@ -101,13 +87,6 @@ SimConfig2IntegratorConfig& SimConfig2IntegratorConfig::operator = (const SimCon
 void Pen::write_down(const Pos_t& x0) {
     dataSet.x0[0].push_back(x0[0]);
     dataSet.x0[1].push_back(x0[1]);
-}
-
-void Pen::write_down(const StationaryStats& sStats) {
-    dataSet.mPhiT.push_back(sStats.mPhiT);
-    dataSet.varPhiT.push_back(sStats.varPhiT);
-    dataSet.mT.push_back(sStats.mT);
-    dataSet.varT.push_back(sStats.varT);
 }
 
 void Pen::write_down(const FRTStats& frtStats) {

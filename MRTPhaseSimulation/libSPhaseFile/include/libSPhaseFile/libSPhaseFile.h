@@ -8,6 +8,7 @@
 #include "../../src/libSPhaseFile/Exceptions.h"
 #include "../../src/libSPhaseFile/IsoSurface.h"
 #include "../../src/libSPhaseFile/FRTData.h"
+#include "../../src/libSPhaseFile/SerialCorrelation.h"
 #include "../../src/libSPhaseFile/libSPhaseDefinitionsAndConstants.h"
 #include "../../src/libSPhaseFile/SimConfig.h"
 

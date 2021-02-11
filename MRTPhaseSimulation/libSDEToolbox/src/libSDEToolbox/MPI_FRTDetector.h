@@ -6,6 +6,7 @@
 #define MRTPHASESIMULATION_MPI_FRTDETECTOR_H
 
 #include <array>
+#include <exception>
 #include <mpi.h>
 #include <libSPhaseFile/libSPhaseFile.h>
 #include <libMPIFunctions/libMPIFunctions.h>
@@ -34,7 +35,11 @@ namespace MPI {
 
 };
 
-
+struct FRTDetectorNoSenseOfRotation : public exception {
+    const char* what () const throw() {
+        return "FRTDetector - mean angular frequency provided by SPhaseFile::IsoSurfaceFile is 0.0";
+    }
+};
 
 class SimConfig2IntegratorConfig: public SDEIntegrator::config_t{
 public:

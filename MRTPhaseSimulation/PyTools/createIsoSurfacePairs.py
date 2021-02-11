@@ -1,7 +1,14 @@
-import sys, os
-from pathlib import Path
+import sys
+from Toolbox.SPhaseFile import *
+from Toolbox.ModelZoo import *
+from Toolbox.ItoIsoSurfaces import *
+
+
 import numpy as np
-from Toolbox import *
+
+rho_min = 0.5
+rho_max = 1.2
+doF = 400
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -19,18 +26,20 @@ if __name__ == "__main__":
     for pSet in config.pSets:
 
         theModel = theModelFactory.create(config.modelName, parameters=pSet)
-        rho = np.linspace(0.5, 1.2, num=200)
+        rho = np.linspace(rho_min, rho_max, num=doF)
         NewbySIsochron = ItoIsochron(theModel, rho)
         NewbySIsovariant = ItoIsovariant(theModel, rho)
 
         isochronCurve = isoSurfaceFile.createCurve("Isochron" + str(index))
         isochronCurve.parameterSet = theModel.pSet
+        isochronCurve.omegaBar = NewbySIsochron.get_OmegaBar()
         (rho, phi) = NewbySIsochron.get_curve()
         isochronCurve.rho = rho.copy()
         isochronCurve.phi = phi.copy()
 
         isovariantCurve = isoSurfaceFile.createCurve("Isovariant" + str(index))
         isovariantCurve.parameterSet = theModel.pSet
+        isovariantCurve.omegaBar = NewbySIsovariant.get_OmegaBar()
         (rho, phi) = NewbySIsovariant.get_curve()
         isovariantCurve.rho = rho.copy()
         isovariantCurve.phi = phi.copy()
