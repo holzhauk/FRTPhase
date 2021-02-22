@@ -9,6 +9,7 @@
 #include <mpi.h>
 #include <iostream>
 #include <random>
+#include <string>
 #include <libSPhaseFile/libSPhaseFile.h>
 #include <libMPIFunctions/libMPIFunctions.h>
 
@@ -91,6 +92,15 @@ BOOST_AUTO_TEST_CASE(MPI_share_IsoSurfaceFile_test){
         BOOST_REQUIRE(isoSurfaceFile == testFile);
     }
 };
+
+BOOST_AUTO_TEST_CASE(MPI_Share_String_test) {
+    bool is_master = (world_rank == 0);
+    string name;
+    if (is_master)
+        name = string("TestName");
+    MPI_Share(world_rank, name);
+    BOOST_CHECK(name == "TestName");
+}
 
 BOOST_AUTO_TEST_CASE(MPI_Share_ConfigSimulation_test) {
     bool is_master = (world_rank == 0);

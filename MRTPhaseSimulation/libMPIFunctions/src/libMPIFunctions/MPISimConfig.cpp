@@ -11,6 +11,24 @@ void MPI_Share(int world_rank, Config::Simulation& simConfig) {
     simConfig = ConfigAdapter(config);
 }
 
+void MPI_Share(int world_rank, string& modelName) {
+    int root = 0;
+    bool is_master = (world_rank == root);
+    unsigned int size;
+    if (is_master)
+        size = modelName.size();
+    MPI_Bcast(&size, 1, MPI_UNSIGNED, root, MPI_COMM_WORLD);
+    if (is_master) {
+        MPI_Bcast(modelName.data(), size, MPI_CHAR, root, MPI_COMM_WORLD);
+    } else {
+        char* buffer = new char [size + 1];
+        MPI_Bcast(buffer, size, MPI_CHAR, root, MPI_COMM_WORLD);
+        buffer[size] = '\0';
+        modelName = string(buffer);
+        delete [] buffer;
+    }
+}
+
 unsigned int SubEnsembleSize(int world_rank, int world_size, const int& ensemble_size){
     // calculate the individual ensemble sizes
     div_t int_div_res = div(static_cast<int>(ensemble_size), world_size); // int_dev_res = eSize / worldSize

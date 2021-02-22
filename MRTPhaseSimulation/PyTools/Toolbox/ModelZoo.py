@@ -46,15 +46,42 @@ class NewbySchwemmer(IsotropicPlanarSSDE):
         P = self.pSet
         return np.sqrt(2*P["D"]) / rho
 
+class SchwabedalPikovsky(IsotropicPlanarSSDE):
+    modelName = "SchwabedalPikovsky"
+    pSet = {
+            "sigma": 0.05,
+            "omega": 0.025,
+            "delta": 0.01,
+            "c": 2.1
+            }
+
+    def g(self, rho: np.array) -> np.array:
+        P = self.pSet
+        return rho*(1.0 - rho)*(3.0 - rho)*(P["c"] - rho)
+
+    def f(self, rho: np.array) -> np.array:
+        P = self.pSet
+        return P["omega"] + P["delta"]*(rho - 2.0) - (1.0 - rho)*(3.0 - rho)
+
+    def q_rho(self, rho: np.array) -> np.array:
+        P = self.pSet
+        return P["sigma"]*rho
+
+    def q_phi(self, rho: np.array) -> np.array:
+        return np.zeros(rho.shape)
+
 
 class ModelFactory():
 
     def __init__(self):
         self.NewbyS = NewbySchwemmer()
+        self.SchwabP = SchwabedalPikovsky()
 
     def create(self, modelName: str, parameters: dict = {}):
         if (modelName == self.NewbyS.modelName):
             return NewbySchwemmer(parameters)
+        if (modelName == self.SchwabP.modelName):
+            return SchwabedalPikovsky(parameters)
 
 
 

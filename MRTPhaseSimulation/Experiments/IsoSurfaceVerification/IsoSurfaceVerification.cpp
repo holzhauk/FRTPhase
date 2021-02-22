@@ -2,30 +2,13 @@
 // Created by konstantin on 1/18/21.
 //
 #include <iostream>
+#include <memory>
 #include <mpi.h>
 #include <filesystem>
 #include <cmath>
 #include <libSDEToolbox/libSDEToolbox.h>
 #include <libSPhaseFile/libSPhaseFile.h>
 #include <libMPIFunctions/libMPIFunctions.h>
-
-const string modelName = "NewbySchwemmer";
-
-class NewbySchwemmer: public IsotropicPlanarSSDEAdditiveNoise{
-public:
-    NewbySchwemmer(ParameterSet pSet):
-        IsotropicPlanarSSDEAdditiveNoise(pSet["D"], pSet["D"]) {
-        this->pSet = pSet;
-    };
-
-    double g(double& rho) override{
-        return -pSet["gamma"]*rho*(pow(rho, 2.0) - 1.0) + pSet["D"] / rho;
-    };
-
-    double f(double& rho) override{
-        return pSet["omega"]*(1 + pSet["gamma"]*pSet["c"]*pow((1.0 - rho), 2.0));
-    };
-};
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -47,15 +30,21 @@ int main(int argc, char* argv[]){
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
     bool is_master = (world_rank == 0);
-    IsoSurfaceFile isoSurfaceFile(modelName);
+    string modelName;
+
     SimConfigFile config;
     Config::Simulation simConfig;
     if (is_master){
         config.read(config_file_path);
+        modelName = config.get_modelName();
         simConfig = config.get_simConfig();
-        isoSurfaceFile.read(config.get_inPath());
     }
+    MPI_Share(world_rank, modelName);
     MPI_Share(world_rank, simConfig);
+
+    IsoSurfaceFile isoSurfaceFile(modelName);
+    if (is_master)
+        isoSurfaceFile.read(config.get_inPath());
     MPI_Share(world_rank, isoSurfaceFile);
 
     FRTDataFile frtDataFile(modelName);
@@ -65,9 +54,12 @@ int main(int argc, char* argv[]){
     }
 
     EquidistantSampler sampler;
+    ModelFactory theModelFactory;
+
     for (auto isoSurface: isoSurfaceFile) {
         auto [rho_min, rho_max] = isoSurface.get_extensions();
         if (is_master)
+            cout << "model: " << modelName << endl;
             cout << "rho_min: " << rho_min << "; rho_max: " << rho_max << endl;
         ReflectiveAnnulus domain(rho_min, rho_max);
         if (is_master) {
@@ -78,8 +70,9 @@ int main(int argc, char* argv[]){
             cout << "gamma: " << pSet["gamma"] << endl;
             cout << "c: " << pSet["c"] << endl;
         }
-        NewbySchwemmer model(isoSurface.get_parameterSet());
-        HeunIntegrator integrator(&domain, &model);
+        unique_ptr<IsotropicPlanarSSDE> theModelPtr =
+                theModelFactory.createModel(modelName, isoSurface.get_parameterSet());
+        ItoEulerIntegrator integrator(&domain, theModelPtr.get());
         MPI::FRTDetector frtDetector(world_rank, world_size);
         FRTData& frtData = frtDataFile.createDataSet(isoSurface.get_name());
         frtData = frtDetector.run(simConfig, isoSurface, &sampler, &integrator);

@@ -19,7 +19,7 @@
 
 namespace fs = std::filesystem;
 
-class CorrelationFile;
+class SerialCorrFile;
 
 struct IsoSurfaceCorr {
 public:
@@ -27,7 +27,7 @@ public:
     size_t offset = 0; // offset
     vector<double> rho_k; // serial correlations up to lag k
 private:
-    friend class CorrelationFile;
+    friend class SerialCorrFile;
     string key;
 public:
     IsoSurfaceCorr(const string& isoSurfaceName): key(isoSurfaceName) {};

@@ -1,5 +1,5 @@
 import unittest
-from SPhaseFile import *
+from Toolbox.SPhaseFile import *
 
 class TestSPhaseFileFunctionality(unittest.TestCase):
 
@@ -28,26 +28,23 @@ class TestSPhaseFileFunctionality(unittest.TestCase):
 
     def test_WriteReadCorrelationFile(self):
         noLags = 10
-        noSamples = 20
-        corrWriteFile = CorrelationFile("theTestModel")
+        N = 10000
+        offset = 100
+        corrWriteFile = SerialCorrFile("theTestModel")
         corrWriteFile.isoSurfaceFilePath = "theIsoSurfaceFile.h5"
         corrWriteFile.configFilePath = "theConfigFile.h5"
-        c1 = corrWriteFile.createFRTCorrData("Curve0")
-        c1.rho0 = np.linspace(0.2, 1.7, num=noSamples)
-        c1.phi0 = np.random.random(size=(noSamples,))
-        c1.mFRT = np.random.random(size=(noSamples,))
-        c1.varFRT = np.random.random(size=(noSamples,))
-        c1.corr_k = np.random.random(size=(noSamples, noLags))
+        c1 = corrWriteFile.createIsoSurfaceCorr("Curve0")
+        c1.N = np.array([N], dtype=np.uint32)
+        c1.offset = np.array([offset], dtype=np.uint32)
+        c1.rho_k = np.random.random(size=(noLags,))
 
-        c2 = corrWriteFile.createFRTCorrData("Curve1")
-        c2.rho0 = np.linspace(0.2, 1.7, num=noSamples)
-        c2.phi0 = np.zeros((noSamples,))
-        c2.mFRT = np.random.random(size=(noSamples,))
-        c2.varFRT = np.random.random(size=(noSamples,))
-        c2.corr_k = np.random.random(size=(noSamples, noLags))
+        c2 = corrWriteFile.createIsoSurfaceCorr("Curve1")
+        c2.N = np.array([N], dtype=np.uint32)
+        c2.offset = np.array([offset], dtype=np.uint32)
+        c2.rho_k = np.random.random(size=(noLags,))
         corrWriteFile.write("pythonTestFile.h5")
 
-        corrReadFile = CorrelationFile("theTestModel")
+        corrReadFile = SerialCorrFile("theTestModel")
         corrReadFile.read("pythonTestFile.h5")
         self.assertEqual(corrWriteFile, corrReadFile)
         os.remove("pythonTestFile.h5")

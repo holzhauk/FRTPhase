@@ -6,12 +6,14 @@
 #define MRTPHASESIMULATION_MPISIMCONFIG_H
 
 #include <cstdlib>
+#include <string>
 #include <mpi.h>
 #include <libSPhaseFile/libSPhaseFile.h>
 
 using namespace std;
 
 void MPI_Share(int world_rank, Config::Simulation& simConfig);
+void MPI_Share(int world_rank, string& modelName);
 unsigned int SubEnsembleSize(int world_rank, int world_size, const int& ensemble_size);
 
 struct SimConfig_t {

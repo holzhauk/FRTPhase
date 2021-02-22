@@ -1,35 +1,15 @@
 #include <iostream>
 #include <vector>
-#include <array>
 #include <filesystem>
 #include <cmath>
 #include <string>
-#include <list>
 #include <exception>
-
-#include <H5Cpp.h>
 
 #include <libSDEToolbox/libSDEToolbox.h>
 #include <libSPhaseFile/libSPhaseFile.h>
 
 using namespace std;
 namespace fs = std::filesystem;
-
-class NewbySchwemmer: public IsotropicPlanarSSDEAdditiveNoise{
-public:
-    explicit NewbySchwemmer(ParameterSet pSet):
-            IsotropicPlanarSSDEAdditiveNoise(pSet["D"], pSet["D"]) {
-        this->pSet = pSet;
-    };
-
-    double g(double& rho) override{
-        return -pSet["gamma"]*rho*(pow(rho, 2.0) - 1.0) + pSet["D"] / rho;
-    };
-
-    double f(double& rho) override{
-        return pSet["omega"]*(1 + pSet["gamma"]*pSet["c"]*pow((1.0 - rho), 2.0));
-    };
-};
 
 class SerialCorrStats {
 private:
@@ -48,8 +28,8 @@ struct DimError : public exception {
     }
 };
 
-const size_t OFFSET = 100;
-const size_t LAGS = 10;
+const size_t OFFSET = 500;
+const size_t LAGS = 15;
 const size_t TOT_INTERVAL_COUNT = 10000;
 
 int main(int argc, char* argv[]) {
@@ -84,14 +64,16 @@ int main(int argc, char* argv[]) {
     SerialCorrFile serialCorrFile = SerialCorrFile(modelName,
                                                    config.get_inPath(),
                                                    config_file_path);
+    ModelFactory theModelFactory;
 
     for (auto isoSurface: isoSurfaceFile) {
 
         auto[rho_min, rho_max] = isoSurface.get_extensions();
         ReflectiveAnnulus domain(rho_min, rho_max);
 
-        NewbySchwemmer model(isoSurface.get_parameterSet());
-        HeunIntegrator integrator(&domain, &model);
+        unique_ptr<IsotropicPlanarSSDE> modelPtr =
+                theModelFactory.createModel(config.get_modelName(), isoSurface.get_parameterSet());
+        ItoEulerIntegrator integrator(&domain, modelPtr.get());
         SDEIntegrator::config_t integratorConfig = SimConfig2IntegratorConfig(simConfig);
         integrator.configure(integratorConfig);
 

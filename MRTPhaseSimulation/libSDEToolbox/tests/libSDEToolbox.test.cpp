@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cmath>
 #include <array>
+#include <memory>
 #include <boost/test/unit_test.hpp>
 #include <libSDEToolbox/libSDEToolbox.h>
 
@@ -87,5 +88,59 @@ BOOST_AUTO_TEST_CASE(ReflectiveAnnulus_test){
     x_p = domain.apply_boundary_conditions(x0, x);
     BOOST_CHECK(x_p[0] - 0.8 < 0.00001);
     BOOST_CHECK_EQUAL(x_p[1], 0.6);
+}
+
+BOOST_AUTO_TEST_CASE(ModelFactory_test, * boost::unit_test::tolerance(0.01)){
+    ParameterSet NewbyS_pSet = { {"D", 0.5},
+                                 {"omega", 1.5},
+                                 {"gamma", 15.0},
+                                 {"c", -15.0} };
+    ParameterSet SchwabedalP_pSet = { {"sigma", 0.2},
+                                      {"c", 1.8},
+                                      {"omega", 1.0},
+                                      {"delta", 1.5} };
+
+    double rho = 0.278;
+    ModelFactory theFactory;
+    unique_ptr<IsotropicPlanarSSDE> theModel;
+    string name;
+
+    try {
+        name = string("NewbySchwemmer");
+        theModel = theFactory.createModel(name, NewbyS_pSet);
+
+        // test if the selected model is indeed the NewbySchwemmer one
+        BOOST_TEST(theModel->g(rho) == 5.64628);
+        BOOST_TEST(theModel->f(rho) == -174.43335);
+        BOOST_TEST(theModel->q_rho(rho) == 1.0);
+        BOOST_TEST(theModel->q_phi(rho) == 3.5971);
+    }
+    catch (ModelNotDefined) {
+        BOOST_CHECK(false);
+    }
+
+    try {
+        name = string("SchwabedalPikovsky");
+        theModel = theFactory.createModel(name, SchwabedalP_pSet);
+
+        BOOST_TEST(theModel->g(rho) == 0.831543);
+        BOOST_TEST(theModel->f(rho) == -3.548283);
+        BOOST_TEST(theModel->q_rho(rho) == 0.05560);
+        BOOST_TEST(theModel->q_phi(rho) == 0.0);
+    }
+    catch (ModelNotDefined) {
+        BOOST_CHECK(false);
+    }
+
+    // check if the exception is catched
+    bool is_catched = false;
+    try {
+        name = string("NotInZoo");
+        theModel = theFactory.createModel(name, SchwabedalP_pSet);
+    }
+    catch (ModelNotDefined) {
+        is_catched = true;
+    }
+    BOOST_TEST(is_catched);
 }
 

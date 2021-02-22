@@ -7,8 +7,8 @@ from Toolbox.ItoIsoSurfaces import *
 import numpy as np
 
 rho_min = 0.5
-rho_max = 1.2
-doF = 400
+rho_max = 4.0
+doF = 1000
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -28,7 +28,6 @@ if __name__ == "__main__":
         theModel = theModelFactory.create(config.modelName, parameters=pSet)
         rho = np.linspace(rho_min, rho_max, num=doF)
         Isochron = ItoIsochron(theModel, rho)
-        Isovariant = ItoIsovariant(theModel, rho)
 
         isochronCurve = isoSurfaceFile.createCurve("Isochron" + str(index))
         isochronCurve.parameterSet = theModel.pSet
@@ -36,13 +35,6 @@ if __name__ == "__main__":
         (rho, phi) = Isochron.get_curve()
         isochronCurve.rho = rho.copy()
         isochronCurve.phi = phi.copy()
-
-        isovariantCurve = isoSurfaceFile.createCurve("Isovariant" + str(index))
-        isovariantCurve.parameterSet = theModel.pSet
-        isovariantCurve.omegaBar = Isovariant.get_OmegaBar()
-        (rho, phi) = Isovariant.get_curve()
-        isovariantCurve.rho = rho.copy()
-        isovariantCurve.phi = phi.copy()
 
         index += 1
 

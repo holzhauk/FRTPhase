@@ -17,5 +17,6 @@
 #include "../../src/libSDEToolbox/EquidistantSampler.h"
 #include "../../src/libSDEToolbox/MPI_FRTDetector.h"
 #include "../../src/libSDEToolbox/ModelZoo.h"
+#include "../../src/libSDEToolbox/ModelFactory.h"
 
 #endif //MRTPHASESIMULATION_LIBSDETOOLBOX_H
