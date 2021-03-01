@@ -7,8 +7,8 @@ from Toolbox.ItoIsoSurfaces import *
 import numpy as np
 
 rho_min = 0.5
-rho_max = 4.0
-doF = 1000
+rho_max = 1.2
+doF = 400
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

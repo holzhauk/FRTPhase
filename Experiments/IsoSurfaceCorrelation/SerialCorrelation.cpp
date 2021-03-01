@@ -28,9 +28,9 @@ struct DimError : public exception {
     }
 };
 
-const size_t OFFSET = 500;
+const size_t OFFSET = 100;
 const size_t LAGS = 15;
-const size_t TOT_INTERVAL_COUNT = 10000;
+const size_t TOT_INTERVAL_COUNT = 1000;
 
 int main(int argc, char* argv[]) {
 

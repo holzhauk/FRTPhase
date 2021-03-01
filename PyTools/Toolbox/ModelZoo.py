@@ -57,7 +57,7 @@ class SchwabedalPikovsky(IsotropicPlanarSSDE):
 
     def g(self, rho: np.array) -> np.array:
         P = self.pSet
-        return rho*(1.0 - rho)*(3.0 - rho)*(P["c"] - rho)
+        return rho*(1.0 - rho)*(3.0 - rho)*(P["c"] - rho) + rho*P["sigma"]**2 / 2
 
     def f(self, rho: np.array) -> np.array:
         P = self.pSet

@@ -35,7 +35,7 @@ namespace ModelZoo {
         };
 
         double g(double& rho) override {
-            return rho*(1.0 - rho)*(3.0 - rho)*(pSet["c"] - rho);
+            return rho*(1.0 - rho)*(3.0 - rho)*(pSet["c"] - rho) + pow(pSet["sigma"], 2.0)*rho / 2;
         };
 
         double f(double& rho) override {
