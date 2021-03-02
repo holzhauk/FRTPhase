@@ -1,0 +1,30 @@
+{
+  "Model": {
+	  "Name": "NewbySchwemmer",
+	  "Parameterizations": [
+		  {
+			  "D": 0.5,
+			  "omega": 1.0,
+			  "gamma": 15.0,
+			  "c": -15.0
+		  }
+	  ]
+  },
+  "Paths": {
+    "In": {
+      "filepath": "../../../FRTPhase/ExampleFiles/IsoSurfaceFiles/NewbySchwemmer/",
+      "filename": "AntirotatingD05_IsoSurfaces.h5"
+    },
+    "Out": {
+      "filepath": "../../../FRTPhase/ExampleFiles/SimData/NewbySchwemmer/",
+      "filename": "AntirotatingD05_CorrFile.h5"
+    }
+  },
+  "Simulation": {
+    "dt": 0.001,
+    "t0": 0.0,
+    "T": 100.0,
+    "Ensemble Size": 100,
+    "Sample Size": 5
+  }
+}
