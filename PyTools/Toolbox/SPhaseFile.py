@@ -5,12 +5,13 @@ import json
 import numpy as np
 from .Exceptions import *
 
+
 class SPhaseFile():
     FORMAT = "SPhaseFile"
     VERSION = "0.0.1"
     CLASSTAG = ""
 
-    def __init__(self, model_name: str, dtype: np.dtype =np.double):
+    def __init__(self, model_name: str, dtype: np.dtype = np.double):
         self.MODELNAME = model_name
         self.dtype = dtype
 
@@ -30,14 +31,14 @@ class SPhaseFile():
             raise SPhaseFileWrongFormat(file_path, "is not" + self.FORMAT)
         if file.attrs.get("version") != self.VERSION:
             raise SPhaseFileVersionConflict(file_path, \
-                        "file version: " + file.attrs.get("version") +\
-                        " is not version " + self.VERSION)
+                                            "file version: " + file.attrs.get("version") + \
+                                            " is not version " + self.VERSION)
         if file.attrs.get("class") != self.CLASSTAG:
-            raise SPhaseFileClassConflict(file_path,\
-                "file is of class: " + file.attrs.get("class"))
+            raise SPhaseFileClassConflict(file_path, \
+                                          "file is of class: " + file.attrs.get("class"))
         if file.attrs.get("model") != self.MODELNAME:
             raise SPhaseFileModelConflict(file_path, \
-                "data in file is associated to a different model than the one specified")
+                                          "data in file is associated to a different model than the one specified")
 
         self.__read_body__(file)
         file.close()
@@ -50,7 +51,6 @@ class SPhaseFile():
         file.attrs.create("model", self.MODELNAME)
         self.__write_body__(file)
         file.close()
-
 
 
 class Curve():
@@ -76,9 +76,9 @@ class Curve():
         return are_equal
 
 
-
 class IsoSurfaceFile(SPhaseFile):
     CLASSTAG = "IsoSurfaceFile"
+
     def __init__(self, model_name):
         super(IsoSurfaceFile, self).__init__(model_name)
         self.curveSet = []
@@ -88,20 +88,20 @@ class IsoSurfaceFile(SPhaseFile):
             IsoSurfaceGroup = file.create_group(curve.key)
             Parameter = IsoSurfaceGroup.create_group("parameters")
             for key in curve.parameterSet:
-                Parameter.create_dataset(key, shape=(1,),\
-                                         dtype=self.dtype,\
+                Parameter.create_dataset(key, shape=(1,), \
+                                         dtype=self.dtype, \
                                          data=curve.parameterSet[key])
 
-            IsoSurfaceGroup.create_dataset("omega_bar", shape=(1,),\
+            IsoSurfaceGroup.create_dataset("omega_bar", shape=(1,), \
                                            dtype=self.dtype, \
                                            data=curve.omegaBar)
 
             CurveGroup = IsoSurfaceGroup.create_group("curve")
-            CurveGroup.create_dataset("rho", shape=curve.rho.shape,\
-                                      dtype=self.dtype,\
+            CurveGroup.create_dataset("rho", shape=curve.rho.shape, \
+                                      dtype=self.dtype, \
                                       data=curve.rho)
-            CurveGroup.create_dataset("phi", shape=curve.phi.shape,\
-                                      dtype=self.dtype,\
+            CurveGroup.create_dataset("phi", shape=curve.phi.shape, \
+                                      dtype=self.dtype, \
                                       data=curve.phi)
 
     def __read_body__(self, file):
@@ -149,15 +149,17 @@ class IsoSurfaceFile(SPhaseFile):
 
 class FRTData():
     def __init__(self, key, dtype=np.double):
-        self.dtype=dtype
+        self.dtype = dtype
         self.key = key
         self.rho0 = np.array([], dtype=self.dtype)
         self.phi0 = np.array([], dtype=self.dtype)
         self.mFRT = np.array([], dtype=self.dtype)
         self.varFRT = np.array([], dtype=self.dtype)
 
+
 class FRTDataFile(SPhaseFile):
     CLASSTAG = "FRTDataFile"
+
     def __init__(self, model_name):
         super(FRTDataFile, self).__init__(model_name)
         self.isoSurfaceFilePath = ""
@@ -166,29 +168,29 @@ class FRTDataFile(SPhaseFile):
 
     def __write_body__(self, file):
         str_dtype = h5py.string_dtype(encoding='utf-8')
-        file.create_dataset("isosurface_file",\
-                            dtype=str_dtype,\
+        file.create_dataset("isosurface_file", \
+                            dtype=str_dtype, \
                             data=self.isoSurfaceFilePath.encode('utf-8'))
-        file.create_dataset("configuration_file",\
-                            dtype=str_dtype,\
+        file.create_dataset("configuration_file", \
+                            dtype=str_dtype, \
                             data=self.configFilePath.encode('utf-8'))
         for frtData in self.dataSet:
             IsoSurfaceGroup = file.create_group(frtData.key)
 
             XinitGroup = IsoSurfaceGroup.create_group("initial_position")
-            XinitGroup.create_dataset("rho", shape=frtData.rho0.shape,\
-                                      dtype=self.dtype,\
+            XinitGroup.create_dataset("rho", shape=frtData.rho0.shape, \
+                                      dtype=self.dtype, \
                                       data=frtData.rho0)
-            XinitGroup.create_dataset("phi", shape=frtData.phi0.shape,\
-                                      dtype=self.dtype,\
+            XinitGroup.create_dataset("phi", shape=frtData.phi0.shape, \
+                                      dtype=self.dtype, \
                                       data=frtData.phi0)
 
             FRTGroup = IsoSurfaceGroup.create_group("first_return_time")
-            FRTGroup.create_dataset("mFRT", shape=frtData.mFRT.shape,\
-                                    dtype=self.dtype,\
+            FRTGroup.create_dataset("mFRT", shape=frtData.mFRT.shape, \
+                                    dtype=self.dtype, \
                                     data=frtData.mFRT)
-            FRTGroup.create_dataset("varFRT", shape=frtData.varFRT.shape,\
-                                    dtype=self.dtype,\
+            FRTGroup.create_dataset("varFRT", shape=frtData.varFRT.shape, \
+                                    dtype=self.dtype, \
                                     data=frtData.varFRT)
 
     def __read_body__(self, file):
@@ -230,6 +232,7 @@ class FRTDataFile(SPhaseFile):
         self.dataSet.append(frtData)
         return frtData
 
+
 class IsoSurfaceCorr():
     def __init__(self, key, dtype=np.double):
         self.dtype = np.double
@@ -248,8 +251,10 @@ class IsoSurfaceCorr():
         are_equal = are_equal and np.array_equal(self.rho_k, other.rho_k)
         return are_equal
 
+
 class SerialCorrFile(SPhaseFile):
     CLASSTAG = "SerialCorrelationFile"
+
     def __init__(self, model_name):
         super(SerialCorrFile, self).__init__(model_name)
         self.isoSurfaceFilePath = ""
@@ -276,7 +281,6 @@ class SerialCorrFile(SPhaseFile):
                                            dtype=self.dtype, \
                                            data=frtCorrData.rho_k)
 
-
     def __read_body__(self, file):
         dSet_isoSurfaceFilePath = file["isosurface_file"]
         self.isoSurfaceFilePath = dSet_isoSurfaceFilePath[()]
@@ -299,7 +303,6 @@ class SerialCorrFile(SPhaseFile):
                 dSet_rho_k = IsoSurfaceGroup.get("rho_k")
                 with dSet_rho_k.astype(self.dtype):
                     frtCorrData.rho_k = np.array(dSet_rho_k, dtype=self.dtype)
-
 
     def __iter__(self):
         self.dataIterator = iter(self.dataSet)
@@ -350,12 +353,12 @@ class SimConfigFile:
                         P[key] = pSet[key]
                     else:
                         raise SPhaseFileWrongFormat(file_path, "in Model: " \
-                                + self.modelName + "Parameterizations: Parameter " \
-                                                    + key + "has non-float values" )
+                                                    + self.modelName + "Parameterizations: Parameter " \
+                                                    + key + "has non-float values")
                 self.pSets.append(P)
             else:
                 raise SPhaseFileWrongFormat(file_path, "in Model: " \
-                                + self.modelName + "Parameterizations: not in dict format")
+                                            + self.modelName + "Parameterizations: not in dict format")
 
         self.paths["In"] = Path(dict_bf["Paths"]["In"]["filepath"]) / \
                            Path(dict_bf["Paths"]["In"]["filename"])
@@ -374,4 +377,3 @@ class SimConfigFile:
         print("\t Paths: \n \t \t In: ", self.paths["In"],
               "\n \t \t Out: ", self.paths["Out"])
         print("\t Simulation: \n \t \t", self.simulation)
-
