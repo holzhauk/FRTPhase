@@ -28,9 +28,9 @@ struct DimError : public exception {
     }
 };
 
-const size_t OFFSET = 100;
-const size_t LAGS = 15;
-const size_t TOT_INTERVAL_COUNT = 1000;
+const size_t OFFSET = 500;
+const size_t LAGS = 20;
+const size_t TOT_INTERVAL_COUNT = 10000;
 
 int main(int argc, char* argv[]) {
 
@@ -48,18 +48,6 @@ int main(int argc, char* argv[]) {
     simConfig = config.get_simConfig();
     IsoSurfaceFile isoSurfaceFile(modelName);
     isoSurfaceFile.read(config.get_inPath());
-
-    // add spoke of a wheel for reference purposes
-    InterpolatedCurve &spokeCurve = isoSurfaceFile.createInterpolatedCurve("Spoke");
-    auto firstElementIt = isoSurfaceFile.begin();
-    auto[rho, phi] = (*firstElementIt).get_nodes();
-    phi = vector<double>(phi.size(), 0.0);
-    spokeCurve.set_nodes(rho, phi);
-    auto pSet = (*firstElementIt).get_parameterSet();
-    for (auto e: pSet) {
-        spokeCurve.add_parameter(e.first.data(), e.second);
-    }
-    spokeCurve.set_omegaBar((*firstElementIt).get_omegaBar());
 
     SerialCorrFile serialCorrFile = SerialCorrFile(modelName,
                                                    config.get_inPath(),
@@ -86,7 +74,7 @@ int main(int argc, char* argv[]) {
         bool is_positive_sense_of_rotation = (omegaBar > 0.0);
         SerialCorrStats serialCorrStats;
         Pos_t x = isoSurface.get_random_point();
-        double t = simConfig.t0;
+        double t = 0.0;
         for (size_t count = 0; count < TOT_INTERVAL_COUNT; count++){
             integrator.reset(x, t);
             while(!isoSurface.is_first_return_event(x, is_positive_sense_of_rotation)){
@@ -97,7 +85,7 @@ int main(int argc, char* argv[]) {
                 x[1] = x[1] - 2 * M_PI;
             else
                 x[1] = x[1] + 2 * M_PI;
-            t = simConfig.t0;
+            t = 0.0;
         }
 
         isoSurfaceCorr = serialCorrStats.get_corr(isoSurface.get_name(), OFFSET, LAGS);

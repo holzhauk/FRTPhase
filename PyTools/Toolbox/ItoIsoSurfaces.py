@@ -7,9 +7,10 @@ class IsoSurface():
     def __init__(self, model: IsotropicPlanarSSDE, rho: np.array):
         self.model = model
         self.rho = rho
+        self.phi = None
 
     def run_calculations(self):
-        pass
+        pass 
 
     def get_curve(self) -> (np.array, np.array):
         pass
@@ -19,7 +20,6 @@ class ItoIsochron(IsoSurface):
     def __init__(self, model: IsotropicPlanarSSDE, rho: np.array):
         super(ItoIsochron, self).__init__(model, rho)
         self.OmegaBar = None
-        self.phi = None
 
     def calc_OmegaBar(self):
 

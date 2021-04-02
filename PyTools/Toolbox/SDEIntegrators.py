@@ -43,7 +43,8 @@ class SDEIntegrator():
 class ItoEulerIntegrator(SDEIntegrator):
 
     def __init__(self, domain: Domain, model: IsotropicPlanarSSDE):
-        super(ItoEulerIntegrator, self).__init__()
+        config = SDEIntegrator.Config()
+        super(ItoEulerIntegrator, self).__init__(config)
         self.domain = domain
         self.model = model
 

@@ -33,6 +33,8 @@ struct Config {
     } simulation;
     string modelName = string();
     list<ParameterSet> pSetList;
+    string domainName = string();
+    list<ParameterSet> domainDimList;
     //Paths paths;
     //Simulation simulation;
     Config() = default;
@@ -40,17 +42,6 @@ struct Config {
 };
 
 class SimConfigFile {
-public:
-    class paramSetIterator {
-        using pSetIt = list<ParameterSet>::iterator;
-    private:
-        pSetIt it;
-    public:
-        paramSetIterator(pSetIt listIt): it(listIt) {};
-        bool operator != (const paramSetIterator& other);
-        ParameterSet& operator ++ ();
-        ParameterSet& operator * ();
-    };
 private:
     Config config = Config();
 public:
@@ -58,8 +49,6 @@ public:
     SimConfigFile(Config& config): config(config) {};
     void read(const fs::path& filepath);
     void write(const fs::path& filepath);
-    paramSetIterator pSet_begin();
-    paramSetIterator pSet_end();
     Config::Simulation get_simConfig() const;
     fs::path get_inPath() const;
     fs::path get_outPath() const;

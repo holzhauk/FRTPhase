@@ -22,15 +22,15 @@ void write_headerOnly_IsoSurfaceFile(fs::path p,
                                      string version_attribute,
                                      string modelName);
 
-void write_headerOnly_FRTDataFile(fs::path p,
-                                  string class_attribute,
-                                  string format_attribute,
-                                  string version_attribute,
-                                  string modelName,
-                                  fs::path configFilePath,
-                                  fs::path isoSurfaceFilePath);
+void write_headerOnly_DataFile(fs::path p,
+                               string class_attribute,
+                               string format_attribute,
+                               string version_attribute,
+                               string modelName,
+                               fs::path configFilePath,
+                               fs::path isoSurfaceFilePath);
 
-fs::path TestPath = "./IsoSurfaceFileTest.h5";
+fs::path TestPath = "./SPhaseFileTest.h5";
 
 BOOST_AUTO_TEST_SUITE(InterpolatedCurveTest)
 
@@ -480,13 +480,13 @@ BOOST_AUTO_TEST_CASE(exception_tests){
     // wrong class attribute
     exceptions_catched = false;
     testPath = fs::path ("wrong_class_attribute.h5");
-    write_headerOnly_FRTDataFile(testPath,
-                                    "WRONG_CLASS_ATTRIBUTE",
-                                    SPhaseFile_FORMAT_ID,
-                                    SPhaseFile_VERSION_ID,
-                                    modelName,
-                                    configFilePath,
-                                    isoSurfaceFilePath);
+        write_headerOnly_DataFile(testPath,
+                                  "WRONG_CLASS_ATTRIBUTE",
+                                  SPhaseFile_FORMAT_ID,
+                                  SPhaseFile_VERSION_ID,
+                                  modelName,
+                                  configFilePath,
+                                  isoSurfaceFilePath);
 
     try{
         FRTDataFile frtDataFile(modelName);
@@ -503,13 +503,13 @@ BOOST_AUTO_TEST_CASE(exception_tests){
     // wrong format attribute
     exceptions_catched = false;
     testPath = fs::path ("wrong_format_attribute.h5");
-    write_headerOnly_FRTDataFile(testPath,
-                                    SPhaseFile_FRTDataFile_CLASS_ID,
-                                    "WRONG_FORMAT_ATTRIBUTE",
-                                    SPhaseFile_VERSION_ID,
-                                    modelName,
-                                    configFilePath,
-                                    isoSurfaceFilePath);
+        write_headerOnly_DataFile(testPath,
+                                  SPhaseFile_FRTDataFile_CLASS_ID,
+                                  "WRONG_FORMAT_ATTRIBUTE",
+                                  SPhaseFile_VERSION_ID,
+                                  modelName,
+                                  configFilePath,
+                                  isoSurfaceFilePath);
 
     try{
         FRTDataFile frtDataFile(modelName);
@@ -526,13 +526,13 @@ BOOST_AUTO_TEST_CASE(exception_tests){
     // wrong version attribute
     exceptions_catched = false;
     testPath = fs::path ("wrong_version_attribute.h5");
-    write_headerOnly_FRTDataFile(testPath,
-                                    SPhaseFile_FRTDataFile_CLASS_ID,
-                                    SPhaseFile_FORMAT_ID,
-                                    "WRONG_VERSION_ATTRIBUTE",
-                                    modelName,
-                                    configFilePath,
-                                    isoSurfaceFilePath);
+        write_headerOnly_DataFile(testPath,
+                                  SPhaseFile_FRTDataFile_CLASS_ID,
+                                  SPhaseFile_FORMAT_ID,
+                                  "WRONG_VERSION_ATTRIBUTE",
+                                  modelName,
+                                  configFilePath,
+                                  isoSurfaceFilePath);
 
     try{
         FRTDataFile frtDataFile(modelName);
@@ -549,13 +549,13 @@ BOOST_AUTO_TEST_CASE(exception_tests){
     // wrong model name
     exceptions_catched = false;
     testPath = fs::path ("wrong_model_name.h5");
-    write_headerOnly_FRTDataFile(testPath,
-                                    SPhaseFile_FRTDataFile_CLASS_ID,
-                                    SPhaseFile_FORMAT_ID,
-                                    SPhaseFile_VERSION_ID,
-                                    "WRONG_MODEL_NAME",
-                                    configFilePath,
-                                    isoSurfaceFilePath);
+        write_headerOnly_DataFile(testPath,
+                                  SPhaseFile_FRTDataFile_CLASS_ID,
+                                  SPhaseFile_FORMAT_ID,
+                                  SPhaseFile_VERSION_ID,
+                                  "WRONG_MODEL_NAME",
+                                  configFilePath,
+                                  isoSurfaceFilePath);
 
     try{
         FRTDataFile frtDataFile(modelName);
@@ -632,6 +632,151 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
 
 BOOST_AUTO_TEST_SUITE_END()
 
+BOOST_AUTO_TEST_SUITE(TbarDataFileTest)
+
+    fs::path configFilePath = "../theConfigFile.json";
+    fs::path isoSurfaceFilePath = "../../SimData/theisoSurfaceFile.h5";
+
+    BOOST_AUTO_TEST_CASE(exception_tests){
+
+        fs::path testPath;
+        // test if opening a non-existing file causes an HDF5API
+        // exception
+        bool exceptions_catched = false;
+        try{
+            fs::path wrongPath = "./wrongfilename.h5";
+            TbarDataFile tbarDataFile(modelName);
+            tbarDataFile.read(wrongPath);
+        }
+        catch(SPhaseFileHDF5APIError error){
+            exceptions_catched = true;
+            BOOST_CHECK(true);
+        }
+        if (!exceptions_catched)
+            BOOST_CHECK(false);
+
+        // test if opening a file with wrong attribute values
+        // throws the correct exception
+        // wrong class attribute
+        exceptions_catched = false;
+        testPath = fs::path ("wrong_class_attribute.h5");
+        write_headerOnly_DataFile(testPath,
+                                  "WRONG_CLASS_ATTRIBUTE",
+                                  SPhaseFile_FORMAT_ID,
+                                  SPhaseFile_VERSION_ID,
+                                  modelName,
+                                  configFilePath,
+                                  isoSurfaceFilePath);
+
+        try{
+            TbarDataFile tbarDataFile(modelName);
+            tbarDataFile.read(testPath);
+        }
+        catch(SPhaseFileClassConflict error){
+            exceptions_catched = true;
+            BOOST_CHECK(true);
+        }
+        if (!exceptions_catched)
+            BOOST_CHECK(false);
+        fs::remove(testPath); // cleanup - delete the test file
+
+        // wrong format attribute
+        exceptions_catched = false;
+        testPath = fs::path ("wrong_format_attribute.h5");
+        write_headerOnly_DataFile(testPath,
+                                  SPhaseFile_TbarDataFile_CLASS_ID,
+                                  "WRONG_FORMAT_ATTRIBUTE",
+                                  SPhaseFile_VERSION_ID,
+                                  modelName,
+                                  configFilePath,
+                                  isoSurfaceFilePath);
+
+        try{
+            TbarDataFile tbarDataFile(modelName);
+            tbarDataFile.read(testPath);
+        }
+        catch(SPhaseFileWrongFormat error){
+            exceptions_catched = true;
+            BOOST_CHECK(true);
+        }
+        if (!exceptions_catched)
+            BOOST_CHECK(false);
+        fs::remove(testPath); // cleanup - delete the test file
+
+        // wrong version attribute
+        exceptions_catched = false;
+        testPath = fs::path ("wrong_version_attribute.h5");
+        write_headerOnly_DataFile(testPath,
+                                  SPhaseFile_TbarDataFile_CLASS_ID,
+                                  SPhaseFile_FORMAT_ID,
+                                  "WRONG_VERSION_ATTRIBUTE",
+                                  modelName,
+                                  configFilePath,
+                                  isoSurfaceFilePath);
+
+        try{
+            TbarDataFile tbarDataFile(modelName);
+            tbarDataFile.read(testPath);
+        }
+        catch(SPhaseFileVersionConflict error){
+            exceptions_catched = true;
+            BOOST_CHECK(true);
+        }
+        if (!exceptions_catched)
+            BOOST_CHECK(false);
+        fs::remove(testPath); // cleanup - delete the test file
+
+        // wrong model name
+        exceptions_catched = false;
+        testPath = fs::path ("wrong_model_name.h5");
+        write_headerOnly_DataFile(testPath,
+                                  SPhaseFile_TbarDataFile_CLASS_ID,
+                                  SPhaseFile_FORMAT_ID,
+                                  SPhaseFile_VERSION_ID,
+                                  "WRONG_MODEL_NAME",
+                                  configFilePath,
+                                  isoSurfaceFilePath);
+
+        try{
+            TbarDataFile tbarDataFile(modelName);
+            tbarDataFile.read(testPath);
+        }
+        catch(SPhaseFileModelConflict error){
+            exceptions_catched = true;
+            BOOST_CHECK(true);
+        }
+        if (!exceptions_catched)
+            BOOST_CHECK(false);
+        fs::remove(testPath); // cleanup - delete the test file
+
+    }
+
+    BOOST_AUTO_TEST_CASE(write_read_file_test){
+        //random number generator
+        std::mt19937 rn_engine;
+        std::normal_distribution<double> n_dist;
+
+        //prepare file with multiple
+        TbarDataFile tbarDataFile_write(modelName, configFilePath, isoSurfaceFilePath);
+
+        TbarData& dat_1 = tbarDataFile_write.createDataSet("isosurface1");
+        dat_1.Tbar = 2.71;
+        TbarData& dat_2 = tbarDataFile_write.createDataSet("isosurface2");
+        dat_2.Tbar = n_dist(rn_engine);
+        tbarDataFile_write.write(TestPath);
+
+        // read in the file
+        TbarDataFile tbarDataFile_read(modelName, configFilePath, isoSurfaceFilePath);
+        tbarDataFile_read.read(TestPath);
+        BOOST_REQUIRE(tbarDataFile_write == tbarDataFile_read);
+
+        //cleanup and delete file
+        fs::remove(TestPath);
+    }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
 BOOST_AUTO_TEST_SUITE(SimConfigFile_test)
 
 BOOST_AUTO_TEST_CASE(basic_functionality) {
@@ -670,7 +815,15 @@ BOOST_AUTO_TEST_CASE(write_read_json) {
     pSet["c"] = -15.0;
     config_write.pSetList.push_back(pSet);
     pSet["D"] = 0.5;
-    config_write.pSetList.push_back(move(pSet));
+    config_write.pSetList.push_back(pSet);
+    config_write.domainName = string("ReflectiveAnnulus");
+    ParameterSet dimSet;
+    dimSet["rho_min"] = 0.5;
+    dimSet["rhioo_max"] = 1.5;
+    config_write.domainDimList.push_back(dimSet);
+    dimSet["rho_min"] = 0.3;
+    dimSet["rho_max"] = 4.0;
+    config_write.domainDimList.push_back(dimSet);
     config_write.paths.input = fs::path("../Test/input.h5");
     config_write.paths.output = fs::path("/usr/Test/output.h5");
     config_write.simulation.dt = 0.002;
@@ -684,14 +837,6 @@ BOOST_AUTO_TEST_CASE(write_read_json) {
 
     SimConfigFile simConfigFile_read;
     simConfigFile_read.read(testPath);
-
-    int index = 0;
-    for (auto pSetIt = simConfigFile_read.pSet_begin();
-            pSetIt != simConfigFile_read.pSet_end(); ++pSetIt){
-        for (auto pIt = (*pSetIt).begin(); pIt != (*pSetIt).end(); ++pIt){
-            BOOST_TEST(true);
-        }
-    }
 
     BOOST_REQUIRE(simConfigFile_write == simConfigFile_read);
     BOOST_REQUIRE(simConfigFile_write.get_modelName() == simConfigFile_read.get_modelName());
@@ -759,13 +904,13 @@ void write_headerOnly_IsoSurfaceFile(fs::path p,
     }
 }
 
-void write_headerOnly_FRTDataFile(fs::path p,
-                                     string class_attribute,
-                                     string format_attribute,
-                                     string version_attribute,
-                                     string modelName,
-                                     fs::path configFilePath,
-                                     fs::path isoSurfaceFilePath){
+void write_headerOnly_DataFile(fs::path p,
+                               string class_attribute,
+                               string format_attribute,
+                               string version_attribute,
+                               string modelName,
+                               fs::path configFilePath,
+                               fs::path isoSurfaceFilePath){
     try{
         H5::Exception::dontPrint();
 

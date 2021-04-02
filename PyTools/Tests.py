@@ -29,6 +29,38 @@ class TestSPhaseFileFunctionality(unittest.TestCase):
         self.assertEqual(isoSurfaceFile, readFile)
         os.remove("pythonTestFile.h5")
 
+    def test_WriteReadFRTDataFile(self):
+        frtDataFile_write = FRTDataFile("theTestModel")
+        dSet1 = frtDataFile_write.createFRTData("Isochron1")
+        dSet1.rho0 = np.random.rand(100)
+        dSet1.phi0 = np.random.rand(100)
+        dSet1.mFRT = np.random.rand(100)
+        dSet1.varFRT = np.random.rand(100)
+        dSet2 = frtDataFile_write.createFRTData("Isochron100")
+        dSet2.rho0 = np.random.rand(5)
+        dSet2.phi0 = np.random.rand(5)
+        dSet2.mFRT = np.random.rand(5)
+        dSet2.varFRT = np.random.rand(5)
+        frtDataFile_write.write("FRTTestFile.h5")
+
+        frtDataFile_read = FRTDataFile("theTestModel")
+        frtDataFile_read.read("FRTTestFile.h5")
+        self.assertEqual(frtDataFile_write, frtDataFile_read)
+        os.remove("FRTTestFile.h5")
+
+    def test_WriteReadTbarDataFile(self):
+        tbarDataFile_write = TbarDataFile("theTestModel")
+        dSet1 = tbarDataFile_write.createTbarData("Isochron0")
+        dSet1.Tbar = 2.71
+        dSet2 = tbarDataFile_write.createTbarData("Isovariant0")
+        dSet2.Tbar = 0.001
+        tbarDataFile_write.write("TbarFileTest.h5")
+
+        tbarDataFile_read = TbarDataFile("theTestModel")
+        tbarDataFile_read.read("TbarFileTest.h5")
+        self.assertEqual(tbarDataFile_write, tbarDataFile_read)
+        os.remove("TbarFileTest.h5")
+
     def test_WriteReadCorrelationFile(self):
         noLags = 10
         N = 10000
@@ -51,6 +83,37 @@ class TestSPhaseFileFunctionality(unittest.TestCase):
         corrReadFile.read("pythonTestFile.h5")
         self.assertEqual(corrWriteFile, corrReadFile)
         os.remove("pythonTestFile.h5")
+
+    def test_ReadSimConfigFile(self):
+        # read test
+        simConfigFile = SimConfigFile()
+        simConfigFile.read("../ExampleFiles/configs/config_verification.json")
+        # test Model content
+        self.assertEqual(simConfigFile.modelName, "NewbySchwemmer")
+        self.assertEqual(len(simConfigFile.pSets), 1)
+        self.assertEqual(simConfigFile.pSets[0]["D"], 0.5)
+        self.assertEqual(simConfigFile.pSets[0]["omega"], 1.0)
+        self.assertEqual(simConfigFile.pSets[0]["gamma"], 15.0)
+        self.assertEqual(simConfigFile.pSets[0]["c"], -15.0)
+        # test Domain content
+        self.assertEqual(simConfigFile.domainName, "ReflectiveAnnulus")
+        self.assertEqual(len(simConfigFile.domainDims), 1)
+        self.assertEqual(simConfigFile.domainDims[0]["rho_min"], 0.5)
+        self.assertEqual(simConfigFile.domainDims[0]["rho_max"], 1.5)
+        # test Simulation content
+        simP = simConfigFile.simulation
+        self.assertEqual(simP["dt"], 0.001)
+        self.assertEqual(simP["t0"], 0.0)
+        self.assertEqual(simP["T"], 1000.0)
+        self.assertEqual(simP["Ensemble Size"], 1000)
+        self.assertEqual(simP["Sample Size"], 5)
+        # test Path variable content
+        self.assertEqual(simConfigFile.paths["In"], \
+            Path("../../../FRTPhase/ExampleFiles/IsoSurfaceFiles" + \
+                 "/NewbySchwemmer/AntirotatingD05_IsoSurfacePair.h5"))
+        self.assertEqual(simConfigFile.paths["Out"], \
+                         Path("../../../FRTPhase/ExampleFiles/SimData" + \
+                              "/NewbySchwemmer/AntirotatingD05_FRTFile.h5"))
 
 
 class TestStochasticIntegration(unittest.TestCase):

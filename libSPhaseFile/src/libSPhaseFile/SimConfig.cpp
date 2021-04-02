@@ -18,6 +18,16 @@ bool Config::operator==(const Config &other) {
         ++rhsPSetIt;
     }
 
+    is_equal = is_equal && (this->domainName == other.domainName);
+    auto lhsDomDimIt = this->domainDimList.begin();
+    auto rhsDomDimIt = other.domainDimList.begin();
+    while (lhsDomDimIt != this->domainDimList.end() && rhsDomDimIt != other.domainDimList.end()){
+        is_equal = is_equal && ((lhsDomDimIt->size() == rhsDomDimIt->size()) &&
+                (std::equal(lhsDomDimIt->begin(), lhsDomDimIt->end(), rhsDomDimIt->begin())));
+        ++lhsDomDimIt;
+        ++rhsDomDimIt;
+    }
+
     is_equal = is_equal && (this->paths.input == other.paths.input);
     is_equal = is_equal && (this->paths.output == other.paths.output);
     is_equal == is_equal && (this->simulation == other.simulation);
@@ -34,18 +44,6 @@ bool Config::Simulation::operator== (const Config::Simulation& other) {
     return is_equal;
 }
 
-bool SimConfigFile::paramSetIterator::operator != (const SimConfigFile::paramSetIterator& other) {
-    return this->it != other.it;
-}
-
-ParameterSet& SimConfigFile::paramSetIterator::operator ++ (){
-    return *(++it);
-}
-
-ParameterSet& SimConfigFile::paramSetIterator::operator * (){
-    return *it;
-}
-
 void SimConfigFile::read(const fs::path& filepath) {
     pt::ptree root;
     pt::read_json(filepath, root);
@@ -58,6 +56,17 @@ void SimConfigFile::read(const fs::path& filepath) {
             pSet[parameter.first.data()] = stod(parameter.second.data());
         }
         config.pSetList.push_back(pSet);
+    }
+
+    pt::ptree domainG = root.get_child("Domain");
+    config.domainName = domainG.get<std::string>("Name");
+
+    for (auto& ptPSet: domainG.get_child("Dimensions")){
+        ParameterSet dimSet;
+        for (auto& dim: ptPSet.second){
+            dimSet[dim.first.data()] = stod(dim.second.data());
+        }
+        config.domainDimList.push_back(dimSet);
     }
 
     pt::ptree inPaths = root.get_child("Paths.In");
@@ -93,6 +102,20 @@ void SimConfigFile::write(const fs::path& filepath) {
     modelG.put_child("Parameterizations", paramG);
     root.put_child("Model", modelG);
 
+    pt::ptree domainG;
+    domainG.put("Name", config.domainName);
+
+    pt::ptree dimensionsG;
+    for (auto& dimSet: config.domainDimList){
+        pt::ptree ptDSet;
+        for (auto& dim: dimSet){
+            ptDSet.put(dim.first.data(), dim.second);
+        }
+        dimensionsG.push_back(make_pair("", ptDSet));
+    }
+    domainG.put_child("Dimensions", dimensionsG);
+    root.put_child("Domain", domainG);
+
     pt::ptree inPaths;
     inPaths.put("filepath", string(config.paths.input.parent_path()));
     inPaths.put("filename", string(config.paths.input.filename()));
@@ -112,14 +135,6 @@ void SimConfigFile::write(const fs::path& filepath) {
     root.put_child("Simulation", simulation);
 
     pt::write_json(filepath, root);
-}
-
-SimConfigFile::paramSetIterator SimConfigFile::pSet_begin(){
-    return paramSetIterator(config.pSetList.begin());
-}
-
-SimConfigFile::paramSetIterator SimConfigFile::pSet_end(){
-    return paramSetIterator(config.pSetList.end());
 }
 
 Config::Simulation SimConfigFile::get_simConfig() const{

@@ -30,3 +30,10 @@ class SPhaseFileDimError(SPhaseFileError):
     def __init__(self, file_name, message):
         self.file_name = file_name
         self.message = message
+
+class FirstPassageDetectorError(Exception):
+    pass
+
+class OutOfDomain(FirstPassageDetectorError):
+    def __init__(self, message):
+        self.message = message

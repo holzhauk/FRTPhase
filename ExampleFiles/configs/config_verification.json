@@ -10,6 +10,15 @@
 		  }
 	  ]
   },
+  "Domain": {
+      "Name": "ReflectiveAnnulus",
+      "Dimensions": [
+          {
+              "rho_min": 0.5,
+              "rho_max": 1.5
+          }
+      ]
+  },
   "Paths": {
     "In": {
       "filepath": "../../../FRTPhase/ExampleFiles/IsoSurfaceFiles/NewbySchwemmer/",

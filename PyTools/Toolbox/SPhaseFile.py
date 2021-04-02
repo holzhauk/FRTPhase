@@ -66,8 +66,7 @@ class Curve():
     def __eq__(self, other):
         if not isinstance(other, Curve):
             return NotImplemented
-        are_equal = True
-        are_equal = are_equal and (self.dtype == other.dtype)
+        are_equal = (self.dtype == other.dtype)
         are_equal = are_equal and (self.key == other.key)
         are_equal = are_equal and (self.omegaBar == other.omegaBar)
         are_equal = are_equal and (self.parameterSet == other.parameterSet)
@@ -136,6 +135,9 @@ class IsoSurfaceFile(SPhaseFile):
         return next(self.IsoSurfaceIterator)
 
     def __eq__(self, other):
+        if not isinstance(other, IsoSurfaceFile):
+            return NotImplemented
+
         are_equal = True
         for (c1, c2) in zip(self.curveSet, other.curveSet):
             are_equal = are_equal and (c1 == c2)
@@ -155,6 +157,18 @@ class FRTData():
         self.phi0 = np.array([], dtype=self.dtype)
         self.mFRT = np.array([], dtype=self.dtype)
         self.varFRT = np.array([], dtype=self.dtype)
+
+    def __eq__(self, other):
+        if not isinstance(other, FRTData):
+            return NotImplemented
+
+        are_equal = (self.dtype == other.dtype)
+        are_equal = are_equal and (self.key == other.key)
+        are_equal = are_equal and np.array_equal(self.rho0, other.rho0)
+        are_equal = are_equal and np.array_equal(self.phi0, other.phi0)
+        are_equal = are_equal and np.array_equal(self.mFRT, other.mFRT)
+        are_equal = are_equal and np.array_equal(self.varFRT, other.varFRT)
+        return are_equal
 
 
 class FRTDataFile(SPhaseFile):
@@ -227,10 +241,104 @@ class FRTDataFile(SPhaseFile):
     def __next__(self):
         return next(self.dataIterator)
 
+    def __eq__(self, other):
+        if not isinstance(other, FRTDataFile):
+            return NotImplemented
+
+        are_equal = (self.isoSurfaceFilePath == other.isoSurfaceFilePath)
+        are_equal = are_equal and (self.configFilePath == other.configFilePath)
+        for (dSet1, dSet2) in zip(self.dataSet, other.dataSet):
+            are_equal = are_equal and (dSet1 == dSet2)
+        return are_equal
+
     def createFRTData(self, key):
         frtData = FRTData(key)
         self.dataSet.append(frtData)
         return frtData
+
+
+class TbarData():
+    def __init__(self, key, dtype=np.double):
+        self.dtype = dtype
+        self.key = key
+        self.Tbar = 0.0
+
+    def __eq__(self, other):
+        if not isinstance(other, TbarData):
+            return NotImplemented
+
+        are_equal = (self.dtype == other.dtype)
+        are_equal = are_equal and (self.key == other.key)
+        are_equal = are_equal  and (self.Tbar == other.Tbar)
+        return are_equal
+
+
+class TbarDataFile(SPhaseFile):
+    CLASSTAG = "TbarDataFile"
+
+    def __init__(self, model_name):
+        super(TbarDataFile, self).__init__(model_name)
+        self.isoSurfaceFilePath = ""
+        self.configFilePath = ""
+        self.dataSet = []
+
+    def __write_body__(self, file):
+        str_dtype = h5py.string_dtype(encoding='utf-8')
+        file.create_dataset("isosurface_file", \
+                            dtype=str_dtype, \
+                            data=self.isoSurfaceFilePath.encode('utf-8'))
+        file.create_dataset("configuration_file", \
+                            dtype=str_dtype, \
+                            data=self.configFilePath.encode('utf-8'))
+        for tbarData in self.dataSet:
+            IsoSurfaceGroup = file.create_group(tbarData.key)
+
+            TbarGroup = IsoSurfaceGroup.create_group("mean_period")
+            TbarGroup.create_dataset("Tbar", shape=(1, ), \
+                                     dtype=self.dtype, \
+                                     data=tbarData.Tbar)
+
+    def __read_body__(self, file):
+        dSet_isoSurfaceFilePath = file["isosurface_file"]
+        self.isoSurfaceFilePath = dSet_isoSurfaceFilePath[()]
+        dSet_configFilePath = file["configuration_file"]
+        self.configFilePath = dSet_configFilePath[()]
+
+        for key in file:
+            if (key != "isosurface_file") and (key != "configuration_file"):
+                IsoSurfaceGroup = file[key]
+                tbarData = self.createTbarData(key)
+
+                scalar_dummy = np.zeros((1,), dtype=self.dtype)
+
+                tbarGroup = IsoSurfaceGroup["mean_period"]
+                dSet_tbar = tbarGroup.get("Tbar")
+                with dSet_tbar.astype(self.dtype):
+                    dSet_tbar.read_direct(scalar_dummy)
+                    tbarData.Tbar = scalar_dummy.copy()
+
+
+    def __iter__(self):
+        self.dataIterator = iter(self.dataSet)
+        return self.dataIterator
+
+    def __next__(self):
+        return next(self.dataIterator)
+
+    def __eq__(self, other):
+        if not isinstance(other, TbarDataFile):
+            return NotImplemented
+
+        are_equal = (self.isoSurfaceFilePath == other.isoSurfaceFilePath)
+        are_equal = are_equal and (self.configFilePath == other.configFilePath)
+        for (dSet1, dSet2) in zip(self.dataSet, other.dataSet):
+            are_equal = are_equal and (dSet1 == dSet2)
+        return are_equal
+
+    def createTbarData(self, key):
+        tbarData = TbarData(key)
+        self.dataSet.append(tbarData)
+        return tbarData
 
 
 class IsoSurfaceCorr():
@@ -327,6 +435,8 @@ class SimConfigFile:
     def __init__(self):
         self.modelName = ""
         self.pSets = []
+        self.domainName = ""
+        self.domainDims = []
         self.paths = {
             "In": Path(""),
             "Out": Path("")
@@ -353,12 +463,29 @@ class SimConfigFile:
                         P[key] = pSet[key]
                     else:
                         raise SPhaseFileWrongFormat(file_path, "in Model: " \
-                                                    + self.modelName + "Parameterizations: Parameter " \
-                                                    + key + "has non-float values")
+                                                    + self.modelName + " Parameterizations: Parameter " \
+                                                    + key + " has non-float value")
                 self.pSets.append(P)
             else:
                 raise SPhaseFileWrongFormat(file_path, "in Model: " \
                                             + self.modelName + "Parameterizations: not in dict format")
+
+        domainG = dict_bf["Domain"]
+        self.domainName = domainG["Name"]
+        for dims in domainG["Dimensions"]:
+            if type(dims) is dict:
+                D = {}
+                for key in dims:
+                    if type(dims[key]) is float:
+                        D[key] = dims[key]
+                    else:
+                        raise SPhaseFileWrongFormat(file_path, "in Domain: " \
+                                                    + self.domainName + " Dimensions: Dimension " \
+                                                    + key + " has non-float value")
+                self.domainDims.append(D)
+            else:
+                raise SPhaseFileWrongFormat(file_path, "in Domain : " \
+                                            + self.domainName + " Dimensions: not in dict format")
 
         self.paths["In"] = Path(dict_bf["Paths"]["In"]["filepath"]) / \
                            Path(dict_bf["Paths"]["In"]["filename"])

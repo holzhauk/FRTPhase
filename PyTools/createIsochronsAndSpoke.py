@@ -7,7 +7,7 @@ from Toolbox.ItoIsoSurfaces import *
 import numpy as np
 
 rho_min = 0.5
-rho_max = 1.2
+rho_max = 4.0
 doF = 1000
 
 if __name__ == "__main__":
@@ -37,5 +37,12 @@ if __name__ == "__main__":
         isochronCurve.phi = phi.copy()
 
         index += 1
+
+    dummyCurve = isoSurfaceFile.curveSet[-1]
+    spokeCurve = isoSurfaceFile.createCurve("Spoke")
+    spokeCurve.parameterSet = dummyCurve.parameterSet.copy()
+    spokeCurve.omegaBar = dummyCurve.omegaBar
+    spokeCurve.rho = np.linspace(rho_min, rho_max, num=doF)
+    spokeCurve.phi = np.zeros(spokeCurve.rho.shape)
 
     isoSurfaceFile.write(config.paths["In"])

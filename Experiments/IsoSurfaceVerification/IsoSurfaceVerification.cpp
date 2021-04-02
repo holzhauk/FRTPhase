@@ -58,18 +58,7 @@ int main(int argc, char* argv[]){
 
     for (auto isoSurface: isoSurfaceFile) {
         auto [rho_min, rho_max] = isoSurface.get_extensions();
-        if (is_master)
-            cout << "model: " << modelName << endl;
-            cout << "rho_min: " << rho_min << "; rho_max: " << rho_max << endl;
         ReflectiveAnnulus domain(rho_min, rho_max);
-        if (is_master) {
-            ParameterSet pSet = isoSurface.get_parameterSet();
-            cout << "Parameters: " << endl;
-            cout << "D: " << pSet["D"] << endl;
-            cout << "omega: " << pSet["omega"] << endl;
-            cout << "gamma: " << pSet["gamma"] << endl;
-            cout << "c: " << pSet["c"] << endl;
-        }
         unique_ptr<IsotropicPlanarSSDE> theModelPtr =
                 theModelFactory.createModel(modelName, isoSurface.get_parameterSet());
         ItoEulerIntegrator integrator(&domain, theModelPtr.get());
