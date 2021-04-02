@@ -1,0 +1,39 @@
+{
+  "Model": {
+	  "Name": "NewbySchwemmer",
+	  "Parameterizations": [
+		  {
+			  "D": 0.5,
+			  "omega": 1.0,
+			  "gamma": 15.0,
+			  "c": -15.0
+		  }
+	  ]
+  },
+  "Domain": {
+      "Name": "ReflectiveAnnulus",
+      "Dimensions": [
+          {
+              "rho_min": 0.5,
+              "rho_max": 1.5
+          }
+      ]
+  },
+  "Paths": {
+    "In": {
+      "filepath": "../../../ExampleFiles/IsoSurfaceFiles/NewbySchwemmer/",
+      "filename": "AntirotatingD05_IsoSurfaces.h5"
+    },
+    "Out": {
+      "filepath": "../../../ExampleFiles/SimData/NewbySchwemmer/",
+      "filename": "AntirotatingD05_TbarFile.h5"
+    }
+  },
+  "Simulation": {
+    "dt": 0.0001,
+    "t0": 0.0,
+    "T": 10000.0,
+    "Ensemble Size": 1,
+    "Sample Size": 1
+  }
+}

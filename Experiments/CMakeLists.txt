@@ -1,2 +1,3 @@
 add_subdirectory(IsoSurfaceVerification)
 add_subdirectory(IsoSurfaceCorrelation)
+add_subdirectory(MeanPeriodVerification)
