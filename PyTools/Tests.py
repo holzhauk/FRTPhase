@@ -109,11 +109,11 @@ class TestSPhaseFileFunctionality(unittest.TestCase):
         self.assertEqual(simP["Sample Size"], 5)
         # test Path variable content
         self.assertEqual(simConfigFile.paths["In"], \
-            Path("../../../FRTPhase/ExampleFiles/IsoSurfaceFiles" + \
-                 "/NewbySchwemmer/AntirotatingD05_IsoSurfacePair.h5"))
+            Path("../ExampleFiles/IsoSurfaceFiles" + \
+                 "/NewbySchwemmer/AntirotatingD05_IsoSurfacePair.h5").absolute().resolve())
         self.assertEqual(simConfigFile.paths["Out"], \
-                         Path("../../../FRTPhase/ExampleFiles/SimData" + \
-                              "/NewbySchwemmer/AntirotatingD05_FRTFile.h5"))
+                         Path("../ExampleFiles/SimData" + \
+                              "/NewbySchwemmer/AntirotatingD05_FRTFile.h5").absolute().resolve())
 
 
 class TestStochasticIntegration(unittest.TestCase):

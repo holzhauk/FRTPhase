@@ -64,7 +64,7 @@ class ItoIsochron(IsoSurface):
         return self.OmegaBar
 
     def get_curve(self) -> (np.array, np.array):
-        if self.phi == None:
+        if type(self.phi) == type(None):
             self.phi = self.calc_phi()
         return (self.rho, self.phi)
 
@@ -163,6 +163,6 @@ class ItoIsovariant(IsoSurface):
         return self.DeltaBar
 
     def get_curve(self) -> (np.array, np.array):
-        if self.phi == None:
+        if type(self.phi) == type(None):
             self.phi = self.calc_phi()
         return (self.rho, self.phi)

@@ -782,8 +782,12 @@ BOOST_AUTO_TEST_SUITE(SimConfigFile_test)
 BOOST_AUTO_TEST_CASE(basic_functionality) {
     Config config;
     config.modelName = modelName;
-    config.paths.input = fs::path("../Test/input.h5");
-    config.paths.output = fs::path("/usr/Test/output.h5");
+    config.paths.input = fs::weakly_canonical(
+            fs::path("../../Test/input.h5")
+            );
+    config.paths.output = fs::weakly_canonical(
+            fs::path("../../Test/output.h5")
+            );
     config.simulation.dt = 0.001;
     config.simulation.t0 = 10.0;
     config.simulation.T = 1000.0;
@@ -799,13 +803,25 @@ BOOST_AUTO_TEST_CASE(basic_functionality) {
     BOOST_CHECK_EQUAL(simConfig.EnsembleSize, 1000000);
     BOOST_CHECK_EQUAL(simConfig.SampleSize, 20);
 
-    BOOST_CHECK(simConfigFile.get_inPath() == fs::path("../Test/input.h5"));
-    BOOST_CHECK(simConfigFile.get_outPath() == fs::path("/usr/Test/output.h5"));
+    BOOST_CHECK(simConfigFile.get_inPath() ==
+        fs::weakly_canonical(
+                fs::path("../../Test/input.h5")
+                ));
+    BOOST_CHECK(simConfigFile.get_outPath() ==
+        fs::weakly_canonical(
+                fs::path("../../Test/output.h5")
+                ));
 }
 
 BOOST_AUTO_TEST_CASE(write_read_json) {
-    fs::path testPath("./Test.json");
+    //fs::path testPath("./Test.json");
+    fs::path testPath("Test.json");
+    fs::path testestpath = fs::path("");
+    if (testestpath == fs::path(""))
+        testestpath = fs::path(".");
+    testPath = testestpath / testPath;
 
+    // test with relative paths
     Config config_write;
     config_write.modelName = modelName;
     ParameterSet pSet;
@@ -819,13 +835,17 @@ BOOST_AUTO_TEST_CASE(write_read_json) {
     config_write.domainName = string("ReflectiveAnnulus");
     ParameterSet dimSet;
     dimSet["rho_min"] = 0.5;
-    dimSet["rhioo_max"] = 1.5;
+    dimSet["rho_max"] = 1.5;
     config_write.domainDimList.push_back(dimSet);
     dimSet["rho_min"] = 0.3;
     dimSet["rho_max"] = 4.0;
     config_write.domainDimList.push_back(dimSet);
-    config_write.paths.input = fs::path("../Test/input.h5");
-    config_write.paths.output = fs::path("/usr/Test/output.h5");
+    config_write.paths.input =
+            fs::absolute(testPath).parent_path() / fs::path("../../Test/input.h5");
+    config_write.paths.input = fs::weakly_canonical(config_write.paths.input);
+    config_write.paths.output =
+            fs::absolute(testPath).parent_path() / fs::path("../../Test/output.h5");
+    config_write.paths.output = fs::weakly_canonical(config_write.paths.output);
     config_write.simulation.dt = 0.002;
     config_write.simulation.t0 = 20.0;
     config_write.simulation.T = 2000.0;
@@ -843,6 +863,21 @@ BOOST_AUTO_TEST_CASE(write_read_json) {
     BOOST_REQUIRE(simConfigFile_write.get_simConfig() == simConfigFile_read.get_simConfig());
     BOOST_REQUIRE(simConfigFile_write.get_inPath() == simConfigFile_read.get_inPath());
     BOOST_REQUIRE(simConfigFile_write.get_outPath() == simConfigFile_read.get_outPath());
+
+    // test with absolute paths
+    fs::path absolute_path = fs::current_path();
+    config_write.paths.input = absolute_path / fs::path("input.h5");
+    config_write.paths.output = absolute_path / fs::path("output.h5");
+
+    simConfigFile_write = SimConfigFile(config_write);
+    simConfigFile_write.write(testPath, false);
+
+    simConfigFile_read.read(testPath);
+
+    BOOST_REQUIRE(simConfigFile_write.get_inPath() == simConfigFile_read.get_inPath());
+    BOOST_REQUIRE(simConfigFile_write.get_outPath() == simConfigFile_read.get_outPath());
+
+    fs::remove(testPath);
 
 }
 

@@ -20,6 +20,9 @@ using namespace std;
 
 struct Config {
     struct Paths {
+        /*
+         * store as absolute system paths
+         */
         fs::path input = fs::path();
         fs::path output = fs::path();
     } paths;
@@ -29,7 +32,7 @@ struct Config {
         double T = 0.0;
         size_t EnsembleSize = 0;
         size_t SampleSize = 0;
-        bool operator == (const Simulation& other);
+        bool operator == (const Simulation& other) const;
     } simulation;
     string modelName = string();
     list<ParameterSet> pSetList;
@@ -44,11 +47,18 @@ struct Config {
 class SimConfigFile {
 private:
     Config config = Config();
+    bool paths_are_not_absolute = true;
 public:
     SimConfigFile() = default;
     SimConfigFile(Config& config): config(config) {};
+    /*
+     * absolute and relative paths are accepted
+     * however, the Config structure is supposed to hold
+     * absolute system paths -> a conversion is implemented
+     */
     void read(const fs::path& filepath);
     void write(const fs::path& filepath);
+    void write(const fs::path& filepath, bool write_relative_paths);
     Config::Simulation get_simConfig() const;
     fs::path get_inPath() const;
     fs::path get_outPath() const;

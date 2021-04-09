@@ -441,6 +441,7 @@ class SimConfigFile:
             "In": Path(""),
             "Out": Path("")
         }
+        self.paths_are_not_absolute = True
         self.simulation = {
             "dt": 0.0,
             "t0": 0.0,
@@ -487,10 +488,31 @@ class SimConfigFile:
                 raise SPhaseFileWrongFormat(file_path, "in Domain : " \
                                             + self.domainName + " Dimensions: not in dict format")
 
-        self.paths["In"] = Path(dict_bf["Paths"]["In"]["filepath"]) / \
+        filepath_input = Path(dict_bf["Paths"]["In"]["filepath"])
+        if filepath_input == Path(""):
+            filepath_input = Path(".")
+        self.paths["In"] = filepath_input / \
                            Path(dict_bf["Paths"]["In"]["filename"])
-        self.paths["Out"] = Path(dict_bf["Paths"]["Out"]["filepath"]) / \
+
+        filepath_output = Path(dict_bf["Paths"]["Out"]["filepath"])
+        if filepath_output == Path(""):
+            filepath_output = Path(".")
+        self.paths["Out"] = filepath_output / \
                             Path(dict_bf["Paths"]["Out"]["filename"])
+
+        self.paths_are_not_absolute = \
+            not (self.paths["In"].is_absolute() and self.paths["Out"].is_absolute())
+
+        if not self.paths["In"].is_absolute():
+            base = Path(file_path).absolute().parent
+            self.paths["In"] =  base / self.paths["In"]
+            self.paths["In"] = self.paths["In"].resolve()
+
+        if not self.paths["Out"].is_absolute():
+            base = Path(file_path).absolute().parent
+            self.paths["Out"] = base / self.paths["Out"]
+            self.paths["Out"] = self.paths["Out"].resolve()
+
         self.simulation = dict_bf["Simulation"]
 
     def print_contents(self):

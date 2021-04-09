@@ -6,8 +6,7 @@
 #include "SimConfig.h"
 
 bool Config::operator==(const Config &other) {
-    bool is_equal = true;
-    is_equal = is_equal && (this->modelName == other.modelName);
+    bool is_equal = (this->modelName == other.modelName);
 
     auto lhsPSetIt = this->pSetList.begin();
     auto rhsPSetIt = other.pSetList.begin();
@@ -30,13 +29,12 @@ bool Config::operator==(const Config &other) {
 
     is_equal = is_equal && (this->paths.input == other.paths.input);
     is_equal = is_equal && (this->paths.output == other.paths.output);
-    is_equal == is_equal && (this->simulation == other.simulation);
+    is_equal = is_equal && (this->simulation == other.simulation);
     return is_equal;
 }
 
-bool Config::Simulation::operator== (const Config::Simulation& other) {
-    bool is_equal = true;
-    is_equal = is_equal && (this->dt == other.dt);
+bool Config::Simulation::operator== (const Config::Simulation& other) const {
+    bool is_equal = (this->dt == other.dt);
     is_equal = is_equal && (this->t0 == other.t0);
     is_equal = is_equal && (this->T == other.T);
     is_equal = is_equal && (this->EnsembleSize == other.EnsembleSize);
@@ -69,13 +67,36 @@ void SimConfigFile::read(const fs::path& filepath) {
         config.domainDimList.push_back(dimSet);
     }
 
+    /*
+     * implement conversions such that eventually
+     * the paths stored in the config structure are absolute
+     */
     pt::ptree inPaths = root.get_child("Paths.In");
-    config.paths.input = fs::path(inPaths.get<std::string>("filepath")) /
+    fs::path filepath_input = fs::path(inPaths.get<std::string>("filepath"));
+    if (filepath_input == fs::path(""))
+        filepath_input = fs::path(".");
+    config.paths.input = filepath_input /
                   fs::path(inPaths.get<std::string>("filename"));
 
     pt::ptree outPaths = root.get_child("Paths.Out");
-    config.paths.output = fs::path(outPaths.get<std::string>("filepath")) /
-                   fs::path(outPaths.get<std::string>("filename"));
+    fs::path filepath_output = fs::path(outPaths.get<std::string>("filepath"));
+    if (filepath_output == fs::path(""))
+        filepath_output = fs::path(".");
+    config.paths.output = filepath_output /
+                          fs::path(outPaths.get<std::string>("filename"));
+
+    paths_are_not_absolute =
+            !(config.paths.input.is_absolute() && config.paths.output.is_absolute());
+
+    if (config.paths.input.is_relative()) {
+        config.paths.input = fs::canonical(filepath).parent_path() / config.paths.input;
+        config.paths.input = fs::weakly_canonical(config.paths.input);
+    }
+
+    if (config.paths.output.is_relative()) {
+        config.paths.output = fs::canonical(filepath).parent_path() / config.paths.output;
+        config.paths.output = fs::weakly_canonical(config.paths.output);
+    }
 
     pt::ptree simulation_configuration = root.get_child("Simulation");
     config.simulation.dt = simulation_configuration.get<double>("dt");
@@ -117,13 +138,23 @@ void SimConfigFile::write(const fs::path& filepath) {
     root.put_child("Domain", domainG);
 
     pt::ptree inPaths;
-    inPaths.put("filepath", string(config.paths.input.parent_path()));
-    inPaths.put("filename", string(config.paths.input.filename()));
+    fs::path json_input_path, json_output_path;
+
+    if (paths_are_not_absolute) {
+        fs::path base = fs::weakly_canonical(filepath).parent_path();
+        json_input_path = fs::relative(config.paths.input, base);
+        json_output_path = fs::relative(config.paths.output, base);
+    } else {
+        json_input_path = config.paths.input;
+        json_output_path = config.paths.output;
+    }
+    inPaths.put("filepath", string(json_input_path.parent_path()));
+    inPaths.put("filename", string(json_input_path.filename()));
     root.put_child("Paths.In", inPaths);
 
     pt::ptree outPaths;
-    outPaths.put("filepath", string(config.paths.output.parent_path()));
-    outPaths.put("filename", string(config.paths.output.filename()));
+    outPaths.put("filepath", string(json_output_path.parent_path()));
+    outPaths.put("filename", string(json_output_path.filename()));
     root.put_child("Paths.Out", outPaths);
 
     pt::ptree simulation;
@@ -135,6 +166,11 @@ void SimConfigFile::write(const fs::path& filepath) {
     root.put_child("Simulation", simulation);
 
     pt::write_json(filepath, root);
+}
+
+void SimConfigFile::write(const fs::path &filepath, bool write_relative_paths) {
+    this->paths_are_not_absolute = write_relative_paths;
+    this->write(filepath);
 }
 
 Config::Simulation SimConfigFile::get_simConfig() const{
@@ -154,5 +190,7 @@ string SimConfigFile::get_modelName() const {
 }
 
 bool SimConfigFile::operator == (const SimConfigFile& other) {
-    return this->config == other.config;
+    bool are_equal = (this->config == other.config);
+    are_equal = are_equal && (this->paths_are_not_absolute && other.paths_are_not_absolute);
+    return are_equal;
 }
