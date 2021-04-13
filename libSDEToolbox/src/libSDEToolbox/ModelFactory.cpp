@@ -14,5 +14,9 @@ unique_ptr<IsotropicPlanarSSDE> ModelFactory::createModel(const string& modelNam
         modelPtr = unique_ptr<IsotropicPlanarSSDE> (new ModelZoo::SchwabedalPikovsky(pSet));
         return move(modelPtr);
     }
+    if (modelName == "SimpleModel") {
+        modelPtr = unique_ptr<IsotropicPlanarSSDE> (new ModelZoo::SimpleModel(pSet));
+        return move(modelPtr);
+    }
     throw ModelNotDefined();
 }

@@ -23,8 +23,24 @@ namespace ModelZoo {
             return -pSet["gamma"] * rho * (pow(rho, 2.0) - 1.0) + pSet["D"] / rho;
         };
 
-        double f(double &rho) override {
+        double f(double& rho) override {
             return pSet["omega"] * (1 + pSet["gamma"] * pSet["c"] * pow((1.0 - rho), 2.0));
+        };
+    };
+
+    class SimpleModel : public IsotropicPlanarSSDEAdditiveNoise {
+    public:
+        SimpleModel(ParameterSet pSet) :
+                IsotropicPlanarSSDEAdditiveNoise(pSet["D"], pSet["D"]) {
+            this->pSet = pSet;
+        };
+
+        double g(double& rho) override {
+            return -pSet["alpha"] + pSet["D"] / rho;
+        };
+
+        double f(double& rho) override {
+            return pSet["omega"] + pSet["beta"]*pow(rho, pSet["n"]);
         };
     };
 

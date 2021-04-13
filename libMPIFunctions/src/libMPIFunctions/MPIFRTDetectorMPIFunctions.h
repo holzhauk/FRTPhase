@@ -28,7 +28,7 @@ struct FRTStats{
     double mFRT = 0.0;
     double varFRT = 0.0;
     FRTStats() = default;
-    MPI_Datatype get_mpi_type();
+    static MPI_Datatype get_mpi_type();
     FRTStats& operator = (const FRTStats& other);
 };
 

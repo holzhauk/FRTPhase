@@ -21,4 +21,5 @@ double NormalizedMoments::get_variance() {
         variance += pow(s - mean, 2.0);
     }
     variance /= data.size();
+    return variance;
 }

@@ -103,7 +103,7 @@ StationaryStats MPI_Dist_StatsFromData(const Data<StationaryStats>& data, const 
     MPI_Type_free(&MPI_SStats_t);
     MPI_Op_free(&MPI_SStats_SUM);
 
-    double E = static_cast<double>(ensemble_size);
+    auto E = static_cast<double>(ensemble_size);
     stationaryStats.mPhiT /= E;
     stationaryStats.varPhiT /= E;
     stationaryStats.varPhiT -= pow(stationaryStats.mPhiT, 2);
@@ -135,7 +135,7 @@ FRTStats MPI_Dist_StatsFromData(const Data<FRTStats>& data, const unsigned int& 
     MPI_Type_free(&MPI_FRTStats_t);
     MPI_Op_free(&MPI_FRTStats_SUM_Op_t);
 
-    double E = static_cast<double>(ensemble_size);
+    auto E = static_cast<double>(ensemble_size);
     frtStats.mFRT /= E;
     frtStats.varFRT /= E;
     frtStats.varFRT -= pow(frtStats.mFRT, 2);

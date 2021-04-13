@@ -21,11 +21,11 @@
   },
   "Paths": {
     "In": {
-      "filepath": "../../../FRTPhase/ExampleFiles/IsoSurfaceFiles/NewbySchwemmer/",
-      "filename": "AntirotatingD05_IsoSurfacePair.h5"
+      "filepath": "../IsoSurfaceFiles/NewbySchwemmer/",
+      "filename": "AntirotatingD05_IsoSurfaces.h5"
     },
     "Out": {
-      "filepath": "../../../FRTPhase/ExampleFiles/SimData/NewbySchwemmer/",
+      "filepath": "../SimData/NewbySchwemmer/",
       "filename": "AntirotatingD05_FRTFile.h5"
     }
   },
