@@ -15,11 +15,14 @@ class SerialCorrStats {
 private:
     vector<double> FRTdata;
     vector<double> rho_k;
-    void calc(size_t offset, size_t lag_max);
+    vector<double> StDev_rho_k;
+    double cv;
+    double StDev_cv;
+    void calc(size_t offset, size_t lag_max, size_t sub_pop_size);
 public:
     SerialCorrStats() = default;
     void add(double first_return_time);
-    IsoSurfaceCorr get_corr(const string& isoSurfaceName, size_t offset, size_t lag_max);
+    IsoSurfaceCorr get_corr(const string& isoSurfaceName, size_t offset, size_t lag_max, size_t sub_pop_size);
 };
 
 struct DimError : public exception {
@@ -31,6 +34,7 @@ struct DimError : public exception {
 const size_t OFFSET = 500;
 const size_t LAGS = 20;
 const size_t TOT_INTERVAL_COUNT = 10000;
+const size_t SUB_POP_SIZE_STATS = 10;
 
 int main(int argc, char* argv[]) {
 
@@ -88,7 +92,7 @@ int main(int argc, char* argv[]) {
             t = 0.0;
         }
 
-        isoSurfaceCorr = serialCorrStats.get_corr(isoSurface.get_name(), OFFSET, LAGS);
+        isoSurfaceCorr = serialCorrStats.get_corr(isoSurface.get_name(), OFFSET, LAGS, SUB_POP_SIZE_STATS);
         cout << "rho_k: ";
         for (auto rho: isoSurfaceCorr.rho_k)
             cout << rho << ", ";
@@ -105,7 +109,8 @@ void SerialCorrStats::add(double first_return_time) {
     FRTdata.push_back(first_return_time);
 }
 
-void SerialCorrStats::calc(size_t offset, size_t lag_max) {
+void SerialCorrStats::calc(size_t offset, size_t lag_max, size_t sub_pop_size) {
+    // calculate values
     if ((offset + lag_max) > FRTdata.size())
         throw DimError();
     double mean = 0.0;
@@ -124,14 +129,72 @@ void SerialCorrStats::calc(size_t offset, size_t lag_max) {
         c_k[k] -= mean*mean;
         rho_k[k] = c_k[k] / c_k[0];
     }
+    cv = sqrt(c_k[0]) / mean;
+
+    // calculate errors
+    if (sub_pop_size > FRTdata.size())
+        throw DimError();
+
+    StDev_rho_k = vector<double>(lag_max + 1, 0.0);
+    double cv_mean = 0.0; // first moment
+    double cv_2 = 0.0; // second_moment
+    vector<double> rho_k_mean(lag_max + 1, 0.0); // first moment
+    vector<double> rho_k_2(lag_max + 1, 0.0); // second moment
+
+    size_t NoSubInt  = floor((FRTdata.size()-offset) / sub_pop_size);
+    for (size_t p = 0; p < sub_pop_size; p++){
+
+        double mean_sub = 0.0;
+        double cv_sub = 0.0;
+        vector<double> c_k_sub(lag_max + 1, 0.0);
+        vector<double> rho_k_sub(lag_max + 1, 0.0);
+
+        for (size_t i = 0; i < NoSubInt; i++)
+            mean_sub += FRTdata[offset + p*(NoSubInt) + i];
+        mean_sub /= NoSubInt;
+
+        for (size_t k = 0; k < lag_max + 1; k++) {
+            for (size_t i = 0; i < NoSubInt - k; i++)
+                c_k_sub[k] += FRTdata[offset + p*(NoSubInt) + i] * FRTdata[offset + p*(NoSubInt) + i + k];
+
+            c_k_sub[k] /= (NoSubInt - k);
+            c_k_sub[k] -= mean_sub*mean_sub;
+            rho_k_sub[k] = c_k_sub[k] / c_k_sub[0];
+        }
+        cv_sub = sqrt(c_k_sub[0]) / mean_sub;
+
+        // update first and second moment
+        cv_mean += cv_sub;
+        cv_2 += pow(cv_sub, 2.0);
+
+        for (size_t j = 0; j < rho_k_mean.size(); j++){
+            rho_k_mean[j] += rho_k_sub[j];
+            rho_k_2[j] += pow(rho_k_sub[j], 2.0);
+        }
+    }
+
+    cv_mean /= sub_pop_size;
+    cv_2 /= sub_pop_size;
+    StDev_cv = sqrt(cv_2 - pow(cv_2, 2.0)) / sqrt(sub_pop_size);
+
+    for (size_t j = 0; j < StDev_rho_k.size(); j ++){
+        rho_k_mean[j] /= sub_pop_size;
+        rho_k_2[j] /= sub_pop_size;
+        StDev_rho_k[j] = sqrt(rho_k_2[j] - pow(rho_k_mean[j], 2.0)) / sqrt(sub_pop_size);
+    }
+
 }
 
-IsoSurfaceCorr SerialCorrStats::get_corr(const string& isoSurfaceName, size_t offset, size_t lag_max) {
+IsoSurfaceCorr SerialCorrStats::get_corr(const string& isoSurfaceName, size_t offset, size_t lag_max, size_t sub_pop_size) {
     IsoSurfaceCorr isoSurfaceCorr(isoSurfaceName);
     isoSurfaceCorr.N = FRTdata.size();
     isoSurfaceCorr.offset = offset;
-    this->calc(offset, lag_max);
+    isoSurfaceCorr.sub_pop_size = sub_pop_size;
+    this->calc(offset, lag_max, sub_pop_size);
+    isoSurfaceCorr.cv = this->cv;
+    isoSurfaceCorr.StDev_cv = this->StDev_cv;
     isoSurfaceCorr.rho_k = this->rho_k;
+    isoSurfaceCorr.StDev_rho_k = this->StDev_rho_k;
     return isoSurfaceCorr;
 }
 

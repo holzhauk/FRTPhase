@@ -7,7 +7,7 @@ class FirstPassageDetector():
 
     def __init__(self, isoSurface: IsoSurface):
         self.isoSurface = isoSurface
-        if (self.isoSurface.phi == None):
+        if (type(self.isoSurface.phi) == None):
             self.isoSurface.run_calculations()
 
     def is_first_return_event(self, x: np.array, pos_sense_of_rotation: bool) -> bool:

@@ -427,15 +427,23 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
     fs::path testPath("../../../../theTestFile.h5");
     SerialCorrFile serialCorrFile(modelName);
     IsoSurfaceCorr& iS_0 = serialCorrFile.create_isoSurfaceCorr("Isochron0");
-    IsoSurfaceCorr& iS_1 = serialCorrFile.create_isoSurfaceCorr("Isovatiant0");
+    IsoSurfaceCorr& iS_1 = serialCorrFile.create_isoSurfaceCorr("Isovariant0");
     iS_0.N = 10000;
     iS_1.N = 10000;
     iS_0.offset = 100;
     iS_1.offset = 10;
+    iS_0.sub_pop_size = 10;
+    iS_1.sub_pop_size = 20;
+    iS_0.cv = 1.0;
+    iS_1.cv = 15.4;
+    iS_0.StDev_cv = 0.01;
+    iS_1.StDev_cv = 5.0;
     const unsigned int lags = 10;
     for (unsigned int k = 0; k < lags; k++){
         iS_0.rho_k.push_back(n_dist(rn_engine));
+        iS_0.StDev_rho_k.push_back(n_dist(rn_engine));
         iS_1.rho_k.push_back(n_dist(rn_engine));
+        iS_1.StDev_rho_k.push_back(n_dist(rn_engine));
     }
 
     serialCorrFile.write(testPath);

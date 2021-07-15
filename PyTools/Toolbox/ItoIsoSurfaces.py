@@ -139,8 +139,8 @@ class ItoIsovariant(IsoSurface):
                                   / self.model.q_rho(r3) ** 2, r3)
 
                 i2 = (self.model.f(r2) - \
-                      (2 * np.pi / DB) * ((self.model.q_rho(r2) * i3) ** 2) + \
-                      (self.model.q_phi(r2) / OB) ** 2) * np.exp(-2 * iE) / \
+                      (2 * np.pi / DB) * ((self.model.q_rho(r2) * i3) ** 2 + \
+                      (self.model.q_phi(r2) / OB) ** 2)) * np.exp(-2 * iE) / \
                      self.model.q_rho(r2) ** 2
                 i1[j] = trapz(i2, r2)
             self.phi[i] = 2 * trapz(i1, r1)
