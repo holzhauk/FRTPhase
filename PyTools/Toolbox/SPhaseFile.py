@@ -347,8 +347,11 @@ class IsoSurfaceCorr():
         self.key = key
         self.N = np.array([], dtype=np.uint32)
         self.offset = np.array([], dtype=np.uint32)
+        self.sub_pop_size = np.array([], dtype=np.uint32)
         self.cv = np.array([], dtype=self.dtype)
+        self.Err_cv = np.array([], dtype=self.dtype)
         self.rho_k = np.array([], dtype=self.dtype)
+        self.Err_rho_k = np.array([], dtype=self.dtype)
 
     def __eq__(self, other):
         if not isinstance(other, IsoSurfaceCorr):
@@ -357,8 +360,11 @@ class IsoSurfaceCorr():
         are_equal = are_equal and (self.key == other.key)
         are_equal = are_equal and np.array_equal(self.N, other.N)
         are_equal = are_equal and np.array_equal(self.offset, other.offset)
+        are_equal = are_equal and np.array_equal(self.sub_pop_size, other.sub_pop_size)
         are_equal = are_equal and np.array_equal(self.cv, other.cv)
+        are_equal = are_equal and np.array_equal(self.Err_cv, other.Err_cv)
         are_equal = are_equal and np.array_equal(self.rho_k, other.rho_k)
+        are_equal = are_equal and np.array_equal(self.Err_rho_k, other.Err_rho_k)
         return are_equal
 
 
@@ -387,12 +393,21 @@ class SerialCorrFile(SPhaseFile):
             IsoSurfaceGroup.create_dataset("stationary_offset", shape=frtCorrData.offset.shape, \
                                            dtype=np.uint32, \
                                            data=frtCorrData.offset)
+            IsoSurfaceGroup.create_dataset("sub_population_size", shape=frtCorrData.sub_pop_size.shape, \
+                                           dtype=np.uint32, \
+                                           data=frtCorrData.sub_pop_size)
             IsoSurfaceGroup.create_dataset("coefficient_of_variation", shape=frtCorrData.cv.shape, \
                                            dtype=self.dtype, \
                                            data=frtCorrData.cv)
+            IsoSurfaceGroup.create_dataset("Err_coefficient_of_variation", shape=frtCorrData.Err_cv.shape, \
+                                           dtype=self.dtype, \
+                                           data=frtCorrData.Err_cv)
             IsoSurfaceGroup.create_dataset("rho_k", shape=frtCorrData.rho_k.shape, \
                                            dtype=self.dtype, \
                                            data=frtCorrData.rho_k)
+            IsoSurfaceGroup.create_dataset("Err_rho_k", shape=frtCorrData.Err_rho_k.shape, \
+                                           dtype=self.dtype, \
+                                           data=frtCorrData.Err_rho_k)
 
     def __read_body__(self, file):
         dSet_isoSurfaceFilePath = file["isosurface_file"]
@@ -413,13 +428,25 @@ class SerialCorrFile(SPhaseFile):
                 with dSet_offset.astype(np.uint32):
                     frtCorrData.offset = np.array(dSet_offset, dtype=np.uint32)
 
+                dSet_sub_pop_size = IsoSurfaceGroup.get("sub_population_size")
+                with dSet_sub_pop_size.astype(np.uint32):
+                    frtCorrData.sub_pop_size = np.array(dSet_sub_pop_size, dtype=np.uint32)
+
                 dSet_cv = IsoSurfaceGroup.get("coefficient_of_variation")
                 with dSet_cv.astype(self.dtype):
                     frtCorrData.cv = np.array(dSet_cv, dtype=self.dtype)
 
+                dSet_Err_cv = IsoSurfaceGroup.get("Err_coefficient_of_variation")
+                with dSet_Err_cv.astype(self.dtype):
+                    frtCorrData.Err_cv = np.array(dSet_Err_cv, dtype=self.dtype)
+
                 dSet_rho_k = IsoSurfaceGroup.get("rho_k")
                 with dSet_rho_k.astype(self.dtype):
                     frtCorrData.rho_k = np.array(dSet_rho_k, dtype=self.dtype)
+
+                dSet_Err_rho_k = IsoSurfaceGroup.get("Err_rho_k")
+                with dSet_Err_rho_k.astype(self.dtype):
+                    frtCorrData.Err_rho_k = np.array(dSet_Err_rho_k, dtype=self.dtype)
 
     def __iter__(self):
         self.dataIterator = iter(self.dataSet)

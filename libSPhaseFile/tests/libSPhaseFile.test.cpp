@@ -436,14 +436,14 @@ BOOST_AUTO_TEST_CASE(write_read_file_test){
     iS_1.sub_pop_size = 20;
     iS_0.cv = 1.0;
     iS_1.cv = 15.4;
-    iS_0.StDev_cv = 0.01;
-    iS_1.StDev_cv = 5.0;
+    iS_0.Err_cv = 0.01;
+    iS_1.Err_cv = 5.0;
     const unsigned int lags = 10;
     for (unsigned int k = 0; k < lags; k++){
         iS_0.rho_k.push_back(n_dist(rn_engine));
-        iS_0.StDev_rho_k.push_back(n_dist(rn_engine));
+        iS_0.Err_rho_k.push_back(n_dist(rn_engine));
         iS_1.rho_k.push_back(n_dist(rn_engine));
-        iS_1.StDev_rho_k.push_back(n_dist(rn_engine));
+        iS_1.Err_rho_k.push_back(n_dist(rn_engine));
     }
 
     serialCorrFile.write(testPath);

@@ -65,18 +65,27 @@ class TestSPhaseFileFunctionality(unittest.TestCase):
         noLags = 10
         N = 10000
         offset = 100
+        sub_pop_size = 10
         corrWriteFile = SerialCorrFile("theTestModel")
         corrWriteFile.isoSurfaceFilePath = "theIsoSurfaceFile.h5"
         corrWriteFile.configFilePath = "theConfigFile.h5"
         c1 = corrWriteFile.createIsoSurfaceCorr("Curve0")
         c1.N = np.array([N], dtype=np.uint32)
         c1.offset = np.array([offset], dtype=np.uint32)
+        c1.sub_pop_size = np.array([sub_pop_size], dtype=np.uint32)
+        c1.cv = np.array([1.5], dtype=np.double)
+        c1.Err_cv = np.array([0.01], dtype=np.double)
         c1.rho_k = np.random.random(size=(noLags,))
+        c1.Err_rho_k = np.random.random(size=(noLags,))
 
         c2 = corrWriteFile.createIsoSurfaceCorr("Curve1")
         c2.N = np.array([N], dtype=np.uint32)
         c2.offset = np.array([offset], dtype=np.uint32)
+        c2.sub_pop_size = np.array([sub_pop_size], dtype=np.uint32)
+        c2.cv = np.array([5.6], dtype=np.double)
+        c2.cv = np.array([10.0], dtype=np.double)
         c2.rho_k = np.random.random(size=(noLags,))
+        c2.Err_rho_k = np.random.random(size=(noLags,))
         corrWriteFile.write("pythonTestFile.h5")
 
         corrReadFile = SerialCorrFile("theTestModel")
@@ -110,7 +119,7 @@ class TestSPhaseFileFunctionality(unittest.TestCase):
         # test Path variable content
         self.assertEqual(simConfigFile.paths["In"], \
             Path("../ExampleFiles/IsoSurfaceFiles" + \
-                 "/NewbySchwemmer/AntirotatingD05_IsoSurfacePair.h5").absolute().resolve())
+                 "/NewbySchwemmer/AntirotatingD05_IsoSurfaces.h5").absolute().resolve())
         self.assertEqual(simConfigFile.paths["Out"], \
                          Path("../ExampleFiles/SimData" + \
                               "/NewbySchwemmer/AntirotatingD05_FRTFile.h5").absolute().resolve())

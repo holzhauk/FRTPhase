@@ -136,8 +136,8 @@ void SerialCorrStats::calc(size_t offset, size_t lag_max, size_t sub_pop_size) {
         throw DimError();
 
     StDev_rho_k = vector<double>(lag_max + 1, 0.0);
-    double cv_mean = 0.0; // first moment
-    double cv_2 = 0.0; // second_moment
+    double cv_mean = 0.0; // first moment of distribution of CVs in subpopulation
+    double cv_2 = 0.0; // second_moment -||-
     vector<double> rho_k_mean(lag_max + 1, 0.0); // first moment
     vector<double> rho_k_2(lag_max + 1, 0.0); // second moment
 
@@ -175,7 +175,7 @@ void SerialCorrStats::calc(size_t offset, size_t lag_max, size_t sub_pop_size) {
 
     cv_mean /= sub_pop_size;
     cv_2 /= sub_pop_size;
-    StDev_cv = sqrt(cv_2 - pow(cv_2, 2.0)) / sqrt(sub_pop_size);
+    StDev_cv = sqrt(cv_2 - pow(cv_mean, 2.0)) / sqrt(sub_pop_size);
 
     for (size_t j = 0; j < StDev_rho_k.size(); j ++){
         rho_k_mean[j] /= sub_pop_size;
@@ -192,9 +192,9 @@ IsoSurfaceCorr SerialCorrStats::get_corr(const string& isoSurfaceName, size_t of
     isoSurfaceCorr.sub_pop_size = sub_pop_size;
     this->calc(offset, lag_max, sub_pop_size);
     isoSurfaceCorr.cv = this->cv;
-    isoSurfaceCorr.StDev_cv = this->StDev_cv;
+    isoSurfaceCorr.Err_cv = this->StDev_cv;
     isoSurfaceCorr.rho_k = this->rho_k;
-    isoSurfaceCorr.StDev_rho_k = this->StDev_rho_k;
+    isoSurfaceCorr.Err_rho_k = this->StDev_rho_k;
     return isoSurfaceCorr;
 }
 

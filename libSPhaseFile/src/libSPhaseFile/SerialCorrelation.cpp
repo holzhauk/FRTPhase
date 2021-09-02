@@ -20,9 +20,9 @@ IsoSurfaceCorr& IsoSurfaceCorr::operator=(const IsoSurfaceCorr& other) {
     this->offset = other.offset;
     this->sub_pop_size = other.sub_pop_size;
     this->cv = other.cv;
-    this->StDev_cv = other.StDev_cv;
+    this->Err_cv = other.Err_cv;
     this->rho_k = other.rho_k;
-    this->StDev_rho_k = other.StDev_rho_k;
+    this->Err_rho_k = other.Err_rho_k;
     return *this;
 }
 
@@ -33,9 +33,9 @@ bool IsoSurfaceCorr::operator== (const IsoSurfaceCorr& other) const {
     is_equal = is_equal && (this->offset == other.offset);
     is_equal = is_equal && (this->sub_pop_size == other.sub_pop_size);
     is_equal = is_equal && (this->cv == other.cv);
-    is_equal = is_equal && (this->StDev_cv == other.StDev_cv);
+    is_equal = is_equal && (this->Err_cv == other.Err_cv);
     is_equal = is_equal && (this->rho_k == other.rho_k);
-    is_equal = is_equal && (this->StDev_rho_k == other.StDev_rho_k);
+    is_equal = is_equal && (this->Err_rho_k == other.Err_rho_k);
     return is_equal;
 }
 
@@ -162,21 +162,21 @@ herr_t surface_group_handler_corr(hid_t group_id, const char* group_name,
         throw SPhaseFileHDF5APIError("failed to close dataset 'coefficient_of_variation' in surface group: "
                                      + string(group_name));
 
-    // read standard deviation of coefficient of variation
-    hid_t dSet_StDev_cv = H5Dopen(surface_group_id, "StDev_coefficient_of_variation", H5P_DEFAULT);
-    if (dSet_StDev_cv < 0)
-        throw SPhaseFileHDF5APIError("failed to open 'StDev_coefficient_of_variation' in surface group:"
+    // read error value of coefficient of variation
+    hid_t dSet_Err_cv = H5Dopen(surface_group_id, "Err_coefficient_of_variation", H5P_DEFAULT);
+    if (dSet_Err_cv < 0)
+        throw SPhaseFileHDF5APIError("failed to open 'Err_coefficient_of_variation' in surface group:"
                                      + string(group_name));
 
-    herr_t id_StDev_cv = H5Dread(dSet_StDev_cv, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &scalar_ddummy);
-    if (id_StDev_cv < 0)
-        throw SPhaseFileHDF5APIError("failed to read 'StDev_coefficient_of_variation' in surface group: "
+    herr_t id_Err_cv = H5Dread(dSet_Err_cv, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &scalar_ddummy);
+    if (id_Err_cv < 0)
+        throw SPhaseFileHDF5APIError("failed to read 'Err_coefficient_of_variation' in surface group: "
                                      + string(group_name));
-    isoSurfaceCorr.StDev_cv = scalar_ddummy;
+    isoSurfaceCorr.Err_cv = scalar_ddummy;
 
-    herr_t dSet_StDev_cv_err = H5Dclose(dSet_StDev_cv);
-    if (dSet_StDev_cv_err < 0)
-        throw SPhaseFileHDF5APIError("failed to close dataset 'StDev_coefficient_of_variation' in surface group: "
+    herr_t dSet_Err_cv_err = H5Dclose(dSet_Err_cv);
+    if (dSet_Err_cv_err < 0)
+        throw SPhaseFileHDF5APIError("failed to close dataset 'Err_coefficient_of_variation' in surface group: "
                                      + string(group_name));
 
     // read serial correlation coefficients up to lag k
@@ -217,41 +217,41 @@ herr_t surface_group_handler_corr(hid_t group_id, const char* group_name,
         throw SPhaseFileHDF5APIError("failed to close dataset 'rho_k' in surface group: "
                                      + string(group_name));
 
-    // read standard deviation of serial correlation coefficients up to lag k
-    hid_t dSet_StDev_rho_k = H5Dopen(surface_group_id, "StDev_rho_k", H5P_DEFAULT);
-    if (dSet_StDev_rho_k < 0)
-        throw SPhaseFileHDF5APIError("failed to open dataset 'StDev_rho_k' in surface group: "
+    // read error values of serial correlation coefficients up to lag k
+    hid_t dSet_Err_rho_k = H5Dopen(surface_group_id, "Err_rho_k", H5P_DEFAULT);
+    if (dSet_Err_rho_k < 0)
+        throw SPhaseFileHDF5APIError("failed to open dataset 'Err_rho_k' in surface group: "
                                      + string(group_name));
 
-    hid_t dSpace_StDev_rho_k = H5Dget_space(dSet_StDev_rho_k);
-    if (dSpace_StDev_rho_k < 0)
-        throw SPhaseFileHDF5APIError("failed to retrieve data space info about 'StDev_rho_k' in surface group: "
+    hid_t dSpace_Err_rho_k = H5Dget_space(dSet_Err_rho_k);
+    if (dSpace_Err_rho_k < 0)
+        throw SPhaseFileHDF5APIError("failed to retrieve data space info about 'Err_rho_k' in surface group: "
                                      + string(group_name));
 
-    ndims = H5Sget_simple_extent_dims(dSpace_StDev_rho_k, dims, NULL);
+    ndims = H5Sget_simple_extent_dims(dSpace_Err_rho_k, dims, NULL);
     if (ndims < 0)
-        throw SPhaseFileHDF5APIError("faild to retrieve dspace's dims of 'StDev_rho_k' in surface group: "
+        throw SPhaseFileHDF5APIError("faild to retrieve dspace's dims of 'Err_rho_k' in surface group: "
                                      + string(group_name));
 
-    isoSurfaceCorr.StDev_rho_k = vector<double> (dims[0]);
-    herr_t id_StDev_rho_k = H5Dread(dSet_StDev_rho_k,
+    isoSurfaceCorr.Err_rho_k = vector<double> (dims[0]);
+    herr_t id_Err_rho_k = H5Dread(dSet_Err_rho_k,
                          H5T_NATIVE_DOUBLE,
                          H5S_ALL,
                          H5S_ALL,
                          H5P_DEFAULT,
-                         isoSurfaceCorr.StDev_rho_k.data());
-    if (id_StDev_rho_k < 0)
-        throw SPhaseFileHDF5APIError("failed to read data from 'StDev_rho_k' in surface group: "
+                         isoSurfaceCorr.Err_rho_k.data());
+    if (id_Err_rho_k < 0)
+        throw SPhaseFileHDF5APIError("failed to read data from 'Err_rho_k' in surface group: "
                                      + string(group_name));
 
-    herr_t dSpace_StDev_rho_k_err = H5Sclose(dSpace_StDev_rho_k);
-    if (dSpace_StDev_rho_k_err < 0)
-        throw SPhaseFileHDF5APIError("failed to close dataspace of 'StDev_rho_k' in surface group: "
+    herr_t dSpace_Err_rho_k_err = H5Sclose(dSpace_Err_rho_k);
+    if (dSpace_Err_rho_k_err < 0)
+        throw SPhaseFileHDF5APIError("failed to close dataspace of 'Err_rho_k' in surface group: "
                                      + string(group_name));
 
-    herr_t dSet_StDev_rho_k_err = H5Dclose(dSet_StDev_rho_k);
-    if (dSet_StDev_rho_k_err < 0)
-        throw SPhaseFileHDF5APIError("failed to close dataset 'StDev_rho_k' in surface group: "
+    herr_t dSet_Err_rho_k_err = H5Dclose(dSet_Err_rho_k);
+    if (dSet_Err_rho_k_err < 0)
+        throw SPhaseFileHDF5APIError("failed to close dataset 'Err_rho_k' in surface group: "
                                      + string(group_name));
 
     herr_t surface_group_err = H5Gclose(surface_group_id);
@@ -318,8 +318,8 @@ void SerialCorrFile::write_body(H5::H5File &file) {
         dset.write(&d_dummy, H5::PredType::NATIVE_DOUBLE);
         dset.close();
 
-        dset = surface.createDataSet("StDev_coefficient_of_variation", H5::PredType::NATIVE_DOUBLE, scalar_dspace);
-        d_dummy = isoSurfaceCorr.StDev_cv;
+        dset = surface.createDataSet("Err_coefficient_of_variation", H5::PredType::NATIVE_DOUBLE, scalar_dspace);
+        d_dummy = isoSurfaceCorr.Err_cv;
         dset.write(&d_dummy, H5::PredType::NATIVE_DOUBLE);
         dset.close();
 
@@ -334,10 +334,10 @@ void SerialCorrFile::write_body(H5::H5File &file) {
         dspace.close();
 
         // write down standard deviations of serial correlation coefficients up to lag k
-        hsize_t StDev_dims[] = {isoSurfaceCorr.StDev_rho_k.size()};
+        hsize_t StDev_dims[] = {isoSurfaceCorr.Err_rho_k.size()};
         H5::DataSpace StDev_dspace (rank, StDev_dims);
-        dset = surface.createDataSet("StDev_rho_k", H5::PredType::NATIVE_DOUBLE, StDev_dspace);
-        dset.write(isoSurfaceCorr.StDev_rho_k.data(), H5::PredType::NATIVE_DOUBLE);
+        dset = surface.createDataSet("Err_rho_k", H5::PredType::NATIVE_DOUBLE, StDev_dspace);
+        dset.write(isoSurfaceCorr.Err_rho_k.data(), H5::PredType::NATIVE_DOUBLE);
         dset.close();
         dspace.close();
 

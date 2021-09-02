@@ -27,9 +27,9 @@ public:
     size_t offset = 0; // offset
     size_t sub_pop_size = 0; // size of sub ensemble population
     double cv = 0.0; // coefficient of variation
-    double StDev_cv = 0.0; // standard deviation of coefficient of variation
+    double Err_cv = 0.0; // error of coefficient of variation
     vector<double> rho_k; // serial correlations up to lag k
-    vector<double> StDev_rho_k; // standard deviation of rho_k
+    vector<double> Err_rho_k; // errors of rho_k
 private:
     friend class SerialCorrFile;
     string key;
